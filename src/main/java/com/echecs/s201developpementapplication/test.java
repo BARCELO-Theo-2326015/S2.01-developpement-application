@@ -1,9 +1,11 @@
 package com.echecs.s201developpementapplication;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -21,6 +23,17 @@ public class test extends Application {
         GridPane grid = new GridPane();
         Rectangle[][] rectangles = new Rectangle[SIZE][SIZE];
         Circle[][] pieces = new Circle[SIZE][SIZE];
+
+        // Définir les contraintes des colonnes et des lignes pour redimensionner la GridPane
+        for (int i = 0; i < SIZE; i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints(TILE_SIZE);
+            colConstraints.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(colConstraints);
+
+            RowConstraints rowConstraints = new RowConstraints(TILE_SIZE);
+            rowConstraints.setVgrow(Priority.ALWAYS);
+            grid.getRowConstraints().add(rowConstraints);
+        }
 
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
@@ -72,9 +85,7 @@ public class test extends Application {
                     pieces[row][col] = null;
                 }
 
-                //partie à modifier et optimiser car trop de beug
                 // Ajouter un événement de clic de souris pour chaque pièce
-                /*
                 if (circle.getFill() != Color.TRANSPARENT) {
                     circle.setOnMouseClicked(event -> {
                         if (selectedRect != null) {
@@ -87,11 +98,11 @@ public class test extends Application {
                         event.consume();  // Empêcher la propagation de l'événement à la case
                     });
                 }
-                */
+
                 GridPane.setRowIndex(circle, row);
                 GridPane.setColumnIndex(circle, col);
                 grid.getChildren().add(circle);
-
+                grid.setPrefHeight(600);
             }
         }
 

@@ -1,11 +1,8 @@
 package com.echecs.s201developpementapplication;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -15,101 +12,92 @@ public class test extends Application {
 
     private static final int SIZE = 8;
     private static final int TILE_SIZE = 80;
+
+    private GridPane board = new GridPane();
     private Circle selectedPiece = null;
-    private Rectangle selectedRect = null;
 
     @Override
     public void start(Stage primaryStage) {
-        GridPane grid = new GridPane();
-        Rectangle[][] rectangles = new Rectangle[SIZE][SIZE];
-        Circle[][] pieces = new Circle[SIZE][SIZE];
+        drawBoard();
+        Scene scene = new Scene(board, SIZE * TILE_SIZE, SIZE * TILE_SIZE);
+        scene.setOnMouseClicked(event -> handleClick(event.getX(), event.getY()));
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Jeu d'échecs");
+        primaryStage.show();
+    }
 
-        // Définir les contraintes des colonnes et des lignes pour redimensionner la GridPane
-        for (int i = 0; i < SIZE; i++) {
-            ColumnConstraints colConstraints = new ColumnConstraints(TILE_SIZE);
-            colConstraints.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().add(colConstraints);
-
-            RowConstraints rowConstraints = new RowConstraints(TILE_SIZE);
-            rowConstraints.setVgrow(Priority.ALWAYS);
-            grid.getRowConstraints().add(rowConstraints);
-        }
-
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
-                Rectangle rect = new Rectangle(TILE_SIZE, TILE_SIZE);
-                if ((row + col) % 2 == 0) {
-                    rect.setFill(Color.WHITE);
+    private void drawBoard() {
+        for (int y = 0; y < SIZE; y++) {
+            for (int x = 0; x < SIZE; x++) {
+                Circle piece = null;
+                if (y == 1) {
+                    piece = createPiece(Color.BLACK); // Pions noirs
+                } else if (y == 6) {
+                    piece = createPiece(Color.WHITE); // Pions blancs
+                } else if ((y == 0 || y == 7) && (x == 0 || x == 7)) {
+                    piece = createPiece(y == 0 ? Color.BLACK : Color.WHITE); // Tours
+                } else if ((y == 0 || y == 7) && (x == 1 || x == 6)) {
+                    piece = createPiece(y == 0 ? Color.BLACK : Color.WHITE); // Cavaliers
+                } else if ((y == 0 || y == 7) && (x == 2 || x == 5)) {
+                    piece = createPiece(y == 0 ? Color.BLACK : Color.WHITE); // Fous
+                } else if ((y == 0 || y == 7) && x == 3) {
+                    piece = createPiece(y == 0 ? Color.BLACK : Color.WHITE); // Reine
+                } else if ((y == 0 || y == 7) && x == 4) {
+                    piece = createPiece(y == 0 ? Color.BLACK : Color.WHITE); // Roi
+                }
+                Rectangle tile = new Rectangle(TILE_SIZE, TILE_SIZE);
+                if ((x + y) % 2 == 0) {
+                    tile.setFill(Color.BEIGE);
                 } else {
-                    rect.setFill(Color.BLACK);
+                    tile.setFill(Color.DARKGREEN);
                 }
-
-                // Stocker les rectangles dans une matrice
-                rectangles[row][col] = rect;
-
-                // Ajouter un événement de clic de souris pour chaque case
-                rect.setOnMouseClicked(event -> {
-                    if (selectedPiece != null) {
-                        int newRow = GridPane.getRowIndex(rect);
-                        int newCol = GridPane.getColumnIndex(rect);
-                        if (pieces[newRow][newCol] == null) {
-                            // Déplacer la pièce
-                            GridPane.setColumnIndex(selectedPiece, newCol);
-                            GridPane.setRowIndex(selectedPiece, newRow);
-                            pieces[newRow][newCol] = selectedPiece;
-                            pieces[GridPane.getRowIndex(selectedPiece)][GridPane.getColumnIndex(selectedPiece)] = null;
-                            selectedPiece = null;  // Désélectionner la pièce après déplacement
-                            if (selectedRect != null) {
-                                selectedRect.setStroke(null);
-                            }
-                            selectedRect = null;
-                        }
-                    }
-                });
-
-                grid.add(rect, col, row);
-
-                // Ajouter des cercles pour simuler des pièces
-                Circle circle = new Circle(TILE_SIZE / 2 - 10);
-                circle.setStrokeWidth(3);
-                if (row < 2) {
-                    circle.setFill(Color.BLACK);
-                    circle.setStroke(Color.WHITE);  // Contour blanc pour pièces noires
-                    pieces[row][col] = circle;
-                } else if (row > 5) {
-                    circle.setFill(Color.WHITE);
-                    circle.setStroke(Color.BLACK);  // Contour noir pour pièces blanches
-                    pieces[row][col] = circle;
-                } else {
-                    circle.setFill(Color.TRANSPARENT);
-                    pieces[row][col] = null;
+                board.add(tile, x, y);
+                if (piece != null) {
+                    board.add(piece, x, y);
                 }
-
-                // Ajouter un événement de clic de souris pour chaque pièce
-                if (circle.getFill() != Color.TRANSPARENT) {
-                    circle.setOnMouseClicked(event -> {
-                        if (selectedRect != null) {
-                            selectedRect.setStroke(null); // Enlever le surlignage précédent
-                        }
-                        selectedPiece = circle;
-                        selectedRect = rect;
-                        selectedRect.setStroke(Color.YELLOW); // Surligner la case en jaune
-                        selectedRect.setStrokeWidth(3);
-                        event.consume();  // Empêcher la propagation de l'événement à la case
-                    });
-                }
-
-                GridPane.setRowIndex(circle, row);
-                GridPane.setColumnIndex(circle, col);
-                grid.getChildren().add(circle);
-                grid.setPrefHeight(600);
             }
         }
+    }
 
-        Scene scene = new Scene(grid);
-        primaryStage.setTitle("Chess Board with Movable Pieces");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    private Circle createPiece(Color color) {
+        Circle piece = new Circle(TILE_SIZE / 3);
+        piece.setFill(color);
+        return piece;
+    }
+
+    private void handleClick(double x, double y) {
+        int col = (int) (x / TILE_SIZE);
+        int row = (int) (y / TILE_SIZE);
+
+        if (selectedPiece == null) {
+            selectPiece(col, row);
+        } else {
+            movePiece(selectedPiece, col, row);
+        }
+    }
+
+    private void selectPiece(int col, int row) {
+        if (col < 0 || col >= SIZE || row < 0 || row >= SIZE) {
+            return;
+        }
+        for (int i = 0; i < board.getChildren().size(); i++) {
+            if (board.getChildren().get(i) instanceof Circle) {
+                Circle piece = (Circle) board.getChildren().get(i);
+                if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
+                    selectedPiece = piece;
+                    return;
+                }
+            }
+        }
+    }
+
+    private void movePiece(Circle piece, int col, int row) {
+        if (col < 0 || col >= SIZE || row < 0 || row >= SIZE) {
+            return;
+        }
+        board.getChildren().remove(piece);
+        board.add(piece, col, row);
+        selectedPiece = null;
     }
 
     public static void main(String[] args) {

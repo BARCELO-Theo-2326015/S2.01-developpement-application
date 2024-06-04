@@ -11,210 +11,350 @@ import javafx.stage.Stage;
 
 public class test extends Application {
 
-    private static final int SIZE = 8;
-    private static final int TILE_SIZE = 80;
+    // Constantes définissant la taille de l'échiquier et des cases
+    private static final int TAILLE = 8;
+    private static final int TAILLE_CASE = 80;
 
-    private GridPane board = new GridPane();
-    private Circle selectedPiece = null;
+    // Le plateau de jeu représenté par un GridPane
+    private GridPane echiquier = new GridPane();
+    // La pièce actuellement sélectionnée
+    private Circle pieceSelectionnee = null;
 
-    private enum PieceType {
-        PAWN_BLACK(Color.BLACK),
-        PAWN_WHITE(Color.WHITE),
-        ROOK_BLACK(Color.BLACK),
-        ROOK_WHITE(Color.WHITE),
-        KNIGHT_BLACK(Color.BLACK),
-        KNIGHT_WHITE(Color.WHITE),
-        BISHOP_BLACK(Color.BLACK),
-        BISHOP_WHITE(Color.WHITE),
-        QUEEN_BLACK(Color.BLACK),
-        QUEEN_WHITE(Color.WHITE),
-        KING_BLACK(Color.BLACK),
-        KING_WHITE(Color.WHITE);
+    // Enumération des différents types de pièces avec leur couleur associée
+    private enum TypePiece {
+        PION_NOIR(Color.BLACK),
+        PION_BLANC(Color.WHITE),
+        TOUR_NOIR(Color.BLACK),
+        TOUR_BLANC(Color.WHITE),
+        CAVALIER_NOIR(Color.BLACK),
+        CAVALIER_BLANC(Color.WHITE),
+        FOU_NOIR(Color.BLACK),
+        FOU_BLANC(Color.WHITE),
+        REINE_NOIR(Color.BLACK),
+        REINE_BLANC(Color.WHITE),
+        ROI_NOIR(Color.BLACK),
+        ROI_BLANC(Color.WHITE);
 
-        private final Color color;
+        private final Color couleur;
 
-        PieceType(Color color) {
-            this.color = color;
+        TypePiece(Color couleur) {
+            this.couleur = couleur;
         }
 
-        public Color getColor() {
-            return color;
+        public Color getCouleur() {
+            return couleur;
         }
     }
 
     @Override
     public void start(Stage primaryStage) {
-        initializeBoard();
-        Scene scene = new Scene(board, SIZE * TILE_SIZE, SIZE * TILE_SIZE);
-        scene.setOnMouseClicked(event -> handleClick(event.getX(), event.getY()));
+        // Initialisation de l'échiquier avec les cases et les pièces
+        initialiserEchiquier();
+        // Création de la scène avec le GridPane représentant l'échiquier
+        Scene scene = new Scene(echiquier, TAILLE * TAILLE_CASE, TAILLE * TAILLE_CASE);
+        // Ajout d'un gestionnaire d'événements pour les clics de souris
+        scene.setOnMouseClicked(event -> gererClic(event.getX(), event.getY()));
         primaryStage.setScene(scene);
         primaryStage.setTitle("Jeu d'échecs");
         primaryStage.show();
     }
 
-    private void initializeBoard() {
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
-                Rectangle tile = createTile(x, y);
-                Circle piece = createPiece(x, y);
-                placePiece(tile, piece, x, y);
+    // Méthode pour initialiser l'échiquier avec les cases et les pièces
+    private void initialiserEchiquier() {
+        for (int y = 0; y < TAILLE; y++) {
+            for (int x = 0; x < TAILLE; x++) {
+                // Création d'une case
+                Rectangle caseEchiquier = creerCase(x, y);
+                // Création d'une pièce si nécessaire
+                Circle piece = creerPiece(x, y);
+                // Placement de la case et de la pièce sur le GridPane
+                placerPiece(caseEchiquier, piece, x, y);
             }
         }
     }
 
-    private Rectangle createTile(int x, int y) {
-        Rectangle tile = new Rectangle(TILE_SIZE, TILE_SIZE);
-        tile.setFill((x + y) % 2 == 0 ? Color.BEIGE : Color.DARKGREEN);
-        return tile;
+    // Méthode pour créer une case de l'échiquier
+    private Rectangle creerCase(int x, int y) {
+        Rectangle caseEchiquier = new Rectangle(TAILLE_CASE, TAILLE_CASE);
+        caseEchiquier.setFill((x + y) % 2 == 0 ? Color.BEIGE : Color.DARKGREEN);
+        return caseEchiquier;
     }
 
-    private Circle createPiece(int x, int y) {
-        PieceType pieceType = getPieceType(x, y);
-        if (pieceType == null) return null;
-        Circle piece = new Circle(TILE_SIZE / 3);
-        piece.setFill(pieceType.getColor());
-        piece.setUserData(pieceType); // Store the piece type in the Circle's user data
+    // Méthode pour créer une pièce à une position donnée
+    private Circle creerPiece(int x, int y) {
+        TypePiece typePiece = obtenirTypePiece(x, y);
+        if (typePiece == null) return null;
+        Circle piece = new Circle(TAILLE_CASE / 3);
+        piece.setFill(typePiece.getCouleur());
+        piece.setUserData(typePiece); // Stocke le type de pièce dans les données utilisateur du cercle
         return piece;
     }
 
-    private PieceType getPieceType(int x, int y) {
-        if (y == 1) return PieceType.PAWN_BLACK;
-        if (y == 6) return PieceType.PAWN_WHITE;
-        if ((y == 0 || y == 7) && (x == 0 || x == 7)) return y == 0 ? PieceType.ROOK_BLACK : PieceType.ROOK_WHITE;
-        if ((y == 0 || y == 7) && (x == 1 || x == 6)) return y == 0 ? PieceType.KNIGHT_BLACK : PieceType.KNIGHT_WHITE;
-        if ((y == 0 || y == 7) && (x == 2 || x == 5)) return y == 0 ? PieceType.BISHOP_BLACK : PieceType.BISHOP_WHITE;
-        if ((y == 0 || y == 7) && x == 3) return y == 0 ? PieceType.QUEEN_BLACK : PieceType.QUEEN_WHITE;
-        if ((y == 0 || y == 7) && x == 4) return y == 0 ? PieceType.KING_BLACK : PieceType.KING_WHITE;
+    // Méthode pour déterminer le type de pièce à une position donnée
+    private TypePiece obtenirTypePiece(int x, int y) {
+        if (y == 1) return TypePiece.PION_NOIR;
+        if (y == 6) return TypePiece.PION_BLANC;
+        if ((y == 0 || y == 7) && (x == 0 || x == 7)) return y == 0 ? TypePiece.TOUR_NOIR : TypePiece.TOUR_BLANC;
+        if ((y == 0 || y == 7) && (x == 1 || x == 6)) return y == 0 ? TypePiece.CAVALIER_NOIR : TypePiece.CAVALIER_BLANC;
+        if ((y == 0 || y == 7) && (x == 2 || x == 5)) return y == 0 ? TypePiece.FOU_NOIR : TypePiece.FOU_BLANC;
+        if ((y == 0 || y == 7) && x == 3) return y == 0 ? TypePiece.REINE_NOIR : TypePiece.REINE_BLANC;
+        if ((y == 0 || y == 7) && x == 4) return y == 0 ? TypePiece.ROI_NOIR : TypePiece.ROI_BLANC;
         return null;
     }
 
-    private void placePiece(Rectangle tile, Circle piece, int x, int y) {
-        board.add(tile, x, y);
+    // Méthode pour placer une pièce sur l'échiquier
+    private void placerPiece(Rectangle caseEchiquier, Circle piece, int x, int y) {
+        echiquier.add(caseEchiquier, x, y);
         if (piece != null) {
             GridPane.setHalignment(piece, javafx.geometry.HPos.CENTER);
             GridPane.setValignment(piece, javafx.geometry.VPos.CENTER);
-            board.add(piece, x, y);
+            echiquier.add(piece, x, y);
         }
     }
 
-    private void handleClick(double x, double y) {
-        int col = (int) (x / TILE_SIZE);
-        int row = (int) (y / TILE_SIZE);
+    // Méthode pour gérer les clics de souris
+    private void gererClic(double x, double y) {
+        int col = (int) (x / TAILLE_CASE);
+        int row = (int) (y / TAILLE_CASE);
 
-        if (selectedPiece == null) {
-            selectPiece(col, row);
+        if (pieceSelectionnee == null) {
+            // Sélectionner une pièce
+            selectionnerPiece(col, row);
         } else {
-            if (movePieceIsValid(selectedPiece, col, row)) {
-                movePiece(selectedPiece, col, row);
+            // Déplacer la pièce si le mouvement est valide
+            if (mouvementPieceEstValide(pieceSelectionnee, col, row)) {
+                deplacerPiece(pieceSelectionnee, col, row);
+                // Vérifier si le roi est en échec après le déplacement
             } else {
                 System.out.println("Mouvement invalide !");
-                selectedPiece = null; // Reset selectedPiece on invalid move
+                pieceSelectionnee = null; // Réinitialiser pieceSelectionnee en cas de mouvement invalide
             }
         }
     }
 
-    private void selectPiece(int col, int row) {
-        if (col < 0 || col >= SIZE || row < 0 || row >= SIZE) {
+    // Méthode pour sélectionner une pièce
+    private void selectionnerPiece(int col, int row) {
+        if (col < 0 || col >= TAILLE || row < 0 || row >= TAILLE) {
             return;
         }
-        for (Node node : board.getChildren()) {
+        for (Node node : echiquier.getChildren()) {
             if (node instanceof Circle) {
                 Circle piece = (Circle) node;
                 if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
-                    selectedPiece = piece;
+                    pieceSelectionnee = piece;
+                    return;
+                }
+            }
+        }
+    }
+// Méthode permettant la suppression d'une pièce du plateau
+    private void supprimerPiece(int col, int row) {
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
+                    echiquier.getChildren().remove(piece);
                     return;
                 }
             }
         }
     }
 
-    private boolean movePieceIsValid(Circle piece, int col, int row) {
+
+    // Méthode pour vérifier si le mouvement d'une pièce est valide
+    private boolean mouvementPieceEstValide(Circle piece, int col, int row) {
         int currentCol = GridPane.getColumnIndex(piece);
         int currentRow = GridPane.getRowIndex(piece);
 
-        if (col < 0 || col >= SIZE || row < 0 || row >= SIZE) {
+        if (col < 0 || col >= TAILLE || row < 0 || row >= TAILLE) {
             return false;
         }
 
-        for (Node node : board.getChildren()) {
+        for (Node node : echiquier.getChildren()) {
             if (node instanceof Circle) {
-                Circle otherPiece = (Circle) node;
-                int otherPieceCol = GridPane.getColumnIndex(otherPiece);
-                int otherPieceRow = GridPane.getRowIndex(otherPiece);
-                if (otherPieceCol == col && otherPieceRow == row && pieceFillEquals(piece, otherPiece)) {
+                Circle autrePiece = (Circle) node;
+                int autrePieceCol = GridPane.getColumnIndex(autrePiece);
+                int autrePieceRow = GridPane.getRowIndex(autrePiece);
+                if (autrePieceCol == col && autrePieceRow == row && pieceRemplissageEgal(piece, autrePiece)) {
                     return false;
                 }
             }
         }
 
-        PieceType pieceType = (PieceType) piece.getUserData();
+        TypePiece typePiece = (TypePiece) piece.getUserData();
 
-        // Déplacement des pions
-        if (pieceType == PieceType.PAWN_BLACK) {
-            if (col == currentCol && row == currentRow + 1) {
+        // Déplacement des pions noirs
+        if (typePiece == TypePiece.PION_NOIR) {
+            if (col == currentCol && row == currentRow + 1 && !estPieceAdverseA(col, row)) {
                 return true; // Avance d'une case
-            } else if (currentRow == 1 && col == currentCol && row == currentRow + 2) {
+            } else if (currentRow == 1 && col == currentCol && row == currentRow + 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1) {
+            } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1 && estPieceAdverseA(col, row)) {
+                supprimerPiece(col, row); // Supprimer la pièce capturée
                 return true; // Capture en diagonale vers l'avant
             }
-        } else if (pieceType == PieceType.PAWN_WHITE) {
-            if (col == currentCol && row == currentRow - 1) {
+        }
+        // Déplacement des pions blancs
+        else if (typePiece == TypePiece.PION_BLANC) {
+            if (col == currentCol && row == currentRow - 1 && !estPieceAdverseA(col, row)) {
                 return true; // Avance d'une case
-            } else if (currentRow == 6 && col == currentCol && row == currentRow - 2) {
+            } else if (currentRow == 6 && col == currentCol && row == currentRow - 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1) {
+            } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1 && estPieceAdverseA(col, row)) {
+                supprimerPiece(col, row); // Supprimer la pièce capturée
                 return true; // Capture en diagonale vers l'avant
             }
         }
 
-        // Déplacement des tours
-        if (pieceType == PieceType.ROOK_BLACK || pieceType == PieceType.ROOK_WHITE) {
+    // Déplacement des tours
+        if (typePiece == TypePiece.TOUR_NOIR || typePiece == TypePiece.TOUR_BLANC) {
             if (col == currentCol || row == currentRow) {
-                return true; // Déplacement horizontal ou vertical
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement horizontal ou vertical
+                }
             }
         }
 
-        // Déplacement des cavaliers
-        if (pieceType == PieceType.KNIGHT_BLACK || pieceType == PieceType.KNIGHT_WHITE) {
+    // Déplacement des cavaliers
+        if (typePiece == TypePiece.CAVALIER_NOIR || typePiece == TypePiece.CAVALIER_BLANC) {
             if ((Math.abs(col - currentCol) == 2 && Math.abs(row - currentRow) == 1) ||
                     (Math.abs(col - currentCol) == 1 && Math.abs(row - currentRow) == 2)) {
+                if (estPieceAdverseA(col, row)) {
+                    supprimerPiece(col, row);
+                }
                 return true; // Déplacement en forme de L
             }
         }
 
-        // Déplacement des fous
-        if (pieceType == PieceType.BISHOP_BLACK || pieceType == PieceType.BISHOP_WHITE) {
+    // Déplacement des fous
+        if (typePiece == TypePiece.FOU_NOIR || typePiece == TypePiece.FOU_BLANC) {
             if (Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return true; // Déplacement en diagonale
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement diagonal
+                }
             }
         }
 
         // Déplacement des reines
-        if (pieceType == PieceType.QUEEN_BLACK || pieceType == PieceType.QUEEN_WHITE) {
+        if (typePiece == TypePiece.REINE_NOIR || typePiece == TypePiece.REINE_BLANC) {
             if (col == currentCol || row == currentRow || Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return true; // Déplacement horizontal, vertical ou en diagonale
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement horizontal, vertical ou diagonal
+                }
             }
         }
 
-        // Déplacement des rois
-        if (pieceType == PieceType.KING_BLACK || pieceType == PieceType.KING_WHITE) {
+    // Déplacement des rois
+        if (typePiece == TypePiece.ROI_NOIR || typePiece == TypePiece.ROI_BLANC) {
             if (Math.abs(col - currentCol) <= 1 && Math.abs(row - currentRow) <= 1) {
-                return true; // Déplacement d'une case dans n'importe quelle direction
+                if (estPieceAdverseA(col, row)) {
+                    supprimerPiece(col, row);
+                }
+                return true; // Déplacement d'une case dans toutes les directions
             }
         }
 
         return false;
     }
 
-    private boolean pieceFillEquals(Circle piece1, Circle piece2) {
+
+    // Vérifie si le roi est en échec
+    private boolean estEchecDuRoi(boolean estNoir) {
+        int colRoi = -1;
+        int rowRoi = -1;
+
+        // Trouver la position du roi
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                TypePiece typePiece = (TypePiece) piece.getUserData();
+                if ((typePiece == TypePiece.ROI_NOIR && estNoir) || (typePiece == TypePiece.ROI_BLANC && !estNoir)) {
+                    colRoi = GridPane.getColumnIndex(piece);
+                    rowRoi = GridPane.getRowIndex(piece);
+                    break;
+                }
+            }
+        }
+
+        // Si le roi n'a pas été trouvé, retourne false
+        if (colRoi == -1 || rowRoi == -1) {
+            return false;
+        }
+
+        // Vérifie si une pièce adverse peut capturer le roi
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                TypePiece typePiece = (TypePiece) piece.getUserData();
+                if ((estNoir && typePiece.getCouleur() == Color.WHITE) || (!estNoir && typePiece.getCouleur() == Color.BLACK)) {
+                    int colPiece = GridPane.getColumnIndex(piece);
+                    int rowPiece = GridPane.getRowIndex(piece);
+                    if (mouvementPieceEstValide(piece, colRoi, rowRoi)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // Méthode pour vérifier si deux pièces ont la même couleur
+    private boolean pieceRemplissageEgal(Circle piece1, Circle piece2) {
         return piece1.getFill().equals(piece2.getFill());
     }
 
-    private void movePiece(Circle piece, int col, int row) {
-        board.getChildren().remove(piece);
-        board.add(piece, col, row);
-        selectedPiece = null;
+    // Méthode pour vérifier si une position donnée contient une pièce adverse
+    private boolean estPieceAdverseA(int col, int row) {
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
+                    return !pieceRemplissageEgal(pieceSelectionnee, piece);
+                }
+            }
+        }
+        return false;
+    }
+
+    // Méthode pour vérifier si le chemin entre deux positions est bloqué par une autre pièce
+    private boolean estCheminBloque(int colDepart, int rowDepart, int colArrivee, int rowArrivee) {
+        int deltaCol = Integer.signum(colArrivee - colDepart);
+        int deltaRow = Integer.signum(rowArrivee - rowDepart);
+
+        int col = colDepart + deltaCol;
+        int row = rowDepart + deltaRow;
+
+        while (col != colArrivee || row != rowArrivee) {
+            for (Node node : echiquier.getChildren()) {
+                if (node instanceof Circle) {
+                    Circle piece = (Circle) node;
+                    if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
+                        return true;
+                    }
+                }
+            }
+            col += deltaCol;
+            row += deltaRow;
+        }
+
+        return false;
+    }
+
+    // Méthode pour déplacer une pièce sur l'échiquier
+    private void deplacerPiece(Circle piece, int col, int row) {
+        echiquier.getChildren().remove(piece);
+        echiquier.add(piece, col, row);
+        pieceSelectionnee = null;
     }
 
     public static void main(String[] args) {

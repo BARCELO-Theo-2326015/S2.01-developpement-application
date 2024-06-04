@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0464e793-7afa-4f74-a4ca-c1907f1df853" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/bishop_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/bishop_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/king_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/king_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/knight_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/knight_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/pawn_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/pawn_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/queen_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/queen_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/rook_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/rook_white.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/echecs/main/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/main.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +32,12 @@
       </map>
     </option>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "Application.mainApplication.executor": "Run",
     "git-widget-placeholder": "Théo",
     "node.js.selected.package.tslint": "(autodetect)"
@@ -32,5 +45,8 @@
 }]]></component>
   <component name="TaskManager">
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

@@ -169,22 +169,24 @@ public class test extends Application {
 
         TypePiece typePiece = (TypePiece) piece.getUserData();
 
-        // Déplacement des pions
+        // Déplacement des pions noirs
         if (typePiece == TypePiece.PION_NOIR) {
-            if (col == currentCol && row == currentRow + 1) {
+            if (col == currentCol && row == currentRow + 1 && !estPieceAdverseA(col, row)) {
                 return true; // Avance d'une case
-            } else if (currentRow == 1 && col == currentCol && row == currentRow + 2) {
+            } else if (currentRow == 1 && col == currentCol && row == currentRow + 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1) {
-                return estPieceAdverseA(col, row); // Capture en diagonale vers l'avant
+            } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1 && estPieceAdverseA(col, row)) {
+                return true; // Capture en diagonale vers l'avant
             }
-        } else if (typePiece == TypePiece.PION_BLANC) {
-            if (col == currentCol && row == currentRow - 1) {
+        }
+        // Déplacement des pions blancs
+        else if (typePiece == TypePiece.PION_BLANC) {
+            if (col == currentCol && row == currentRow - 1 && !estPieceAdverseA(col, row)) {
                 return true; // Avance d'une case
-            } else if (currentRow == 6 && col == currentCol && row == currentRow - 2) {
+            } else if (currentRow == 6 && col == currentCol && row == currentRow - 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1) {
-                return estPieceAdverseA(col, row); // Capture en diagonale vers l'avant
+            } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1 && estPieceAdverseA(col, row)) {
+                return true; // Capture en diagonale vers l'avant
             }
         }
 
@@ -226,6 +228,7 @@ public class test extends Application {
 
         return false;
     }
+
 
     // Méthode pour vérifier si deux pièces ont la même couleur
     private boolean pieceRemplissageEgal(Circle piece1, Circle piece2) {

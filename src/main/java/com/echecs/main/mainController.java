@@ -34,6 +34,8 @@ public class mainController {
         pions.clear();
         selectedPiece = null;
 
+        jeu.setStyle("-");
+
         for (int row = 0; row < 8; ++row) {
             for(int col = 0; col < 8; ++col) {
                 VBox rect = new VBox();

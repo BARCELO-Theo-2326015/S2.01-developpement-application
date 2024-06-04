@@ -24,7 +24,7 @@ public class mainController {
     @FXML
     private Button boutonJouer;
 
-    List<Piece> pions = new ArrayList<Piece>();
+    public List<Piece> pions = new ArrayList<Piece>();
 
     private Piece selectedPiece = null;
 
@@ -34,7 +34,7 @@ public class mainController {
         pions.clear();
         selectedPiece = null;
 
-        jeu.setStyle("-");
+        jeu.setStyle("");
 
         for (int row = 0; row < 8; ++row) {
             for(int col = 0; col < 8; ++col) {
@@ -65,8 +65,8 @@ public class mainController {
                     clickEvent(event, rect);
                 });
 
-                if ((row + col) % 2 == 0) rect.setBackground(Background.fill(Color.WHITE));
-                else rect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
+                if ((row + col) % 2 == 0) rect.setBackground(Background.fill(Paint.valueOf("#EBECD0")));
+                else rect.setBackground(Background.fill(Paint.valueOf("#779556")));
 
                 jeu.add(rect, col, row);
             }
@@ -156,7 +156,7 @@ public class mainController {
         for(int i = 0; i < jeu.getChildren().size(); ++i) {
             VBox piece = (VBox) jeu.getChildren().get(i);
             Label l = new Label(" ");
-            l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
+            l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 40));
             if(piece.getChildren().isEmpty()) piece.getChildren().add(l);
         }
     }

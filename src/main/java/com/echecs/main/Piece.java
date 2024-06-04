@@ -11,7 +11,7 @@ import javafx.scene.text.FontPosture;
 
 import java.sql.Types;
 
-public class Piece extends VBox {
+public class Piece {
     Button box;
 
     public String getType() {
@@ -78,6 +78,6 @@ public class Piece extends VBox {
         }
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);
-        symbole.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
+        symbole.setFont(Font.font("sans-serif", FontPosture.REGULAR, 40));
     }
 }

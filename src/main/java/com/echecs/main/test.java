@@ -1,4 +1,4 @@
-package com.echecs.s201developpementapplication;
+package com.echecs.main;
 
 import javafx.application.Application;
 import javafx.scene.Node;

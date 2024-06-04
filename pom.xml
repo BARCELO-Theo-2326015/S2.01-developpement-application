@@ -75,7 +75,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.echecs.s201developpementapplication/com.echecs.s201developpementapplication.HelloApplication
+                                com.echecs.s201developpementapplication/com.echecs.main.mainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

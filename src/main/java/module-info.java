@@ -6,6 +6,6 @@ module com.echecs.s201developpementapplication {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.echecs.s201developpementapplication to javafx.fxml;
-    exports com.echecs.s201developpementapplication;
+    opens com.echecs.main to javafx.fxml;
+    exports com.echecs.main;
 }

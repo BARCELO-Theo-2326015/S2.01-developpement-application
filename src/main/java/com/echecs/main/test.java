@@ -124,6 +124,7 @@ public class test extends Application {
             // Déplacer la pièce si le mouvement est valide
             if (mouvementPieceEstValide(pieceSelectionnee, col, row)) {
                 deplacerPiece(pieceSelectionnee, col, row);
+                // Vérifier si le roi est en échec après le déplacement
             } else {
                 System.out.println("Mouvement invalide !");
                 pieceSelectionnee = null; // Réinitialiser pieceSelectionnee en cas de mouvement invalide
@@ -146,6 +147,19 @@ public class test extends Application {
             }
         }
     }
+// Méthode permettant la suppression d'une pièce du plateau
+    private void supprimerPiece(int col, int row) {
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                if (GridPane.getColumnIndex(piece) == col && GridPane.getRowIndex(piece) == row) {
+                    echiquier.getChildren().remove(piece);
+                    return;
+                }
+            }
+        }
+    }
+
 
     // Méthode pour vérifier si le mouvement d'une pièce est valide
     private boolean mouvementPieceEstValide(Circle piece, int col, int row) {
@@ -176,6 +190,7 @@ public class test extends Application {
             } else if (currentRow == 1 && col == currentCol && row == currentRow + 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
             } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1 && estPieceAdverseA(col, row)) {
+                supprimerPiece(col, row); // Supprimer la pièce capturée
                 return true; // Capture en diagonale vers l'avant
             }
         }
@@ -186,42 +201,64 @@ public class test extends Application {
             } else if (currentRow == 6 && col == currentCol && row == currentRow - 2 && !estPieceAdverseA(col, row)) {
                 return true; // Premier mouvement spécial de deux cases
             } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1 && estPieceAdverseA(col, row)) {
+                supprimerPiece(col, row); // Supprimer la pièce capturée
                 return true; // Capture en diagonale vers l'avant
             }
         }
 
-        // Déplacement des tours
+    // Déplacement des tours
         if (typePiece == TypePiece.TOUR_NOIR || typePiece == TypePiece.TOUR_BLANC) {
             if (col == currentCol || row == currentRow) {
-                return !estCheminBloque(currentCol, currentRow, col, row); // Déplacement horizontal ou vertical
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement horizontal ou vertical
+                }
             }
         }
 
-        // Déplacement des cavaliers
+    // Déplacement des cavaliers
         if (typePiece == TypePiece.CAVALIER_NOIR || typePiece == TypePiece.CAVALIER_BLANC) {
             if ((Math.abs(col - currentCol) == 2 && Math.abs(row - currentRow) == 1) ||
                     (Math.abs(col - currentCol) == 1 && Math.abs(row - currentRow) == 2)) {
+                if (estPieceAdverseA(col, row)) {
+                    supprimerPiece(col, row);
+                }
                 return true; // Déplacement en forme de L
             }
         }
 
-        // Déplacement des fous
+    // Déplacement des fous
         if (typePiece == TypePiece.FOU_NOIR || typePiece == TypePiece.FOU_BLANC) {
             if (Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return !estCheminBloque(currentCol, currentRow, col, row); // Déplacement diagonal
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement diagonal
+                }
             }
         }
 
         // Déplacement des reines
         if (typePiece == TypePiece.REINE_NOIR || typePiece == TypePiece.REINE_BLANC) {
             if (col == currentCol || row == currentRow || Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return !estCheminBloque(currentCol, currentRow, col, row); // Déplacement horizontal, vertical ou diagonal
+                if (!estCheminBloque(currentCol, currentRow, col, row)) {
+                    if (estPieceAdverseA(col, row)) {
+                        supprimerPiece(col, row);
+                    }
+                    return true; // Déplacement horizontal, vertical ou diagonal
+                }
             }
         }
 
-        // Déplacement des rois
+    // Déplacement des rois
         if (typePiece == TypePiece.ROI_NOIR || typePiece == TypePiece.ROI_BLANC) {
             if (Math.abs(col - currentCol) <= 1 && Math.abs(row - currentRow) <= 1) {
+                if (estPieceAdverseA(col, row)) {
+                    supprimerPiece(col, row);
+                }
                 return true; // Déplacement d'une case dans toutes les directions
             }
         }
@@ -229,6 +266,47 @@ public class test extends Application {
         return false;
     }
 
+
+    // Vérifie si le roi est en échec
+    private boolean estEchecDuRoi(boolean estNoir) {
+        int colRoi = -1;
+        int rowRoi = -1;
+
+        // Trouver la position du roi
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                TypePiece typePiece = (TypePiece) piece.getUserData();
+                if ((typePiece == TypePiece.ROI_NOIR && estNoir) || (typePiece == TypePiece.ROI_BLANC && !estNoir)) {
+                    colRoi = GridPane.getColumnIndex(piece);
+                    rowRoi = GridPane.getRowIndex(piece);
+                    break;
+                }
+            }
+        }
+
+        // Si le roi n'a pas été trouvé, retourne false
+        if (colRoi == -1 || rowRoi == -1) {
+            return false;
+        }
+
+        // Vérifie si une pièce adverse peut capturer le roi
+        for (Node node : echiquier.getChildren()) {
+            if (node instanceof Circle) {
+                Circle piece = (Circle) node;
+                TypePiece typePiece = (TypePiece) piece.getUserData();
+                if ((estNoir && typePiece.getCouleur() == Color.WHITE) || (!estNoir && typePiece.getCouleur() == Color.BLACK)) {
+                    int colPiece = GridPane.getColumnIndex(piece);
+                    int rowPiece = GridPane.getRowIndex(piece);
+                    if (mouvementPieceEstValide(piece, colRoi, rowRoi)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     // Méthode pour vérifier si deux pièces ont la même couleur
     private boolean pieceRemplissageEgal(Circle piece1, Circle piece2) {

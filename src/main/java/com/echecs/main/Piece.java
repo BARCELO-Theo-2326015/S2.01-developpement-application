@@ -5,8 +5,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+
+import java.sql.Types;
 
 public class Piece extends VBox {
     Button box;
@@ -58,20 +61,20 @@ public class Piece extends VBox {
     }
 
     private void generateSymbol() {
-        if(equipe == "blanc") {
-            if (type == "roi") symbole = new Label("♔");
-            else if (type == "reine") symbole = new Label("♕");
-            else if (type == "tour") symbole = new Label("♖");
-            else if (type == "eveque") symbole = new Label("♗");
-            else if (type == "chevalier") symbole = new Label("♘");
-            else if (type == "pion") symbole = new Label("♙");
-        } else if(equipe == "noir") {
-            if (type == "roi") symbole = new Label("♚");
-            else if (type == "reine") symbole = new Label("♛");
-            else if (type == "tour") symbole = new Label("♜");
-            else if (type == "eveque") symbole = new Label("♝");
-            else if (type == "chevalier") symbole = new Label("♞");
-            else if (type == "pion") symbole = new Label("♟");
+        if(equipe == "WHITE") {
+            if (type == "KING") symbole = new Label("♔");
+            else if (type == "QUEEN") symbole = new Label("♕");
+            else if (type == "ROOK") symbole = new Label("♖");
+            else if (type == "BISHOP") symbole = new Label("♗");
+            else if (type == "KNIGHT") symbole = new Label("♘");
+            else if (type == "PAWN") symbole = new Label("♙");
+        } else if(equipe == "BLACK") {
+            if (type == "KING") symbole = new Label("♚");
+            else if (type == "QUEEN") symbole = new Label("♛");
+            else if (type == "ROOK") symbole = new Label("♜");
+            else if (type == "BISHOP") symbole = new Label("♝");
+            else if (type == "KNIGHT") symbole = new Label("♞");
+            else if (type == "PAWN") symbole = new Label("♟");
         }
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);

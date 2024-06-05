@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="patch mouvement (sauf pions 2 cases)">
+    <list default="true" id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="ajout jusqu'à échec et math qui beug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +54,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.chess.executor": "Run",
-    "Application.mainApplication.executor": "Run",
+    "Application.mainApplication.executor": "Debug",
     "Application.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -101,7 +100,7 @@
       <workItem from="1717519889394" duration="2395000" />
       <workItem from="1717526313605" duration="228000" />
       <workItem from="1717526737257" duration="2914000" />
-      <workItem from="1717568657445" duration="9299000" />
+      <workItem from="1717568657445" duration="10227000" />
     </task>
     <task id="LOCAL-00001" summary="modification de test">
       <option name="closed" value="true" />
@@ -127,7 +126,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717568822866</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ajout jusqu'à échec et math qui beug">
+      <option name="closed" value="true" />
+      <created>1717578392157</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1717578392157</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,6 +153,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="patch mouvement (sauf pions 2 cases)" />
-    <option name="LAST_COMMIT_MESSAGE" value="patch mouvement (sauf pions 2 cases)" />
+    <MESSAGE value="ajout jusqu'à échec et math qui beug" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout jusqu'à échec et math qui beug" />
   </component>
 </project>

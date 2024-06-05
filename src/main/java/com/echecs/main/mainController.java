@@ -61,7 +61,6 @@ public class mainController {
 
                 if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Color.WHITE));
                 else caseRect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
-
                 jeu.add(caseRect, col, ligne);
             }
         }

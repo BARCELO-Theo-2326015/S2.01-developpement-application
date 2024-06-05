@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d134776a-59fe-4222-b876-b21a5e583899" name="Changes" comment="merge arnaud et main">
+    <list default="true" id="d134776a-59fe-4222-b876-b21a5e583899" name="Changes" comment="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -64,7 +64,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Accueil.executor": "Run",
+    "Application.Accueil.executor": "Debug",
     "Application.mainApplication.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -116,8 +116,17 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717604615115</updated>
-      <workItem from="1717604616674" duration="10564000" />
+      <workItem from="1717604616674" duration="10978000" />
     </task>
+    <task id="LOCAL-00001" summary="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)">
+      <option name="closed" value="true" />
+      <created>1717615597186</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717615597186</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,6 +134,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="merge arnaud et main" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge arnaud et main" />
+    <MESSAGE value="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)" />
+    <option name="LAST_COMMIT_MESSAGE" value="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)" />
   </component>
 </project>

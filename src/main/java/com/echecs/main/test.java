@@ -267,47 +267,6 @@ public class test extends Application {
     }
 
 
-    // Vérifie si le roi est en échec
-    private boolean estEchecDuRoi(boolean estNoir) {
-        int colRoi = -1;
-        int rowRoi = -1;
-
-        // Trouver la position du roi
-        for (Node node : echiquier.getChildren()) {
-            if (node instanceof Circle) {
-                Circle piece = (Circle) node;
-                TypePiece typePiece = (TypePiece) piece.getUserData();
-                if ((typePiece == TypePiece.ROI_NOIR && estNoir) || (typePiece == TypePiece.ROI_BLANC && !estNoir)) {
-                    colRoi = GridPane.getColumnIndex(piece);
-                    rowRoi = GridPane.getRowIndex(piece);
-                    break;
-                }
-            }
-        }
-
-        // Si le roi n'a pas été trouvé, retourne false
-        if (colRoi == -1 || rowRoi == -1) {
-            return false;
-        }
-
-        // Vérifie si une pièce adverse peut capturer le roi
-        for (Node node : echiquier.getChildren()) {
-            if (node instanceof Circle) {
-                Circle piece = (Circle) node;
-                TypePiece typePiece = (TypePiece) piece.getUserData();
-                if ((estNoir && typePiece.getCouleur() == Color.WHITE) || (!estNoir && typePiece.getCouleur() == Color.BLACK)) {
-                    int colPiece = GridPane.getColumnIndex(piece);
-                    int rowPiece = GridPane.getRowIndex(piece);
-                    if (mouvementPieceEstValide(piece, colRoi, rowRoi)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     // Méthode pour vérifier si deux pièces ont la même couleur
     private boolean pieceRemplissageEgal(Circle piece1, Circle piece2) {
         return piece1.getFill().equals(piece2.getFill());

@@ -19,6 +19,12 @@
       <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/rook_white.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
+    <list default="true" id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="ajout jusqu'à échec et math qui beug">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/temp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +36,29 @@
       <map>
         <entry key="$PROJECT_DIR$" value="main" />
       </map>
+
+        <entry key="$PROJECT_DIR$" value="arnaud" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;NURDIN-Arnaud-2326082b&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:BARCELO-Theo-2326015/S2.01-developpement-application.git&quot;,
+    &quot;accountId&quot;: &quot;24ecf7b9-a537-4a0c-9ee7-4b0d12a2ba53&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
     </option>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -44,9 +73,117 @@
   }
 }]]></component>
   <component name="TaskManager">
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2hQG133RrGxZ8aDr7Cri14RF5gQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.chess.executor": "Run",
+    "Application.mainApplication.executor": "Run",
+    "Application.test.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/arnaud/IdeaProjects/S2.01-developpement-application",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="chess" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.echecs.main.mainApplication" />
+      <module name="S2-01-developpement-application" />
+      <option name="PROGRAM_PARAMETERS" value="-Xms400m -Xmx2g" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17011.79" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17011.79" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="" />
+      <created>1717405266287</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717405266287</updated>
+      <workItem from="1717405267412" duration="2000" />
+      <workItem from="1717519889394" duration="2395000" />
+      <workItem from="1717526313605" duration="228000" />
+      <workItem from="1717526737257" duration="2914000" />
+      <workItem from="1717568657445" duration="10227000" />
+    </task>
+    <task id="LOCAL-00001" summary="modification de test">
+      <option name="closed" value="true" />
+      <created>1717501951438</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717501951438</updated>
+    </task>
+    <task id="LOCAL-00002" summary="modification mouvement pions">
+      <option name="closed" value="true" />
+      <created>1717502271405</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1717502271405</updated>
+    </task>
+    <task id="LOCAL-00003" summary="patch mouvement (sauf pions 2 cases)">
+      <option name="closed" value="true" />
+      <created>1717568822866</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1717568822866</updated>
+    </task>
+    <task id="LOCAL-00004" summary="ajout jusqu'à échec et math qui beug">
+      <option name="closed" value="true" />
+      <created>1717578392157</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1717578392157</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="patch mouvement (sauf pions 2 cases)" />
+    <MESSAGE value="ajout jusqu'à échec et math qui beug" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout jusqu'à échec et math qui beug" />
   </component>
 </project>

@@ -6,6 +6,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+
+public class Piece extends VBox {
+
 public class Piece {
     public String getType() {
         return type;
@@ -44,6 +53,13 @@ public class Piece {
     }
 
     int y;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setSymbole(Label symbole) {
+        this.symbole = symbole;
+    }
 
     Piece(String type, String equipe, int x, int y) {
         this.type = type;
@@ -74,6 +90,7 @@ public class Piece {
             else if (type == "BISHOP") image = new Image(getClass().getResourceAsStream("images/bishop_black.png"));
             else if (type == "KNIGHT") image = new Image(getClass().getResourceAsStream("images/knight_black.png"));
             else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_black.png"));
+
         }
 
         if(image != null) {
@@ -84,5 +101,8 @@ public class Piece {
 
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);
+
+      
+
     }
 }

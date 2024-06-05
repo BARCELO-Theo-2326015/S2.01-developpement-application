@@ -1,0 +1,58 @@
+/* Style du texte */
+.custom-label {
+    -fx-text-fill: white; /* Couleur du texte en blanc */
+    -fx-font-size: 8pt;
+    -fx-alignment: center;
+}
+
+/* Style des boutons pour jouer avec un autre joueur */
+.player-button {
+    -fx-background-color: linear-gradient(#64dd17, #1b5e20); /* Gradient vert */
+    -fx-background-radius: 8; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 14pt; /* Taille du texte */
+    -fx-padding: 10px; /* Padding pour agrandir le bouton */
+}
+
+.player-button:hover {
+    -fx-background-color: linear-gradient(#76ff03, #388e3c); /* Gradient vert clair lorsqu'on survole */
+}
+
+/* Style des boutons pour jouer avec l'ordinateur */
+.computer-button {
+    -fx-background-color: linear-gradient(#484848, #2f2f2f); /* Gradient gris */
+    -fx-background-radius: 8; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 14pt; /* Taille du texte */
+    -fx-padding: 10px; /* Padding pour agrandir le bouton */
+}
+
+.computer-button:hover {
+    -fx-background-color: linear-gradient(#6b6b6b, #424242); /* Gradient gris clair lorsqu'on survole */
+}
+
+/* Style du header label */
+.header-label {
+    -fx-font-size: 18pt; /* Taille du texte en grand */
+    -fx-font-weight: bold; /* Texte en gras */
+    -fx-font-style: italic; /* Texte en italique */
+    -fx-text-fill: white; /* Couleur du texte en blanc */
+}
+
+.custom-bold{
+    -fx-font-weight: bold;
+    -fx-text-fill: white; /* Couleur du texte en blanc */
+    -fx-font-size: 14pt; /* Taille du texte standard */
+    -fx-alignment: center;
+}
+
+/* Style du BorderPane pour le fond en gris noir */
+.root-pane {
+    -fx-background-color: #2f2f2f; /* Couleur de fond noir */
+}
+
+.otherBackground {
+    -fx-background-color: #212121;
+}

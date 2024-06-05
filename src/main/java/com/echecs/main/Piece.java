@@ -76,7 +76,10 @@ public class Piece {
             else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_black.png"));
         }
 
-        if(image != null) symbole.setImage(image);
+        if(image != null) {
+            symbole.setPreserveRatio(true);
+            symbole.setImage(image);
+        }
 
 
         HBox.setHgrow(symbole, Priority.ALWAYS);

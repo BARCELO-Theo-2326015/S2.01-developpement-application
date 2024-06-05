@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -13,6 +14,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,9 @@ public class mainController {
     public List<Piece> pions = new ArrayList<Piece>();
 
     private Piece selectedPiece = null;
+
+    private Double height = 0.0;
+    private Double width = 0.0;
 
     @FXML
     private void jouerClicked() {
@@ -72,6 +78,7 @@ public class mainController {
             }
         }
         updatePiece();
+        updateGameSize();
     }
 
     private void clickEvent(MouseEvent event, VBox rect) {
@@ -153,12 +160,6 @@ public class mainController {
             VBox uneCase = (VBox) jeu.getChildren().get(p.getX()*8+p.getY());
             uneCase.getChildren().add(p.getSymbole());
         }
-        for(int i = 0; i < jeu.getChildren().size(); ++i) {
-            VBox piece = (VBox) jeu.getChildren().get(i);
-            Label l = new Label(" ");
-            l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 40));
-            if(piece.getChildren().isEmpty()) piece.getChildren().add(l);
-        }
     }
 
     private String movePieceIsValid(Piece piece, int col, int row, int currentCol, int currentRow) {
@@ -223,5 +224,55 @@ public class mainController {
         }
 
         return "false";
+    }
+
+    @FXML
+    private void initialize() {
+        jouerClicked();
+    }
+
+    public void setResizeEvents(WindowEvent windowEvent) {
+        // Get the stage
+        Stage stage = (Stage) boutonJouer.getScene().getWindow();
+
+        width = stage.getWidth();
+        height = stage.getHeight();
+        updateGameSize();
+
+        // Listen for changes to stage size.
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            width = (Double) newVal;
+            updateGameSize();
+        });
+
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            height = (Double) newVal;
+            updateGameSize();
+        });
+    }
+
+    public void updateGameSize() {
+        Double superVal;
+        if(width > height) superVal = height;
+        else superVal = width;
+
+        superVal = superVal - 100;
+
+        jeu.setMaxWidth(superVal);
+        jeu.setPrefWidth(superVal);
+        jeu.setMaxHeight(superVal);
+        jeu.setPrefHeight(superVal);
+
+        // update the size of each pieces /8
+        for(int i = 0; i < jeu.getChildren().size(); ++i) {
+            VBox piece = (VBox) jeu.getChildren().get(i);
+            piece.setPrefWidth(superVal/8);
+            piece.setPrefHeight(superVal/8);
+            if(piece.getChildren().size() > 0) {
+                ImageView symbole = (ImageView) piece.getChildren().get(0);
+                symbole.setFitWidth(superVal/8);
+                symbole.setFitHeight(superVal/8);
+            }
+        }
     }
 }

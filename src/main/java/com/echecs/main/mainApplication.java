@@ -12,7 +12,10 @@ public class mainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 500);
-        scene.getStylesheets().add("style.css");
+
+        mainController controller = fxmlLoader.getController();
+        stage.setOnShown(controller::setResizeEvents);
+
         stage.setTitle("Echecs");
         stage.setScene(scene);
         stage.show();

@@ -6,12 +6,16 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -25,11 +29,13 @@ public class mainController {
     @FXML
     private Button boutonJouer;
 
+    public List<Piece> pions = new ArrayList<Piece>();
     private boolean tourBlanc = true; // true si c'est le tour des blancs, false si c'est le tour des noirs
 
-    private final List<Piece> pions = new ArrayList<>();
-
     private Piece selectedPiece = null;
+
+    private Double height = 0.0;
+    private Double width = 0.0;
 
     @FXML
     private void jouerClicked() {
@@ -43,6 +49,8 @@ public class mainController {
         jeu.getChildren().clear();
         pions.clear();
         selectedPiece = null;
+
+        jeu.setStyle("");
 
         for (int ligne = 0; ligne < 8; ++ligne) {
             for (int col = 0; col < 8; ++col) {
@@ -110,6 +118,9 @@ public class mainController {
 
 
 
+                if ((row + col) % 2 == 0) rect.setBackground(Background.fill(Paint.valueOf("#EBECD0")));
+                else rect.setBackground(Background.fill(Paint.valueOf("#779556")));
+
 
     private boolean roiEnEchec(String equipe) {
         // Trouver la position du roi
@@ -122,6 +133,9 @@ public class mainController {
                 break;
             }
         }
+        updatePiece();
+        updateGameSize();
+    }
         if (roiX == -1 || roiY == -1) return false; // Roi introuvable
 
         // Vérifier si une pièce adverse peut capturer le roi
@@ -325,6 +339,7 @@ public class mainController {
             VBox uneCase = (VBox) jeu.getChildren().get(p.getX() * 8 + p.getY());
             uneCase.getChildren().add(p.getSymbole());
         }
+
         jeu.getChildren().stream()
                 .filter(node -> ((VBox) node).getChildren().isEmpty())
                 .forEach(node -> {
@@ -363,6 +378,7 @@ public class mainController {
             if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle - 1) return "CAPTURE";
         }
         return "false";
+
     }
 
 
@@ -438,4 +454,56 @@ public class mainController {
         // Fermez le programme, vous pouvez appeler Platform.exit() si vous utilisez JavaFX
         System.exit(0);
     }
+
+    @FXML
+    private void initialize() {
+        jouerClicked();
+    }
+
+    public void setResizeEvents(WindowEvent windowEvent) {
+        // Get the stage
+        Stage stage = (Stage) boutonJouer.getScene().getWindow();
+
+        width = stage.getWidth();
+        height = stage.getHeight();
+        updateGameSize();
+
+        // Listen for changes to stage size.
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            width = (Double) newVal;
+            updateGameSize();
+        });
+
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            height = (Double) newVal;
+            updateGameSize();
+        });
+    }
+
+    public void updateGameSize() {
+        Double superVal;
+        if(width > height) superVal = height;
+        else superVal = width;
+
+        superVal = superVal - 100;
+
+        jeu.setMaxWidth(superVal);
+        jeu.setPrefWidth(superVal);
+        jeu.setMaxHeight(superVal);
+        jeu.setPrefHeight(superVal);
+
+        // update the size of each pieces /8
+        for(int i = 0; i < jeu.getChildren().size(); ++i) {
+            VBox piece = (VBox) jeu.getChildren().get(i);
+            piece.setPrefWidth(superVal/8);
+            piece.setPrefHeight(superVal/8);
+            if(piece.getChildren().size() > 0) {
+                ImageView symbole = (ImageView) piece.getChildren().get(0);
+                symbole.setFitWidth(superVal/8);
+                symbole.setFitHeight(superVal/8);
+            }
+        }
+    }
 }
+}
+

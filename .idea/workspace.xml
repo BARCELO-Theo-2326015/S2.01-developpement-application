@@ -4,6 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+    <list default="true" id="0464e793-7afa-4f74-a4ca-c1907f1df853" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/bishop_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/bishop_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/king_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/king_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/knight_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/knight_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/pawn_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/pawn_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/queen_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/queen_white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/rook_black.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/images/rook_white.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
     <list default="true" id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="ajout jusqu'à échec et math qui beug">
       <change afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/temp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
@@ -19,6 +34,9 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+
         <entry key="$PROJECT_DIR$" value="arnaud" />
       </map>
     </option>
@@ -43,9 +61,18 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.mainApplication.executor": "Run",
+    "git-widget-placeholder": "Théo",
+    "node.js.selected.package.tslint": "(autodetect)"
+  }
+}]]></component>
+  <component name="TaskManager">
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -140,8 +167,8 @@
     <option name="localTasksCounter" value="5" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

@@ -1,5 +1,11 @@
 package com.echecs.main;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -9,6 +15,7 @@ import javafx.scene.text.FontPosture;
 
 public class Piece extends VBox {
 
+public class Piece {
     public String getType() {
         return type;
     }
@@ -21,11 +28,11 @@ public class Piece extends VBox {
 
     String equipe;
 
-    public Label getSymbole() {
+    public ImageView getSymbole() {
         return symbole;
     }
 
-    Label symbole;
+    ImageView symbole;
 
     public int getX() {
         return x;
@@ -63,28 +70,39 @@ public class Piece extends VBox {
     }
 
     private void generateSymbol() {
-        if(equipe.equals("WHITE")) {
-            switch (type) {
-                case "KING" -> symbole = new Label("♔");
-                case "QUEEN" -> symbole = new Label("♕");
-                case "ROOK" -> symbole = new Label("♖");
-                case "BISHOP" -> symbole = new Label("♗");
-                case "KNIGHT" -> symbole = new Label("♘");
-                case "PAWN" -> symbole = new Label("♙");
-            }
-        } else if(equipe.equals("BLACK")) {
-            switch (type) {
-                case "KING" -> symbole = new Label("♚");
-                case "QUEEN" -> symbole = new Label("♛");
-                case "ROOK" -> symbole = new Label("♜");
-                case "BISHOP" -> symbole = new Label("♝");
-                case "KNIGHT" -> symbole = new Label("♞");
-                case "PAWN" -> symbole = new Label("♟");
-            }
+
+        // load the image
+        Image image = null;
+
+        symbole = new ImageView();
+
+        if(equipe == "WHITE") {
+            if (type == "KING") image = new Image(getClass().getResourceAsStream("images/king_white.png"));
+            else if (type == "QUEEN") image = new Image(getClass().getResourceAsStream("images/queen_white.png"));
+            else if (type == "ROOK") image = new Image(getClass().getResourceAsStream("images/rook_white.png"));
+            else if (type == "BISHOP") image = new Image(getClass().getResourceAsStream("images/bishop_white.png"));
+            else if (type == "KNIGHT") image = new Image(getClass().getResourceAsStream("images/knight_white.png"));
+            else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_white.png"));
+        } else if(equipe == "BLACK") {
+            if (type == "KING") image = new Image(getClass().getResourceAsStream("images/king_black.png"));
+            else if (type == "QUEEN") image = new Image(getClass().getResourceAsStream("images/queen_black.png"));
+            else if (type == "ROOK") image = new Image(getClass().getResourceAsStream("images/rook_black.png"));
+            else if (type == "BISHOP") image = new Image(getClass().getResourceAsStream("images/bishop_black.png"));
+            else if (type == "KNIGHT") image = new Image(getClass().getResourceAsStream("images/knight_black.png"));
+            else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_black.png"));
+
         }
+
+        if(image != null) {
+            symbole.setPreserveRatio(true);
+            symbole.setImage(image);
+        }
+
+
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);
-        assert symbole != null;
-        symbole.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
+
+      
+
     }
 }

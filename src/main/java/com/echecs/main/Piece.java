@@ -1,18 +1,13 @@
 package com.echecs.main;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
-import java.sql.Types;
-
-public class Piece extends VBox {
-    Button box;
+public class Piece{
 
     public String getType() {
         return type;
@@ -61,23 +56,28 @@ public class Piece extends VBox {
     }
 
     private void generateSymbol() {
-        if(equipe == "WHITE") {
-            if (type == "KING") symbole = new Label("♔");
-            else if (type == "QUEEN") symbole = new Label("♕");
-            else if (type == "ROOK") symbole = new Label("♖");
-            else if (type == "BISHOP") symbole = new Label("♗");
-            else if (type == "KNIGHT") symbole = new Label("♘");
-            else if (type == "PAWN") symbole = new Label("♙");
-        } else if(equipe == "BLACK") {
-            if (type == "KING") symbole = new Label("♚");
-            else if (type == "QUEEN") symbole = new Label("♛");
-            else if (type == "ROOK") symbole = new Label("♜");
-            else if (type == "BISHOP") symbole = new Label("♝");
-            else if (type == "KNIGHT") symbole = new Label("♞");
-            else if (type == "PAWN") symbole = new Label("♟");
+        if(equipe.equals("WHITE")) {
+            switch (type) {
+                case "KING" -> symbole = new Label("♔");
+                case "QUEEN" -> symbole = new Label("♕");
+                case "ROOK" -> symbole = new Label("♖");
+                case "BISHOP" -> symbole = new Label("♗");
+                case "KNIGHT" -> symbole = new Label("♘");
+                case "PAWN" -> symbole = new Label("♙");
+            }
+        } else if(equipe.equals("BLACK")) {
+            switch (type) {
+                case "KING" -> symbole = new Label("♚");
+                case "QUEEN" -> symbole = new Label("♛");
+                case "ROOK" -> symbole = new Label("♜");
+                case "BISHOP" -> symbole = new Label("♝");
+                case "KNIGHT" -> symbole = new Label("♞");
+                case "PAWN" -> symbole = new Label("♟");
+            }
         }
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);
+        assert symbole != null;
         symbole.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
     }
 }

@@ -1,16 +1,13 @@
 package com.echecs.main;
 
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
@@ -24,204 +21,239 @@ public class mainController {
     @FXML
     private Button boutonJouer;
 
-    List<Piece> pions = new ArrayList<Piece>();
+    private final List<Piece> pions = new ArrayList<>();
 
     private Piece selectedPiece = null;
 
     @FXML
     private void jouerClicked() {
+        reinitialiserPlateau();
+        configurerPieces();
+        mettreAJourPieces();
+    }
+
+    private void reinitialiserPlateau() {
         jeu.getChildren().clear();
         pions.clear();
         selectedPiece = null;
 
-        jeu.setStyle("-");
+        for (int ligne = 0; ligne < 8; ++ligne) {
+            for (int col = 0; col < 8; ++col) {
+                VBox caseRect = new VBox();
+                GridPane.setHgrow(caseRect, Priority.ALWAYS);
+                GridPane.setVgrow(caseRect, Priority.ALWAYS);
 
-        for (int row = 0; row < 8; ++row) {
-            for(int col = 0; col < 8; ++col) {
-                VBox rect = new VBox();
+                caseRect.setMaxWidth(Double.MAX_VALUE);
+                caseRect.setMaxHeight(Double.MAX_VALUE);
 
-                Piece p = null;
-                if (row == 1) p = new Piece("PAWN", "BLACK", row, col);
-                if (row == 6) p = new Piece("PAWN", "WHITE", row, col);
-                if ((row == 0 || row == 7) && (col == 0 ||col == 7)) p = new Piece("ROOK", (row == 0 ? "BLACK" : "WHITE"), row, col);
-                if ((row == 0 || row == 7) && (col == 1 || col == 6))  p = new Piece("KNIGHT", (row == 0 ? "BLACK" : "WHITE"), row, col);
-                if ((row == 0 || row == 7) && (col == 2 || col == 5))  p = new Piece("BISHOP", (row == 0 ? "BLACK" : "WHITE"), row, col);
-                if ((row == 0 || row == 7) && col == 3)  p = new Piece("QUEEN", (row == 0 ? "BLACK" : "WHITE"), row, col);
-                if ((row == 0 || row == 7) && col == 4)  p = new Piece("KING", (row == 0 ? "BLACK" : "WHITE"), row, col);
-                if(p != null) pions.add(p);
+                caseRect.setMinHeight(Double.MIN_VALUE);
+                caseRect.setMinWidth(Double.MIN_VALUE);
 
-                GridPane.setHgrow(rect, Priority.ALWAYS);
-                GridPane.setVgrow(rect, Priority.ALWAYS);
+                caseRect.setAlignment(Pos.CENTER);
+                caseRect.setOnMouseClicked(event -> clickEvent(caseRect));
 
-                rect.setMaxWidth(Double.MAX_VALUE);
-                rect.setMaxHeight(Double.MAX_VALUE);
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Color.WHITE));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
 
-                rect.setMinHeight(Double.MIN_VALUE);
-                rect.setMinWidth(Double.MIN_VALUE);
-
-                rect.setAlignment(Pos.CENTER);
-
-                rect.setOnMouseClicked(event -> {
-                    clickEvent(event, rect);
-                });
-
-                if ((row + col) % 2 == 0) rect.setBackground(Background.fill(Color.WHITE));
-                else rect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
-
-                jeu.add(rect, col, row);
+                jeu.add(caseRect, col, ligne);
             }
         }
-        updatePiece();
     }
 
-    private void clickEvent(MouseEvent event, VBox rect) {
-        int newRow = GridPane.getRowIndex(rect);
-        int newCol = GridPane.getColumnIndex(rect);
+    private void configurerPieces() {
+        for (int ligne = 0; ligne < 8; ++ligne) {
+            for (int col = 0; col < 8; ++col) {
+                Piece p = null;
+                if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                if (p != null) pions.add(p);
+            }
+        }
+    }
 
-        VBox selectedCase = null;
+    private void clickEvent(Node rect) {
+        int nouvelleLigne = GridPane.getRowIndex(rect);
+        int nouvelleCol = GridPane.getColumnIndex(rect);
 
         if (selectedPiece == null) {
-            for(int i = 0; i < pions.size(); ++i) {
-                if(pions.get(i).getX() == newRow && pions.get(i).getY() == newCol) selectedPiece = pions.get(i);
+            selectionnerPiece(nouvelleLigne, nouvelleCol);
+        } else {
+            deplacerPiece(nouvelleLigne, nouvelleCol);
+        }
+    }
+
+    private void selectionnerPiece(int ligne, int col) {
+        for (Piece pion : pions) {
+            if (pion.getX() == ligne && pion.getY() == col) {
+                selectedPiece = pion;
+                VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
+                selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
+                break;
             }
-            selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX()*8+selectedPiece.getY());
-            if(selectedPiece != null) selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
-
-            return;
         }
-        selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX()*8+selectedPiece.getY());
+    }
 
-        Piece selectedOtherPiece = null;
-        for(int i = 0; i < pions.size(); ++i) {
-            if(pions.get(i).getX() == newRow && pions.get(i).getY() == newCol) selectedOtherPiece = pions.get(i);
-        }
-
-        // on reset le border
+    private void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
+        VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
         selectedCase.setStyle("");
 
-        // si piece identique on enleve la selection
-        if(selectedPiece == selectedOtherPiece) {
+        Piece autrePieceSelectionnee = getPieceAt(nouvelleCol, nouvelleLigne);
+
+        if (selectedPiece.equals(autrePieceSelectionnee) || (autrePieceSelectionnee != null && selectedPiece.getEquipe().equals(autrePieceSelectionnee.getEquipe()))) {
             selectedPiece = null;
             return;
         }
 
-        if(selectedOtherPiece != null && selectedPiece.getEquipe() == selectedOtherPiece.getEquipe()) {
+        String valide = deplacementPieceValide(selectedPiece, selectedPiece.getY(), selectedPiece.getX(), nouvelleCol, nouvelleLigne);
+        if (valide.equals("false")) {
             selectedPiece = null;
             return;
         }
 
-        String valide = movePieceIsValid(selectedPiece, selectedPiece.getY(), selectedPiece.getX(), newCol, newRow);
-        if(valide == "false") {
+        if (autrePieceSelectionnee != null && valide.equals("AVANCE")) {
             selectedPiece = null;
             return;
-        } else {
-            if(selectedOtherPiece == null && valide == "CAPTURE") {
-                selectedPiece = null;
-                return;
-            } else if(selectedOtherPiece != null && valide == "AVANCE") {
-                selectedPiece = null;
-                return;
-            }
         }
 
-        // on supprime tout du rect et on ajoute la nouvelle piece
-        VBox piece2 = (VBox) jeu.getChildren().get(newRow*8+newCol);
-        piece2.getChildren().clear();
-        piece2.getChildren().add(selectedPiece.getSymbole());
+        if (autrePieceSelectionnee == null && valide.equals("CAPTURE")) {
+            selectedPiece = null;
+            return;
+        }
 
-        // on clear la piece originale pour la deplacer
-        VBox piece = (VBox) jeu.getChildren().get(selectedPiece.getX()*8+selectedPiece.getY());
-        piece.getChildren().clear();
+        VBox caseCible = (VBox) jeu.getChildren().get(nouvelleLigne * 8 + nouvelleCol);
+        caseCible.getChildren().clear();
+        caseCible.getChildren().add(selectedPiece.getSymbole());
 
-        // on supprime l'ancienne piece
-        if(selectedOtherPiece != null) pions.remove(selectedOtherPiece);
+        VBox caseOriginale = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
+        caseOriginale.getChildren().clear();
 
-        // on la deplace
-        selectedPiece.setX(newRow);
-        selectedPiece.setY(newCol);
+        if (autrePieceSelectionnee != null) pions.remove(autrePieceSelectionnee);
+
+        selectedPiece.setX(nouvelleLigne);
+        selectedPiece.setY(nouvelleCol);
 
         selectedPiece = null;
     }
 
-    public void updatePiece() {
-        for(int i = 0; i < jeu.getChildren().size(); ++i) {
+    public void mettreAJourPieces() {
+        for (int i = 0; i < jeu.getChildren().size(); ++i) {
             VBox piece = (VBox) jeu.getChildren().get(i);
             piece.getChildren().clear();
         }
-        for(int i = 0; i < pions.size(); ++i) {
-            Piece p = pions.get(i);
-            VBox uneCase = (VBox) jeu.getChildren().get(p.getX()*8+p.getY());
+        for (Piece p : pions) {
+            VBox uneCase = (VBox) jeu.getChildren().get(p.getX() * 8 + p.getY());
             uneCase.getChildren().add(p.getSymbole());
         }
-        for(int i = 0; i < jeu.getChildren().size(); ++i) {
+        for (int i = 0; i < jeu.getChildren().size(); ++i) {
             VBox piece = (VBox) jeu.getChildren().get(i);
-            Label l = new Label(" ");
-            l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
-            if(piece.getChildren().isEmpty()) piece.getChildren().add(l);
+            if (piece.getChildren().isEmpty()) {
+                Label l = new Label(" ");
+                l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
+                piece.getChildren().add(l);
+            }
         }
     }
 
-    private String movePieceIsValid(Piece piece, int col, int row, int currentCol, int currentRow) {
-        if (col < 0 || col >= 8 || row < 0 || row >= 8) return "false";
+    private String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (col < 0 || col >= 8 || ligne < 0 || ligne >= 8) return "false";
 
-        String PieceType = piece.getType();
-        String PieceEquipe = piece.getEquipe();
+        String typePiece = piece.getType();
 
-        // Déplacement des pions
-        if (PieceType == "PAWN" && PieceEquipe == "WHITE") {
-            if (col == currentCol && row == currentRow + 1) {
-                return "AVANCE"; // Avance d'une case
-            } else if (currentRow == 1 && col == currentCol && row == currentRow + 2) {
-                return "AVANCE"; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow + 1) {
-                return "CAPTURE"; // Capture en diagonale vers l'avant
-            }
-        } else if (PieceType == "PAWN" && PieceEquipe == "BLACK") {
-            if (col == currentCol && row == currentRow - 1) {
-                return "AVANCE"; // Avance d'une case
-            } else if (currentRow == 6 && col == currentCol && row == currentRow - 2) {
-                return "AVANCE"; // Premier mouvement spécial de deux cases
-            } else if (Math.abs(col - currentCol) == 1 && row == currentRow - 1) {
-                return "CAPTURE"; // Capture en diagonale vers l'avant
-            }
+        return switch (typePiece) {
+            case "PAWN" -> validerDeplacementPion(piece, col, ligne, colActuelle, ligneActuelle);
+            case "ROOK" -> validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
+            case "KNIGHT" -> validerDeplacementCavalier(col, ligne, colActuelle, ligneActuelle);
+            case "BISHOP" -> validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
+            case "QUEEN" -> validerDeplacementReine(col, ligne, colActuelle, ligneActuelle);
+            case "KING" -> validerDeplacementRoi(col, ligne, colActuelle, ligneActuelle);
+            default -> "false";
+        };
+    }
+
+    private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        String equipePiece = piece.getEquipe();
+        System.out.println("Ligne actuelle : " + ligneActuelle);
+        System.out.println("Colonne actuelle : " + colActuelle);
+        System.out.println("Nouvelle ligne : " + ligne);
+        System.out.println("Nouvelle colonne : " + col);
+        if (equipePiece.equals("WHITE")) {
+            if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
+            if (ligneActuelle == 1 && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle + 1) == null && getPieceAt(col, ligneActuelle + 2) == null) return "AVANCE";
+            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle + 1) return "CAPTURE";
+        } else if (equipePiece.equals("BLACK")) {
+            if (col == colActuelle && ligne == ligneActuelle - 1) return "AVANCE";
+            if (ligneActuelle == 6 && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle - 1) == null && getPieceAt(col, ligneActuelle - 2) == null) return "AVANCE";
+            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle - 1) return "CAPTURE";
         }
-
-        // Déplacement des tours
-        if (PieceType == "ROOK") {
-            if (col == currentCol || row == currentRow) {
-                return "true"; // Déplacement horizontal ou vertical
-            }
-        }
-
-        // Déplacement des cavaliers
-        if (PieceType == "KNIGHT") {
-            if ((Math.abs(col - currentCol) == 2 && Math.abs(row - currentRow) == 1) ||
-                    (Math.abs(col - currentCol) == 1 && Math.abs(row - currentRow) == 2)) {
-                return "true"; // Déplacement en forme de L
-            }
-        }
-
-        // Déplacement des fous
-        if (PieceType == "BISHOP") {
-            if (Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return "true"; // Déplacement en diagonale
-            }
-        }
-
-        // Déplacement des reines
-        if (PieceType == "QUEEN") {
-            if (col == currentCol || row == currentRow || Math.abs(col - currentCol) == Math.abs(row - currentRow)) {
-                return "true"; // Déplacement horizontal, vertical ou en diagonale
-            }
-        }
-
-        // Déplacement des rois
-        if (PieceType == "KING") {
-            if (Math.abs(col - currentCol) <= 1 && Math.abs(row - currentRow) <= 1) {
-                return "true"; // Déplacement d'une case dans n'importe quelle direction
-            }
-        }
-
         return "false";
+    }
+
+
+
+
+    private String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (col == colActuelle) {
+            int step = (ligne > ligneActuelle) ? 1 : -1;
+            for (int i = ligneActuelle + step; i != ligne; i += step) {
+                if (getPieceAt(colActuelle, i) != null) return "false";
+            }
+            return "true";
+        } else if (ligne == ligneActuelle) {
+            int step = (col > colActuelle) ? 1 : -1;
+            for (int i = colActuelle + step; i != col; i += step) {
+                if (getPieceAt(i, ligneActuelle) != null) return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    private String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
+        int deltaX = Math.abs(col - colActuelle);
+        int deltaY = Math.abs(ligne - ligneActuelle);
+        if ((deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2)) {
+            return "true";
+        }
+        return "false";
+    }
+
+    private String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
+            int colStep = (col > colActuelle) ? 1 : -1;
+            int ligneStep = (ligne > ligneActuelle) ? 1 : -1;
+            for (int i = 1; i < Math.abs(col - colActuelle); i++) {
+                if (getPieceAt(colActuelle + i * colStep, ligneActuelle + i * ligneStep) != null) return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    private String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (col == colActuelle || ligne == ligneActuelle) {
+            return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
+        } else if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
+            return validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
+        }
+        return "false";
+    }
+
+    private String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
+            return "true";
+        }
+        return "false";
+    }
+
+    private Piece getPieceAt(int col, int ligne) {
+        for (Piece p : pions) {
+            if (p.getX() == ligne && p.getY() == col) return p;
+        }
+        return null;
     }
 }

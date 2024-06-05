@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ec01ca8-8b8f-49ce-bc15-1d9be9a6c63e" name="Changes" comment="ajout jusqu'à échec et math qui beug">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/temp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -16,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="arnaud" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -54,11 +57,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.chess.executor": "Run",
-    "Application.mainApplication.executor": "Debug",
+    "Application.mainApplication.executor": "Run",
     "Application.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "arnaud",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/arnaud/IdeaProjects/S2.01-developpement-application",
     "node.js.detected.package.eslint": "true",

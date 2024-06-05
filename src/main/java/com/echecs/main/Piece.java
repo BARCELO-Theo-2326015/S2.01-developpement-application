@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
-public class Piece{
+public class Piece extends VBox {
 
     public String getType() {
         return type;
@@ -46,13 +46,12 @@ public class Piece{
     }
 
     int y;
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public void setSymbole(Label symbole) {
         this.symbole = symbole;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     Piece(String type, String equipe, int x, int y) {

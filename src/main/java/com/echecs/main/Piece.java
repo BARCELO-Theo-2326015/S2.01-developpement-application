@@ -6,14 +6,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-
-public class Piece extends VBox {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Piece {
     public String getType() {
@@ -53,47 +48,64 @@ public class Piece {
     }
 
     int y;
+
     public void setType(String type) {
         this.type = type;
     }
 
-    public void setSymbole(Label symbole) {
-        this.symbole = symbole;
+    private boolean hasMoved;
+
+    // Ajoutez un getter et un setter pour hasMoved
+    public boolean hasMoved() {
+        return hasMoved;
     }
 
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+    public boolean getHasMoved(){
+        return hasMoved;
+    }
     Piece(String type, String equipe, int x, int y) {
         this.type = type;
         this.equipe = equipe;
         this.x = x;
         this.y = y;
+        this.hasMoved = false;
         generateSymbol();
     }
 
-    private void generateSymbol() {
+    public void generateSymbol() {
 
         // load the image
         Image image = null;
 
         symbole = new ImageView();
 
-        if(equipe == "WHITE") {
-            if (type == "KING") image = new Image(getClass().getResourceAsStream("images/king_white.png"));
-            else if (type == "QUEEN") image = new Image(getClass().getResourceAsStream("images/queen_white.png"));
-            else if (type == "ROOK") image = new Image(getClass().getResourceAsStream("images/rook_white.png"));
-            else if (type == "BISHOP") image = new Image(getClass().getResourceAsStream("images/bishop_white.png"));
-            else if (type == "KNIGHT") image = new Image(getClass().getResourceAsStream("images/knight_white.png"));
-            else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_white.png"));
-        } else if(equipe == "BLACK") {
-            if (type == "KING") image = new Image(getClass().getResourceAsStream("images/king_black.png"));
-            else if (type == "QUEEN") image = new Image(getClass().getResourceAsStream("images/queen_black.png"));
-            else if (type == "ROOK") image = new Image(getClass().getResourceAsStream("images/rook_black.png"));
-            else if (type == "BISHOP") image = new Image(getClass().getResourceAsStream("images/bishop_black.png"));
-            else if (type == "KNIGHT") image = new Image(getClass().getResourceAsStream("images/knight_black.png"));
-            else if (type == "PAWN") image = new Image(getClass().getResourceAsStream("images/pawn_black.png"));
+        if (equipe.equals("WHITE")) {
+            image = switch (type) {
+                case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_white.png")));
+                case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_white.png")));
+                case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_white.png")));
+                case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_white.png")));
+                case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_white.png")));
+                case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_white.png")));
+                default -> image;
+            };
+        } else if (equipe.equals("BLACK")) {
+            image = switch (type) {
+                case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_black.png")));
+                case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_black.png")));
+                case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_black.png")));
+                case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_black.png")));
+                case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_black.png")));
+                case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_black.png")));
+                default -> image;
+            };
 
         }
 
-        if(image != null) {
+        if (image != null) {
             symbole.setPreserveRatio(true);
             symbole.setImage(image);
         }
@@ -102,7 +114,28 @@ public class Piece {
         HBox.setHgrow(symbole, Priority.ALWAYS);
         VBox.setVgrow(symbole, Priority.ALWAYS);
 
-      
 
     }
+
+    public List<int[]> genererMouvementsPossibles() {
+        List<int[]> mouvementsPossibles = new ArrayList<>();
+        // Ajouter la logique pour générer les mouvements possibles pour chaque type de pièce
+        int[] directions = {-1, 0, 1};
+
+        for (int dx : directions) {
+            for (int dy : directions) {
+                if (dx != 0 || dy != 0) {
+                    int nouvelleX = this.getX() + dx;
+                    int nouvelleY = this.getY() + dy;
+                    if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                        mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                    }
+                }
+            }
+        }
+
+        return mouvementsPossibles;
+    }
+
 }
+

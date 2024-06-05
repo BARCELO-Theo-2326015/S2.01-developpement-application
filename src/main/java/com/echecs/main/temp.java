@@ -297,7 +297,6 @@ public class temp {
 
     private void promouvoirPion(Piece pion, String nouvellePiece) {
         pion.setType(nouvellePiece);
-        pion.setSymbole(creerSymbole(nouvellePiece, pion.getEquipe()));
 
         // Mettre à jour l'affichage du pion promu sur l'échiquier
         VBox casePion = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());

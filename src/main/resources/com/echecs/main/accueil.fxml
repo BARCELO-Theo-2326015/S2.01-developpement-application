@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.AccueilController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.AccueilController">
 
     <!-- Définir le padding avec Insets -->
     <padding>

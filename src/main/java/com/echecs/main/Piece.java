@@ -47,6 +47,14 @@ public class Piece{
 
     int y;
 
+    public void setSymbole(Label symbole) {
+        this.symbole = symbole;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     Piece(String type, String equipe, int x, int y) {
         this.type = type;
         this.equipe = equipe;

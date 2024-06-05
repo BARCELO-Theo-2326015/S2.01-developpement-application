@@ -3,13 +3,17 @@ package com.echecs.main;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +25,15 @@ public class mainController {
     @FXML
     private Button boutonJouer;
 
+    private boolean tourBlanc = true; // true si c'est le tour des blancs, false si c'est le tour des noirs
+
     private final List<Piece> pions = new ArrayList<>();
 
     private Piece selectedPiece = null;
 
     @FXML
     private void jouerClicked() {
+        tourBlanc = true; // Les blancs commencent toujours
         reinitialiserPlateau();
         configurerPieces();
         mettreAJourPieces();
@@ -90,12 +97,94 @@ public class mainController {
     private void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
-                selectedPiece = pion;
-                VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
-                selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
+                if ((tourBlanc && "WHITE".equals(pion.getEquipe())) || (!tourBlanc && "BLACK".equals(pion.getEquipe()))) {
+                    selectedPiece = pion;
+                    VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
+                    selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
+                }
                 break;
             }
         }
+    }
+
+
+
+
+
+
+    private boolean roiEnEchec(String equipe) {
+        // Trouver la position du roi
+        int roiX = -1;
+        int roiY = -1;
+        for (Piece p : pions) {
+            if ("KING".equals(p.getType()) && equipe.equals(p.getEquipe())) {
+                roiX = p.getX();
+                roiY = p.getY();
+                break;
+            }
+        }
+        if (roiX == -1 || roiY == -1) return false; // Roi introuvable
+
+        // Vérifier si une pièce adverse peut capturer le roi
+        for (Piece p : pions) {
+            if (!equipe.equals(p.getEquipe())) {
+                String valide = deplacementPieceValide(p, p.getY(), p.getX(), roiY, roiX);
+                if (valide.equals("CAPTURE")||valide.equals("true")) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean echecEtMat(String equipe) {
+        // Vérifie si le roi est en échec
+        if (!roiEnEchec(equipe)) {
+            return false;
+        }
+
+        // Vérifie si le roi peut être sauvé ou si c'est échec et mat
+        for (Piece p : pions) {
+            if (p.getEquipe().equals(equipe)) {
+                // Essayez de déplacer chaque pièce du joueur pour sauver son roi
+                for (int ligne = 0; ligne < 8; ligne++) {
+                    for (int col = 0; col < 8; col++) {
+                        if (deplacementPieceValide(p, col, ligne, p.getY(), p.getX()).equals("true")||deplacementPieceValide(p, col, ligne, p.getY(), p.getX()).equals("AVANCE")||deplacementPieceValide(p, col, ligne, p.getY(), p.getX()).equals("CAPTURE")) {
+                            if (deplacementPossibleSansEchec(p, col, ligne, p.getY(), p.getX())) {
+                                // Si un déplacement est valide et sauve le roi, ce n'est pas échec et mat
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Si aucune pièce ne peut sauver le roi, c'est échec et mat
+        return true;
+    }
+
+
+    private boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        // Vérifier si le déplacement met le roi en échec
+        Piece pieceTemp = null;
+        for (Piece p : pions) {
+            if (p.getX() == ligne && p.getY() == col) {
+                pieceTemp = p;
+                break;
+            }
+        }
+
+        // Simuler le déplacement pour vérifier l'échec
+        if (pieceTemp != null) {
+            pions.remove(pieceTemp);
+        }
+        piece.setX(ligne);
+        piece.setY(col);
+        boolean enEchec = roiEnEchec(piece.getEquipe());
+        piece.setX(ligneActuelle);
+        piece.setY(colActuelle);
+        if (pieceTemp != null) {
+            pions.add(pieceTemp);
+        }
+        return !enEchec;
     }
 
     private void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
@@ -125,6 +214,11 @@ public class mainController {
             return;
         }
 
+        if (!deplacementPossibleSansEchec(selectedPiece, nouvelleCol, nouvelleLigne, selectedPiece.getY(), selectedPiece.getX())) {
+            selectedPiece = null;
+            return;
+        }
+
         VBox caseCible = (VBox) jeu.getChildren().get(nouvelleLigne * 8 + nouvelleCol);
         caseCible.getChildren().clear();
         caseCible.getChildren().add(selectedPiece.getSymbole());
@@ -137,27 +231,110 @@ public class mainController {
         selectedPiece.setX(nouvelleLigne);
         selectedPiece.setY(nouvelleCol);
 
+        verifierPromotion(selectedPiece);
+
         selectedPiece = null;
+
+        // Vérifiez si le jeu est terminé (échec et mat)
+        if (echecEtMat(tourBlanc ? "BLACK" : "WHITE")) {
+            // Affichez un message approprié
+            afficherMessageFinDePartie("Échec et mat! Les " + (tourBlanc ? "Noirs" : "Blancs") + " ont gagné!");
+            // Fermez le programme
+            fermerProgramme();
+        }
+        //change le tour
+        tourBlanc = !tourBlanc;
     }
 
-    public void mettreAJourPieces() {
-        for (int i = 0; i < jeu.getChildren().size(); ++i) {
-            VBox piece = (VBox) jeu.getChildren().get(i);
-            piece.getChildren().clear();
+
+    private void verifierPromotion(Piece piece) {
+        if ("PAWN".equals(piece.getType()) && (piece.getX() == 0 || piece.getX() == 7)) {
+            // Afficher l'interface pour choisir une nouvelle pièce
+            afficherOptionsPromotion(piece);
         }
+    }
+
+    private void afficherOptionsPromotion(Piece pion) {
+        // Créer un dialogue ou une interface pour permettre au joueur de choisir la pièce de promotion
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        VBox vbox = new VBox();
+
+        Label label = new Label("Choisissez une pièce pour la promotion :");
+        label.setFont(Font.font("Arial", FontPosture.REGULAR, 20));
+
+        Button reineButton = new Button("Reine");
+        reineButton.setOnAction(e -> {
+            promouvoirPion(pion, "QUEEN");
+            stage.close();
+        });
+
+        Button tourButton = new Button("Tour");
+        tourButton.setOnAction(e -> {
+            promouvoirPion(pion, "ROOK");
+            stage.close();
+        });
+
+        Button fouButton = new Button("Fou");
+        fouButton.setOnAction(e -> {
+            promouvoirPion(pion, "BISHOP");
+            stage.close();
+        });
+
+        Button cavalierButton = new Button("Cavalier");
+        cavalierButton.setOnAction(e -> {
+            promouvoirPion(pion, "KNIGHT");
+            stage.close();
+        });
+
+        vbox.getChildren().addAll(label, reineButton, tourButton, fouButton, cavalierButton);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        Scene scene = new Scene(vbox, 300, 200);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    private void promouvoirPion(Piece pion, String nouvellePiece) {
+        pion.setType(nouvellePiece);
+        pion.setSymbole(creerSymbole(nouvellePiece, pion.getEquipe()));
+
+        // Mettre à jour l'affichage du pion promu sur l'échiquier
+        VBox casePion = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
+        casePion.getChildren().clear();
+        casePion.getChildren().add(pion.getSymbole());
+    }
+
+    private Label creerSymbole(String type, String equipe) {
+        String symbole = switch (type) {
+            case "QUEEN" -> "♛";
+            case "ROOK" -> "♜";
+            case "BISHOP" -> "♝";
+            case "KNIGHT" -> "♞";
+            default -> "";
+        };
+
+        Label label = new Label(symbole);
+        label.setTextFill("WHITE".equals(equipe) ? Color.WHITE : Color.BLACK);
+        label.setFont(new Font("Arial", 24));
+        return label;
+    }
+    public void mettreAJourPieces() {
+        jeu.getChildren().forEach(node -> ((VBox) node).getChildren().clear());
         for (Piece p : pions) {
             VBox uneCase = (VBox) jeu.getChildren().get(p.getX() * 8 + p.getY());
             uneCase.getChildren().add(p.getSymbole());
         }
-        for (int i = 0; i < jeu.getChildren().size(); ++i) {
-            VBox piece = (VBox) jeu.getChildren().get(i);
-            if (piece.getChildren().isEmpty()) {
-                Label l = new Label(" ");
-                l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
-                piece.getChildren().add(l);
-            }
-        }
+        jeu.getChildren().stream()
+                .filter(node -> ((VBox) node).getChildren().isEmpty())
+                .forEach(node -> {
+                    Label l = new Label(" ");
+                    l.setFont(Font.font("sans-serif", FontPosture.REGULAR, 50));
+                    ((VBox) node).getChildren().add(l);
+                });
     }
+
 
     private String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col < 0 || col >= 8 || ligne < 0 || ligne >= 8) return "false";
@@ -177,13 +354,9 @@ public class mainController {
 
     private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         String equipePiece = piece.getEquipe();
-        System.out.println("Ligne actuelle : " + ligneActuelle);
-        System.out.println("Colonne actuelle : " + colActuelle);
-        System.out.println("Nouvelle ligne : " + ligne);
-        System.out.println("Nouvelle colonne : " + col);
         if (equipePiece.equals("WHITE")) {
             if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
-            if (ligneActuelle == 1 && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle + 1) == null && getPieceAt(col, ligneActuelle + 2) == null) return "AVANCE";
+            if (ligneActuelle == 6 && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle + 1) == null && getPieceAt(col, ligneActuelle + 2) == null) return "AVANCE";
             if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle + 1) return "CAPTURE";
         } else if (equipePiece.equals("BLACK")) {
             if (col == colActuelle && ligne == ligneActuelle - 1) return "AVANCE";
@@ -255,5 +428,15 @@ public class mainController {
             if (p.getX() == ligne && p.getY() == col) return p;
         }
         return null;
+    }
+
+    private void afficherMessageFinDePartie(String message) {
+        // Affichez le message de fin de partie, vous pouvez utiliser une boîte de dialogue ou une autre méthode appropriée
+        System.out.println(message);
+    }
+
+    private void fermerProgramme() {
+        // Fermez le programme, vous pouvez appeler Platform.exit() si vous utilisez JavaFX
+        System.exit(0);
     }
 }

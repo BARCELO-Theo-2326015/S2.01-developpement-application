@@ -44,6 +44,9 @@ public class mainController {
     private Double height = 0.0;
     private Double width = 0.0;
 
+    private Bot joueurNoir;
+    private Bot joueurBlanc;
+
     private void demarrerTimer() {
          timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Décrémente le temps restant pour chaque équipe
@@ -129,6 +132,9 @@ public class mainController {
         pions.clear();
         selectedPiece = null;
 
+        joueurNoir = new Bot(jeu,"Black", false, this); // False signifie que c'est un bot
+        joueurBlanc = new Bot(jeu, "WHITE", true, this); // True signifie que c'est un humain
+
         for (int ligne = 0; ligne < 8; ++ligne) {
             for (int col = 0; col < 8; ++col) {
                 VBox caseRect = createCase(ligne, col);
@@ -148,7 +154,7 @@ public class mainController {
         return caseRect;
     }
 
-    private void configurerPieces() {
+    public void configurerPieces() {
         for (int ligne = 0; ligne < 8; ++ligne) {
             for (int col = 0; col < 8; ++col) {
                 Piece p = null;
@@ -172,10 +178,11 @@ public class mainController {
             selectionnerPiece(nouvelleLigne, nouvelleCol);
         } else {
             deplacerPiece(nouvelleLigne, nouvelleCol);
+            //if(!tourBlanc) joueurNoir.jouer();
         }
     }
 
-    private void selectionnerPiece(int ligne, int col) {
+    public void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
                 if ((tourBlanc && "WHITE".equals(pion.getEquipe())) || (!tourBlanc && "BLACK".equals(pion.getEquipe()))) {
@@ -303,7 +310,7 @@ public class mainController {
         caseCible.getChildren().add(pion.getSymbole());
     }
 
-    private void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
+    public void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
         VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
         selectedCase.setStyle("");
 
@@ -387,8 +394,9 @@ public class mainController {
     }
 
 
-    private String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (col < 0 || col >= 8 || ligne < 0 || ligne >= 8) return "false";
+    public String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (colActuelle < 0 || colActuelle >= 8 || ligneActuelle < 0 || ligneActuelle >= 8) return "false";
+        if(colActuelle == col && ligneActuelle == ligne) return "false";
 
         String typePiece = piece.getType();
 
@@ -407,11 +415,11 @@ public class mainController {
         String equipePiece = piece.getEquipe();
         if (equipePiece.equals("WHITE")) {
             if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
-            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle + 1) == null && getPieceAt(col, ligneActuelle + 2) == null) return "AVANCE";
+            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle+1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
             if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle + 1) return "CAPTURE";
         } else if (equipePiece.equals("BLACK")) {
             if (col == colActuelle && ligne == ligneActuelle - 1) return "AVANCE";
-            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle - 1) == null && getPieceAt(col, ligneActuelle - 2) == null) return "AVANCE";
+            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle-1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
             if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle - 1) return "CAPTURE";
         }
         return "false";
@@ -476,7 +484,7 @@ public class mainController {
         return "false";
     }
 
-    private Piece getPieceAt(int col, int ligne) {
+    public Piece getPieceAt(int col, int ligne) {
         for (Piece p : pions) {
             if (p.getX() == ligne && p.getY() == col) return p;
         }

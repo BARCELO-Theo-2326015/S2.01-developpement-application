@@ -116,23 +116,123 @@ public class Piece {
 
     public List<int[]> genererMouvementsPossibles() {
         List<int[]> mouvementsPossibles = new ArrayList<>();
-        // Ajouter la logique pour générer les mouvements possibles pour chaque type de pièce
-        int[] directions = {-1, 0, 1};
 
-        for (int dx : directions) {
-            for (int dy : directions) {
-                if (dx != 0 || dy != 0) {
-                    int nouvelleX = this.getX() + dx;
-                    int nouvelleY = this.getY() + dy;
-                    if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
-                        mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+        if ("KING".equals(this.getType())) {
+            // Roi
+            int[] directions = {-1, 0, 1};
+            for (int dx : directions) {
+                for (int dy : directions) {
+                    if (dx != 0 || dy != 0) {
+                        int nouvelleX = this.getX() + dx;
+                        int nouvelleY = this.getY() + dy;
+                        if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                            mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                        }
                     }
+                }
+            }
+        } else if ("QUEEN".equals(this.getType())) {
+            // Reine
+            // Générer les mouvements horizontaux, verticaux et diagonaux
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (dx != 0 || dy != 0) {
+                        for (int i = 1; i < 8; i++) {
+                            int nouvelleX = this.getX() + i * dx;
+                            int nouvelleY = this.getY() + i * dy;
+                            if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                                mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        } else if ("ROOK".equals(this.getType())) {
+            // Tour
+            // Générer les mouvements horizontaux et verticaux
+            for (int dx = -1; dx <= 1; dx++) {
+                if (dx != 0) {
+                    for (int i = 1; i < 8; i++) {
+                        int nouvelleX = this.getX() + i * dx;
+                        int nouvelleY = this.getY();
+                        if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                            mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                }
+            }
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dy != 0) {
+                    for (int i = 1; i < 8; i++) {
+                        int nouvelleX = this.getX();
+                        int nouvelleY = this.getY() + i * dy;
+                        if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                            mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                }
+            }
+        } else if ("BISHOP".equals(this.getType())) {
+            // Fou
+            // Générer les mouvements diagonaux
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (dx != 0 && dy != 0) {
+                        for (int i = 1; i < 8; i++) {
+                            int nouvelleX = this.getX() + i * dx;
+                            int nouvelleY = this.getY() + i * dy;
+                            if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                                mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        } else if ("KNIGHT".equals(this.getType())) {
+            // Cavalier
+            // Générer les mouvements en L
+            int[] dx = {1, 1, 2, 2, -1, -1, -2, -2};
+            int[] dy = {2, -2, 1, -1, 2, -2, 1, -1};
+            for (int i = 0; i < 8; i++) {
+                int nouvelleX = this.getX() + dx[i];
+                int nouvelleY = this.getY() + dy[i];
+                if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                    mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+                }
+            }
+        } else if ("PAWN".equals(this.getType())) {
+            // Pion
+            int direction = this.getEquipe().equals("WHITE") ? -1 : 1; // Direction du mouvement du pion
+            int startX = this.getEquipe().equals("WHITE") ? 6 : 1; // Rang de départ du pion
+
+            // Mouvement simple en avant
+            int nouvelleX = this.getX() + direction;
+            int nouvelleY = this.getY();
+            if (nouvelleX >= 0 && nouvelleX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                mouvementsPossibles.add(new int[]{nouvelleX, nouvelleY});
+            }
+
+            // Première avancée de deux cases depuis le rang de départ
+            if (this.getX() == startX) {
+                int deuxCasesX = this.getX() + 2 * direction;
+                if (deuxCasesX >= 0 && deuxCasesX < 8 && nouvelleY >= 0 && nouvelleY < 8) {
+                    mouvementsPossibles.add(new int[]{deuxCasesX, nouvelleY});
+                }
+            }
+
+            // Captures en diagonale
+            int[] deplacementsDiagonaux = {this.getY() - 1, this.getY() + 1};
+            for (int dy : deplacementsDiagonaux) {
+                if (dy >= 0 && dy < 8) {
+                    mouvementsPossibles.add(new int[]{nouvelleX, dy});
                 }
             }
         }
 
         return mouvementsPossibles;
     }
+
+
 
 }
 

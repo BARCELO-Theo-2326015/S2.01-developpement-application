@@ -117,7 +117,8 @@ public class BotController {
             selectionnerPiece(nouvelleLigne, nouvelleCol);
         } else {
             deplacerPiece(nouvelleLigne, nouvelleCol);
-            if(!tourBlanc) joueurNoir.jouer();
+            Piece roi = trouverRoi("BLACK");
+            if((!tourBlanc)) joueurNoir.jouer();
         }
     }
 
@@ -181,41 +182,74 @@ public class BotController {
         }
         return !enEchec;
     }
+    //méthode nécéssaire car celle de base beug de façon inexpliquée avec la méthode de vérification de tous les mouvements légaux
+    private boolean cheminLibre(Piece piece, int nouvelleX, int nouvelleY) {
+        int x = piece.getX();
+        int y = piece.getY();
 
+        // Calculer les directions de déplacement
+        int dx = Integer.compare(nouvelleX, x); // 1, -1 ou 0
+        int dy = Integer.compare(nouvelleY, y); // 1, -1 ou 0
+
+        // Avancer jusqu'à la case cible
+        x += dx;
+        y += dy;
+        while (x != nouvelleX || y != nouvelleY) {
+            if (getPieceAt(x, y) != null) {
+                return false; // Il y a une pièce sur le chemin
+            }
+            x += dx;
+            y += dy;
+        }
+        return true; // Aucun obstacle trouvé
+    }
 
     private List<int[]> genererTousLesMouvementsLegaux(String equipe) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
         List<Piece> copiePions = new ArrayList<>(pions); // Créer une copie de la liste des pièces pour éviter la modification concurrente
-
         for (Piece piece : copiePions) {
             if (piece.getEquipe().equals(equipe)) {
                 // Pour chaque pièce, générer les mouvements possibles
                 for (int[] mouvement : piece.genererMouvementsPossibles()) {
                     int nouvelleX = mouvement[0];
                     int nouvelleY = mouvement[1];
+                    Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
 
-                    if (deplacementPossibleSansEchec(piece, nouvelleY, nouvelleX, piece.getY(), piece.getX())) {
-                        mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                    if (piece.getType().equals("KNIGHT") || cheminLibre(piece, nouvelleX, nouvelleY)) {
+                        if (autrePieceSelectionnee == null) {
+                            String valide = deplacementPieceValide(piece, nouvelleX, nouvelleY, piece.getX(), piece.getY());
+                            if (!valide.equals("false")) {
+                                mouvementsLegaux.add(mouvement);
+                            }
+
+                            if (deplacementPossibleSansEchec(piece, nouvelleY, nouvelleX, piece.getY(), piece.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
                     }
                 }
             }
         }
+
         return mouvementsLegaux;
     }
 
-    private List<int[]> genererTousLesMouvementsLegauxSansEchec(String equipe) {
+
+    // l'ajout d'une fonction de vérification de mouvement légaux pour chaque type de pièce a été nécéssaire dans un souci de débogage premièrement puis ont été laissé de manière permanente
+    private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
-        List<Piece> copiePions = new ArrayList<>(pions); // Créer une copie de la liste des pièces pour éviter la modification concurrente
 
-        for (Piece piece : copiePions) {
-            if (piece.getEquipe().equals(equipe)) {
-                // Pour chaque pièce, générer les mouvements possibles
-                for (int[] mouvement : piece.genererMouvementsPossibles()) {
-                    int nouvelleX = mouvement[0];
-                    int nouvelleY = mouvement[1];
-
-                    if (deplacementPossibleSansEchec(piece, nouvelleY, nouvelleX, piece.getY(), piece.getX())) {
-                        mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+        if (roi.getType().equals("KING")) {
+            for (int[] mouvement : roi.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(roi.getEquipe())) {
+                    String valide = deplacementPieceValide(roi, nouvelleX, nouvelleY, roi.getX(), roi.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(roi, nouvelleY, nouvelleX, roi.getY(), roi.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
                     }
                 }
             }
@@ -223,26 +257,134 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    private boolean estPat(String equipe) {
-        if (roiEnEchec(equipe)) {
-            return false;
-        }
+    private List<int[]> genererMouvementsLegauxReine(Piece reine) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
 
-        List<int[]> mouvementsLegaux = genererTousLesMouvementsLegaux(equipe);
-        return mouvementsLegaux.isEmpty();
+        if (reine.getType().equals("QUEEN")) {
+            for (int[] mouvement : reine.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(reine.getEquipe())) {
+                    if (cheminLibre(reine, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(reine, nouvelleX, nouvelleY, reine.getX(), reine.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(reine, nouvelleY, nouvelleX, reine.getY(), reine.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
     }
 
-    private boolean estEchecEtMat(Piece roi) {
-        if (!roiEnEchec(roi.getEquipe())) {
-            return false;
+    private List<int[]> genererMouvementsLegauxFou(Piece fou) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (fou.getType().equals("BISHOP")) {
+            for (int[] mouvement : fou.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(fou.getEquipe())) {
+                    if (cheminLibre(fou, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(fou, nouvelleX, nouvelleY, fou.getX(), fou.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(fou, nouvelleY, nouvelleX, fou.getY(), fou.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
         }
-        List<int[]> mouvementsLegaux = genererTousLesMouvementsLegaux(roi.getEquipe());
-        System.out.println(mouvementsLegaux.size());
-        for (int[] mouvement : mouvementsLegaux) {
-            VBox selectedCase = (VBox) jeu.getChildren().get(mouvement[0] * 8 + mouvement[1]);
-            selectedCase.setStyle("-fx-border-color: yellow; -fx-border-style: solid; -fx-border-width: 10;");
+        return mouvementsLegaux;
+    }
+
+    private List<int[]> genererMouvementsLegauxTour(Piece tour) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (tour.getType().equals("ROOK")) {
+            for (int[] mouvement : tour.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(tour.getEquipe())) {
+                    if (cheminLibre(tour, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(tour, nouvelleX, nouvelleY, tour.getX(), tour.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(tour, nouvelleY, nouvelleX, tour.getY(), tour.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return mouvementsLegaux.isEmpty();
+        return mouvementsLegaux;
+    }
+
+
+    private List<int[]> genererMouvementsLegauxPion(Piece pion) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (pion.getType().equals("PAWN")) {
+            for (int[] mouvement : pion.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                // Vérifier si la case est vide
+                if (autrePieceSelectionnee == null) {
+                    String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                } else {
+                    // Vérifier si la case contient une pièce adverse
+                    if (!autrePieceSelectionnee.getEquipe().equals(pion.getEquipe())) {
+                        String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
+                        if (!valide.equals("false") && valide.equals("CAPTURE")) {
+                            if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return mouvementsLegaux;
+    }
+
+    private List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (cavalier.getType().equals("KNIGHT")) {
+            for (int[] mouvement : cavalier.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                // Vérifier si la case est vide ou contient une pièce adverse
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(cavalier.getEquipe())) {
+                    String valide = deplacementPieceValide(cavalier, nouvelleX, nouvelleY, cavalier.getX(), cavalier.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(cavalier, nouvelleY, nouvelleX, cavalier.getY(), cavalier.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
     }
 
     private Piece trouverRoi(String equipe) {
@@ -253,6 +395,106 @@ public class BotController {
         }
         return null;
     }
+
+    private boolean estEchecEtMat(Piece roi) {
+        if (!roiEnEchec(roi.getEquipe())) {
+            return false;
+        }
+        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
+        if (!mouvementsLegaux.isEmpty()) {
+            for (int[] mouvement : mouvementsLegaux) {
+                int newX = mouvement[0];
+                int newY = mouvement[1];
+                VBox selectedCase = (VBox) jeu.getChildren().get(newX * 8 + newY);
+                selectedCase.setStyle("-fx-border-color: yellow; -fx-border-style: solid; -fx-border-width: 10;");
+            }
+        }
+        if(mouvementsLegaux.isEmpty()) {
+            List<Piece> copiePions = new ArrayList<>(pions);
+            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+            for (Piece piece : copiePions) {
+                if (piece.getEquipe().equals(roi.getEquipe())) {
+                    if (piece.getType().equals("KNIGHT")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                    }
+                    if (piece.getType().equals("ROOK")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                    }
+                    if (piece.getType().equals("BISHOP")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                    }
+                    if (piece.getType().equals("QUEEN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                    }
+                    if (piece.getType().equals("PAWN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                    }
+                }
+            }
+            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
+                if (mouvementsLegaux2.get(i).isEmpty()) {
+                    mouvementsLegaux2.remove(i);
+                    i--; // Décrémenter i car la taille de la liste a changé
+                }
+            }
+            return mouvementsLegaux2.isEmpty() ;
+        }
+        return false;
+    }
+    
+    //méthode permettant au bot de récuperer les lmouvements réalisable lors d'une mise en échec 
+    private  List<int[]> recupMoove(){
+        Piece roi = trouverRoi("BLACK");
+        if (!!estEchecEtMat(roi)){
+            List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
+            if(mouvementsLegaux.isEmpty()) {
+                List<Piece> copiePions = new ArrayList<>(pions);
+                List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+                for (Piece piece : copiePions) {
+                    if (piece.getEquipe().equals(roi.getEquipe())) {
+                        if (piece.getType().equals("KNIGHT")) {
+                            mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                        }
+                        if (piece.getType().equals("ROOK")) {
+                            mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                        }
+                        if (piece.getType().equals("BISHOP")) {
+                            mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                        }
+                        if (piece.getType().equals("QUEEN")) {
+                            mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                        }
+                        if (piece.getType().equals("PAWN")) {
+                            mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                        }
+                    }
+                }
+                for (int i = 0; i < mouvementsLegaux2.size(); i++) {
+                    if (mouvementsLegaux2.get(i).isEmpty()) {
+                        mouvementsLegaux2.remove(i);
+                        i--; // Décrémenter i car la taille de la liste a changé
+                    }
+                }
+                List<int[]> mouvementsLegauxCombine = new ArrayList<>();
+                for (List<int[]> liste : mouvementsLegaux2) {
+                    mouvementsLegauxCombine.addAll(liste);
+                }
+                return mouvementsLegauxCombine;
+            }
+            return mouvementsLegaux;
+        }
+        return null;
+    }
+    
+    private boolean estPat(String equipe) {
+        if (roiEnEchec(equipe)) {
+            return false;
+        }
+
+        List<int[]> mouvementsLegaux = genererTousLesMouvementsLegaux(equipe);
+        return mouvementsLegaux.isEmpty();
+    }
+
     private void promouvoirPion(Piece pion) {
         // Afficher une boîte de dialogue pour choisir la nouvelle pièce
         List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");

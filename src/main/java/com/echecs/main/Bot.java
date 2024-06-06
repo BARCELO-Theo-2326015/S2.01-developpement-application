@@ -48,13 +48,10 @@ public class Bot {
                 tests++;
             }
 
-            System.out.println("MouvementValide = " + mouvementsValides);
 
             if (!mouvementsValides.isEmpty()) {
                 int[] mouvement = mouvementsValides.get(random.nextInt(mouvementsValides.size()));
 
-                System.out.println("Ancien | x : " + pieceADeplacer.getX() + " | y : " + pieceADeplacer.getY());
-                System.out.println("Nouveau | x : " + mouvement[1] + " | y : " + mouvement[0]);
 
                 controller.selectionnerPiece(pieceADeplacer.getX(), pieceADeplacer.getY());
 
@@ -62,7 +59,6 @@ public class Bot {
                 int botRow = mouvement[1];
 
                 // Déplacer la pièce aléatoirement
-                System.out.println("deplacerAleatoirement");
 
                 // Mettre à jour la liste des pièces dans la classe de contrôleur
                 controller.deplacerPiece(botRow, botCol);
@@ -91,7 +87,6 @@ public class Bot {
                 }
             }
         }
-        System.out.println("mouvementValide = "+mouvementsValides);
         return mouvementsValides;
     }
 

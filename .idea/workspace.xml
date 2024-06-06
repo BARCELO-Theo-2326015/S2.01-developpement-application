@@ -5,20 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d134776a-59fe-4222-b876-b21a5e583899" name="Changes" comment="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/BotController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/bot.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Piece.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/AccueilController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/AccueilController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/Bot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/Bot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/mainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/echecs/main/temp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/echecs/main/temp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/echecs/main/accueil.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/accueil.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/echecs/main/main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/echecs/main/main.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="FxmlFile" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -29,18 +35,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "NURDIN-Arnaud-2326082b"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;NURDIN-Arnaud-2326082b&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:BARCELO-Theo-2326015/S2.01-developpement-application.git",
-    "accountId": "24ecf7b9-a537-4a0c-9ee7-4b0d12a2ba53"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:BARCELO-Theo-2326015/S2.01-developpement-application.git&quot;,
+    &quot;accountId&quot;: &quot;24ecf7b9-a537-4a0c-9ee7-4b0d12a2ba53&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -51,9 +57,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2hT4DbC2apB9mxqiyfLPKaWMeia" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -64,10 +70,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Accueil.executor": "Debug",
+    "Application.Accueil.executor": "Run",
     "Application.mainApplication.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "ignore.preview.features.used": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -116,7 +123,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717604615115</updated>
-      <workItem from="1717604616674" duration="10978000" />
+      <workItem from="1717604616674" duration="11013000" />
+      <workItem from="1717673321441" duration="8144000" />
     </task>
     <task id="LOCAL-00001" summary="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)">
       <option name="closed" value="true" />
@@ -126,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717615597186</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="beaucoup d'amélioration (le jeu marche sans le roque, le en passant et le mouvement de 2 cases vers l'avant d'un pion)">
+      <option name="closed" value="true" />
+      <created>1717615611988</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1717615611988</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

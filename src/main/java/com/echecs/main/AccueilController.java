@@ -38,10 +38,10 @@ public class AccueilController {
     private void playComputer() throws IOException {
         Stage stage = new Stage();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("bot.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 500);
 
-        mainController controller = fxmlLoader.getController();
+        BotController controller = fxmlLoader.getController();
         stage.setOnShown(controller::setResizeEvents);
 
         stage.setTitle("Echecs");

@@ -1,64 +1,29 @@
 package com.echecs.main;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
 
-import java.io.IOException;
+
 import java.util.*;
 
-public class mainController {
+public class BotController {
     @FXML
     private GridPane jeu;
 
     @FXML
     private Button boutonJouer;
 
-    @FXML
-    Button playComputer;
-
-    Stage theStage;
-
-    @FXML
-    private void playComputer() throws IOException {
-        Stage stage = new Stage();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("bot.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 700, 500);
-
-        BotController controller = fxmlLoader.getController();
-        stage.setOnShown(controller::setResizeEvents);
-
-        stage.setTitle("Echecs");
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private Label labelTempsBlancs; // Label pour afficher le temps restant pour les blancs
-
-    @FXML
-    private Label labelTempsNoirs; // Label pour afficher le temps restant pour les noirs
-    private int tempsInitialBlancs = 10 * 60; // Temps initial en secondes pour les blancs (10 minutes)
-    private int tempsInitialNoirs = 10 * 60; // Temps initial en secondes pour les noirs (10 minutes)
-    private int tempsRestantBlancs = tempsInitialBlancs; // 10 minutes en secondes
-    private int tempsRestantNoirs = tempsInitialNoirs; // 10 minutes en secondes
-    private Timeline timeline ;
     public List<Piece> pions = new ArrayList<>();
     private boolean tourBlanc = true; // true si c'est le tour des blancs, false si c'est le tour des noirs
 
@@ -70,75 +35,6 @@ public class mainController {
     private Bot joueurNoir;
     private Bot joueurBlanc;
 
-    private void demarrerTimer() {
-         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            // Décrémente le temps restant pour chaque équipe
-            if (tourBlanc) {
-                tempsRestantBlancs--;
-                // Met à jour l'affichage du temps restant pour les blancs
-                // (par exemple, en mettant à jour un label dans votre interface utilisateur)
-                // Supposons que vous ayez un label nommé labelTempsBlancs pour afficher le temps restant pour les blancs
-                labelTempsBlancs.setText(formaterTemps(tempsRestantBlancs));
-                if (tempsRestantBlancs <= 0) {
-                    terminerPartie("Les Noirs remportent la partie par temps écoulé !");
-                    timeline.stop();
-                }
-            } else {
-                tempsRestantNoirs--;
-                // Met à jour l'affichage du temps restant pour les noirs
-                // (par exemple, en mettant à jour un label dans votre interface utilisateur)
-                // Supposons que vous ayez un label nommé labelTempsNoirs pour afficher le temps restant pour les noirs
-                labelTempsNoirs.setText(formaterTemps(tempsRestantNoirs));
-                if (tempsRestantNoirs <= 0) {
-                    terminerPartie("Les Blancs remportent la partie par temps écoulé !");
-                    timeline.stop();
-                }
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-    }
-
-    private void reinitialiserTimer() {
-        // Arrête la timeline si elle est en cours
-        if (timeline != null) {
-            timeline.stop();
-        }
-
-        // Réinitialise les temps restants pour les blancs et les noirs (si nécessaire)
-        tempsRestantBlancs = tempsInitialBlancs;
-        tempsRestantNoirs = tempsInitialNoirs;
-
-        // Met à jour l'affichage des temps restants (si nécessaire)
-        labelTempsBlancs.setText(formaterTemps(tempsRestantBlancs));
-        labelTempsNoirs.setText(formaterTemps(tempsRestantNoirs));
-
-        // Redémarre la timeline
-        demarrerTimer();
-    }
-
-    // Méthode pour formater le temps restant en format minutes:secondes
-    private String formaterTemps(int tempsRestant) {
-        int minutes = tempsRestant / 60;
-        int secondes = tempsRestant % 60;
-        return String.format("%02d:%02d", minutes, secondes);
-    }
-
-
-
-    // Méthode pour terminer la partie
-    private void terminerPartie(String message) {
-        // Afficher un message indiquant la fin de la partie
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Fin de la partie");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.show();
-
-        // Arrêter le timer
-        // (facultatif : vous pouvez également ajouter d'autres logiques de nettoyage ou de réinitialisation ici)
-    }
-
     @FXML
     private void jouerClicked() {
         tourBlanc = true; // Les blancs commencent toujours
@@ -146,13 +42,16 @@ public class mainController {
         configurerPieces();
         mettreAJourPieces();
         updateGameSize();
-        reinitialiserTimer(); // Démarrer le timer lorsque le jeu commence
     }
 
     private void reinitialiserPlateau() {
         jeu.getChildren().clear();
         pions.clear();
         selectedPiece = null;
+
+        joueurNoir = new Bot(jeu,"Black", false, this); // False signifie que c'est un bot
+        joueurBlanc = new Bot(jeu, "WHITE", true, this); // True signifie que c'est un humain
+
         for (int ligne = 0; ligne < 8; ++ligne) {
             for (int col = 0; col < 8; ++col) {
                 VBox caseRect = createCase(ligne, col);
@@ -196,7 +95,7 @@ public class mainController {
             selectionnerPiece(nouvelleLigne, nouvelleCol);
         } else {
             deplacerPiece(nouvelleLigne, nouvelleCol);
-            System.out.println(pions.size());
+            if(!tourBlanc) joueurNoir.jouer();
         }
     }
 
@@ -410,21 +309,19 @@ public class mainController {
         // Vérification de l'échec et mat après chaque déplacement
         Piece roi = trouverRoi(tourBlanc ? "BLACK" : "WHITE");
         if (estEchecEtMat(Objects.requireNonNull(roi))) {
-            timeline.stop();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Échec et mat");
             alert.setHeaderText(null);
             alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
             alert.showAndWait();
         }
-     else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
-         timeline.stop();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Pat");
-        alert.setHeaderText(null);
-        alert.setContentText("Pat ! La partie est nulle.");
-        alert.showAndWait();
-    }
+        else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Pat");
+            alert.setHeaderText(null);
+            alert.setContentText("Pat ! La partie est nulle.");
+            alert.showAndWait();
+        }
         selectedPiece = null;
         //change le tour
         tourBlanc = !tourBlanc;
@@ -584,9 +481,6 @@ public class mainController {
                 symbole.setFitHeight(superVal/8);
             }
         }
-    }
-    void setClose(WindowEvent windowEvent) {
-        theStage = (Stage) playComputer.getScene().getWindow();
     }
 }
 

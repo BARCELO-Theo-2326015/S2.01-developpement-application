@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.BotController">
+    <children>
+        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox alignment="CENTER" prefHeight="369.0" prefWidth="328.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox maxHeight="40.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/chesscom.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </HBox>
+                        <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
+                        <HBox maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS" alignment="CENTER_RIGHT">
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
+                    </children>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>
+

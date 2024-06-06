@@ -17,9 +17,9 @@ public class Bot {
     private List<Piece> pionsNoirs;
     private Piece pieceADeplacer;
     Piece piece;
-    private mainController controller;
+    private BotController controller;
 
-    public Bot(GridPane echiquier, String equipe, boolean estHumain, mainController controller) {
+    public Bot(GridPane echiquier, String equipe, boolean estHumain, BotController controller) {
         this.jeu = echiquier;
         this.equipe = equipe;
         this.estHumain = estHumain;
@@ -32,7 +32,6 @@ public class Bot {
     }
 
     public void deplacerAleatoirement() {
-        controller.configurerPieces();
         pionsNoirs = controller.pions.stream()
                 .filter(piece -> piece.getEquipe().equals("BLACK"))
                 .collect(Collectors.toList());

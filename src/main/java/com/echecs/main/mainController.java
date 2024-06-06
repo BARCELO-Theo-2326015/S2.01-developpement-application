@@ -30,7 +30,9 @@ public class mainController {
     @FXML
     Button playComputer;
 
-    Stage theStage;
+    Stage stage;
+
+    Stage selectStage;
 
     @FXML
     private void playComputer() throws IOException {
@@ -71,6 +73,9 @@ public class mainController {
     private List<String> joueurs;
     private int matchIndex;
     private List<String> roundWinners;
+
+    private Joueur j1 = null;
+    private Joueur j2 = null;
 
     private void demarrerTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -559,9 +564,33 @@ public class mainController {
         jouerClicked();
     }
 
+    public void setPlayer(Joueur j) {
+        if(j1 == null && j != null) {
+            j1 = j;
+
+            selectStage.close();
+
+            try {
+                selectStage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("PlayerSelection.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+                PlayerSelectionController controller = fxmlLoader.getController();
+                controller.setMain(this);
+
+                selectStage.setTitle("j2");
+                selectStage.setScene(scene);
+                selectStage.show();
+            } catch(Exception e) {};
+        } else if(j2 == null && j != null) {
+            j2 = j;
+            selectStage.close();
+            stage.show();
+        }
+    }
+
     public void setResizeEvents(WindowEvent windowEvent) {
         // Get the stage
-        Stage stage = (Stage) boutonJouer.getScene().getWindow();
+        stage = (Stage) boutonJouer.getScene().getWindow();
 
         width = stage.getWidth();
         height = stage.getHeight();
@@ -577,6 +606,18 @@ public class mainController {
             height = (Double) newVal;
             updateGameSize();
         });
+
+        try {
+            selectStage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("PlayerSelection.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+            PlayerSelectionController controller = fxmlLoader.getController();
+            controller.setMain(this);
+
+            selectStage.setTitle("J1");
+            selectStage.setScene(scene);
+            selectStage.show();
+        } catch (Exception e) {};
     }
 
     public void updateGameSize() {
@@ -602,9 +643,6 @@ public class mainController {
                 symbole.setFitHeight(superVal/8);
             }
         }
-    }
-    void setClose(WindowEvent windowEvent) {
-        theStage = (Stage) playComputer.getScene().getWindow();
     }
 }
 

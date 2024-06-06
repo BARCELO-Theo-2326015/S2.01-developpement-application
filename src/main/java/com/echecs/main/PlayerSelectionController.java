@@ -5,49 +5,74 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class PlayerSelectionController {
 
     @FXML
-    private ComboBox<Joueur> playerComboBox;
+    private ComboBox<String> playerComboBox;
 
     private ObservableList<Joueur> players;
-    private List<Joueur> selectedPlayers;
+    private Joueur selectedPlayer = null;
+
+    @FXML
+    private TextField newPlayerTextField;
+
+    mainController main;
 
     @FXML
     public void initialize() {
+        createPlayersFileIfNotExists(); // Crée le fichier "players.csv" s'il n'existe pas
         loadPlayers();
-        playerComboBox.setItems(players);
-        selectedPlayers = new ArrayList<>();
+        playerComboBox.setItems(FXCollections.observableArrayList(players.stream().map(Joueur::getNomJoueur).collect(Collectors.toList())));
+        selectedPlayer = null;
+    }
+
+    public Joueur getSelectedPlayer() {
+        return selectedPlayer;
     }
 
     @FXML
     private void deletePlayer() {
-        Joueur selectedPlayer = playerComboBox.getSelectionModel().getSelectedItem();
+        Joueur selectedPlayer = players.stream().filter(a -> a.getNomJoueur()
+                .equals(playerComboBox.getSelectionModel().getSelectedItem())).findFirst().orElse(null);
         if (selectedPlayer != null) {
             players.remove(selectedPlayer);
+            playerComboBox.setItems(FXCollections.observableArrayList(players.stream().map(Joueur::getNomJoueur).collect(Collectors.toList())));
             savePlayers();
         }
     }
 
     @FXML
     private void createNewPlayer() {
-        // Code to open a window and create a new player
+        String playerName = newPlayerTextField.getText().trim();
+        if (!playerName.isEmpty()) {
+            Joueur newPlayer = new Joueur(playerName, false); // Assuming new player is not a computer player
+            players.add(newPlayer);
+            playerComboBox.setItems(FXCollections.observableArrayList(players.stream().map(Joueur::getNomJoueur).collect(Collectors.toList())));
+            savePlayers();
+        }
     }
 
     @FXML
     private void selectPlayer() {
-        Joueur selectedPlayer = playerComboBox.getSelectionModel().getSelectedItem();
-        if (selectedPlayer != null && !selectedPlayers.contains(selectedPlayer)) {
-            selectedPlayers.add(selectedPlayer);
-            closeWindow();
+        Joueur selectedPlayer1 = players.stream().filter(a -> a.getNomJoueur()
+                .equals(playerComboBox.getSelectionModel().getSelectedItem())).findFirst().orElse(null);
+        if (selectedPlayer1 != null) {
+            selectedPlayer = selectedPlayer1;
+            main.setPlayer(selectedPlayer);
         }
+    }
+
+    void setMain(mainController main) throws IOException {
+        this.main = main;
     }
 
     private void loadPlayers() {
@@ -75,8 +100,14 @@ public class PlayerSelectionController {
         }
     }
 
-    private void closeWindow() {
-        Stage stage = (Stage) playerComboBox.getScene().getWindow();
-        stage.close();
+    private void createPlayersFileIfNotExists() {
+        File playersFile = new File("players.csv");
+        if (!playersFile.exists()) {
+            try {
+                playersFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

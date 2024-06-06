@@ -72,7 +72,7 @@ public class mainController {
     private Bot joueurBlanc;
 
     private void demarrerTimer() {
-         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Décrémente le temps restant pour chaque équipe
             if (tourBlanc) {
                 tempsRestantBlancs--;
@@ -422,14 +422,14 @@ public class mainController {
             alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
             alert.showAndWait();
         }
-     else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
-         timeline.stop();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Pat");
-        alert.setHeaderText(null);
-        alert.setContentText("Pat ! La partie est nulle.");
-        alert.showAndWait();
-    }
+        else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
+            timeline.stop();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Pat");
+            alert.setHeaderText(null);
+            alert.setContentText("Pat ! La partie est nulle.");
+            alert.showAndWait();
+        }
         selectedPiece = null;
         //change le tour
         tourBlanc = !tourBlanc;
@@ -596,5 +596,4 @@ public class mainController {
         theStage = (Stage) playComputer.getScene().getWindow();
     }
 }
-
 

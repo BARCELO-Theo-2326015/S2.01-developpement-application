@@ -82,8 +82,8 @@ public class Bot {
                 String mouvementPossible = controller.deplacementPieceValide(pieceADeplacer, botCol, botRow, col, row);
                 if (!mouvementPossible.equals("false")) {
                     if((mouvementPossible.equals("true")) ||
-                        (mouvementPossible.equals("AVANCE") && controller.getPieceAt(col, row) == null) ||
-                        (mouvementPossible.equals("CAPTURE") && controller.getPieceAt(col, row) != null)) {
+                            (mouvementPossible.equals("AVANCE") && controller.getPieceAt(col, row) == null) ||
+                            (mouvementPossible.equals("CAPTURE") && controller.getPieceAt(col, row) != null)) {
                         if(controller.getPieceAt(col, row) != null) {
                             if(controller.getPieceAt(col, row).getEquipe() != pieceADeplacer.getEquipe()) mouvementsValides.add(new int[]{col, row});
                         } else mouvementsValides.add(new int[]{col, row});

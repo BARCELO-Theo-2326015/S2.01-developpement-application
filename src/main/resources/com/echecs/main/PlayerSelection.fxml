@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.PlayerSelectionController">
+    <children>
+        <ComboBox fx:id="playerComboBox" promptText="Select a player"/>
+        <Button text="Delete Player" onAction="#deletePlayer"/>
+        <Button text="Create New Player" onAction="#createNewPlayer"/>
+        <Button text="Select Player" onAction="#selectPlayer"/>
+    </children>
+</VBox>

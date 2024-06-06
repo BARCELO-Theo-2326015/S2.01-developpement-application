@@ -56,16 +56,13 @@ public class Piece {
     private boolean hasMoved;
 
     // Ajoutez un getter et un setter pour hasMoved
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
     public boolean getHasMoved(){
         return hasMoved;
     }
+    
     Piece(String type, String equipe, int x, int y) {
         this.type = type;
         this.equipe = equipe;

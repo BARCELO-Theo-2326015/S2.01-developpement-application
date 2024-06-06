@@ -2,15 +2,13 @@ package com.echecs.main;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -54,8 +52,11 @@ public class mainController {
 
     @FXML
     private Label labelTempsNoirs; // Label pour afficher le temps restant pour les noirs
-    private int tempsInitialBlancs = 10 * 60; // Temps initial en secondes pour les blancs (10 minutes)
-    private int tempsInitialNoirs = 10 * 60; // Temps initial en secondes pour les noirs (10 minutes)
+
+    @FXML
+    private ComboBox<String> tempsComboBox;
+    private int tempsInitialBlancs ;// Temps initial en secondes pour les blancs
+    private int tempsInitialNoirs ; // Temps initial en secondes pour les noirs (10 minutes)
     private int tempsRestantBlancs = tempsInitialBlancs; // 10 minutes en secondes
     private int tempsRestantNoirs = tempsInitialNoirs; // 10 minutes en secondes
     private Timeline timeline ;
@@ -142,6 +143,10 @@ public class mainController {
     @FXML
     private void jouerClicked() {
         tourBlanc = true; // Les blancs commencent toujours
+        // Récupérer le temps initial sélectionné dans le ComboBox
+        String selectedTemps = tempsComboBox.getValue();
+        tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
+        tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
         reinitialiserPlateau();
         configurerPieces();
         mettreAJourPieces();
@@ -538,6 +543,8 @@ public class mainController {
 
     @FXML
     private void initialize() {
+        tempsComboBox.setItems(FXCollections.observableArrayList("10", "3", "1"));
+        tempsComboBox.getSelectionModel().selectFirst();
         jouerClicked();
     }
 

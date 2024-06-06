@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -9,10 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.mainController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.mainController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
          <children>
@@ -22,8 +22,11 @@
                      <children>
                         <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/chesscom.png" />
+                              <Image url="@images/joueur_blanc.png" />
                            </image>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                         </ImageView>
                         <VBox alignment="CENTER_RIGHT" maxHeight="40.0" HBox.hgrow="ALWAYS">
                            <children>
@@ -33,9 +36,25 @@
                      </children>
                   </HBox>
                   <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER_RIGHT" maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
+                  <HBox alignment="CENTER_LEFT" maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label fx:id="labelTempsBlancs" alignment="BOTTOM_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" /> <!-- Label pour afficher le temps restant pour les blancs -->
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/joueur_noir.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                        <VBox alignment="BOTTOM_RIGHT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="labelTempsBlancs" alignment="BOTTOM_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" />
+                           </children>
+                        </VBox> <!-- Label pour afficher le temps restant pour les blancs -->
                      </children>
                   </HBox>
                </children>
@@ -43,17 +62,28 @@
             <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
                <children>
                   <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
-                  <VBox alignment="CENTER" prefHeight="49.0" prefWidth="226.0" />
-                  <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true" />
-                  <ComboBox fx:id="tempsComboBox" promptText="Choisir le temps">
-                     <items>
-                        <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="10" />
-                           <String fx:value="3" />
-                           <String fx:value="1" />
-                        </FXCollections>
-                     </items>
-                  </ComboBox>
+                  <VBox alignment="CENTER" prefHeight="49.0" prefWidth="226.0">
+                     <children>
+                        <ComboBox fx:id="tempsComboBox" promptText="Choisir le temps">
+                           <items>
+                              <FXCollections fx:factory="observableArrayList">
+                                 <String fx:value="1" />
+                                 <String fx:value="3" />
+                                 <String fx:value="10" />
+                              </FXCollections>
+                           </items>
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </ComboBox>
+                     </children></VBox>
+                  <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin></Button>
 
                </children>
                <HBox.margin>

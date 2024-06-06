@@ -18,19 +18,41 @@
                             <children>
                                 <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@images/chesscom.png" />
+                                        <Image url="@images/joueur_blanc.png" />
                                     </image>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
                                 </ImageView>
                             </children>
                         </HBox>
                         <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
-                        <HBox maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS" alignment="CENTER_RIGHT">
+                        <HBox alignment="CENTER_LEFT" maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
+                            <children>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/joueur_noir.png" />
+                                            </image>
+                                            <VBox.margin>
+                                                <Insets left="10.0" />
+                                            </VBox.margin>
+                                        </ImageView>
+                                    </children>
+                                </VBox>
+                            </children>
                         </HBox>
                     </children>
                 </VBox>
                 <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
                     <children>
                         <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
+                        <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playPlayer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre un ami" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin></Button>
+
                     </children>
                     <HBox.margin>
                         <Insets />
@@ -43,4 +65,3 @@
         </HBox>
     </children>
 </VBox>
-

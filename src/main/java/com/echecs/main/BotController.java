@@ -2,8 +2,10 @@ package com.echecs.main;
 
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
@@ -15,11 +17,15 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 
+import java.io.IOException;
 import java.util.*;
 
 public class BotController {
     @FXML
     private GridPane jeu;
+
+    @FXML
+    Button playPlayer;
 
     @FXML
     private Button boutonJouer;
@@ -33,7 +39,24 @@ public class BotController {
     private Double width = 0.0;
 
     private Bot joueurNoir;
-    private Bot joueurBlanc;
+
+    Stage theStage;
+
+    @FXML
+    private void playPlayer() throws IOException {
+        Stage stage = new Stage();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("main.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+
+        mainController controller = fxmlLoader.getController();
+        stage.setOnShown(controller::setResizeEvents);
+
+        stage.setTitle("Echecs");
+        stage.setScene(scene);
+        stage.show();
+        theStage.close();
+    }
 
     @FXML
     private void jouerClicked() {
@@ -50,7 +73,6 @@ public class BotController {
         selectedPiece = null;
 
         joueurNoir = new Bot(jeu,"Black", false, this); // False signifie que c'est un bot
-        joueurBlanc = new Bot(jeu, "WHITE", true, this); // True signifie que c'est un humain
 
         for (int ligne = 0; ligne < 8; ++ligne) {
             for (int col = 0; col < 8; ++col) {
@@ -481,6 +503,10 @@ public class BotController {
                 symbole.setFitHeight(superVal/8);
             }
         }
+    }
+
+    void setClose(WindowEvent windowEvent) {
+        theStage = (Stage) playPlayer.getScene().getWindow();
     }
 }
 

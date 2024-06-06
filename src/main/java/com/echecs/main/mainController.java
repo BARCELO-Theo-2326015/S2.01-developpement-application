@@ -68,8 +68,9 @@ public class mainController {
     private Double height = 0.0;
     private Double width = 0.0;
 
-    private Bot joueurNoir;
-    private Bot joueurBlanc;
+    private List<String> joueurs;
+    private int matchIndex;
+    private List<String> roundWinners;
 
     private void demarrerTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -147,6 +148,12 @@ public class mainController {
         String selectedTemps = tempsComboBox.getValue();
         tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
         tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
+        // Initialiser le tournoi
+        matchIndex = 0;
+        roundWinners = new ArrayList<>();
+
+        // Afficher les premiers matchs
+     //s   afficherMatchs();
         reinitialiserPlateau();
         configurerPieces();
         mettreAJourPieces();
@@ -545,6 +552,10 @@ public class mainController {
     private void initialize() {
         tempsComboBox.setItems(FXCollections.observableArrayList("10", "3", "1"));
         tempsComboBox.getSelectionModel().selectFirst();
+        joueurs = new ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            joueurs.add("Joueur " + i);
+        }
         jouerClicked();
     }
 

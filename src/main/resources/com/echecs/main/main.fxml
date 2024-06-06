@@ -81,6 +81,7 @@
                         </ComboBox>
                      </children></VBox>
                   <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                     <VBox fx:id="tournoiBox" spacing="10" alignment="CENTER"/>
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin></Button>

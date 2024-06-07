@@ -114,6 +114,12 @@ public class mainController {
     @FXML
     private VBox selectedStats;
 
+    @FXML
+    private Button selectStats;
+
+    @FXML
+    private Button boutonNext ;
+
 
     //méthode permettant de switcher sr l'interface de partie avec un bot
     @FXML
@@ -542,10 +548,12 @@ public class mainController {
         }
         if(!tournoi) {
             //ajoute les coordonnée dans le fichier texte
-            data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
-            ajoutDataToFile(data);
-            coordinates = readCoordinatesFromFile();
-            coordinates.forEach(System.out::println);
+            if(selectedPiece.getX() != nouvelleLigne && selectedPiece.getY() != nouvelleCol) {
+                data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
+                ajoutDataToFile(data);
+                coordinates = readCoordinatesFromFile();
+                coordinates.forEach(System.out::println);
+            }
         }
         selectedPiece = null;
         //change le tour
@@ -961,30 +969,31 @@ public class mainController {
 
     //Méthode permettant de vérifier si une équipe est en situation de pat
     private boolean estPat(String equipe) {
+
         if (roiEnEchec(equipe)) {
             return false;
         }
-        List<Piece> copiePions = new ArrayList<>(pions);
-        List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
-        for (Piece piece : copiePions) {
-            if (piece.getEquipe().equals(equipe)){
-                if (piece.getType().equals("KNIGHT")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
-                }
-                if (piece.getType().equals("ROOK")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
-                }
-                if (piece.getType().equals("BISHOP")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
-                }
-                if (piece.getType().equals("QUEEN")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
-                }
-                if (piece.getType().equals("PAWN")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
-                }
-                if (piece.getType().equals("KING")) {
-                    mouvementsLegaux2.add(genererMouvementsLegauxRoi(piece));
+        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(Objects.requireNonNull(trouverRoi("BLACK")));
+        if(mouvementsLegaux.isEmpty()) {
+            List<Piece> copiePions = new ArrayList<>(pions);
+            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+            for (Piece piece : copiePions) {
+                if (piece.getEquipe().equals(equipe)) {
+                    if (piece.getType().equals("KNIGHT")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                    }
+                    if (piece.getType().equals("ROOK")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                    }
+                    if (piece.getType().equals("BISHOP")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                    }
+                    if (piece.getType().equals("QUEEN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                    }
+                    if (piece.getType().equals("PAWN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                    }
                 }
             }
 
@@ -1105,18 +1114,22 @@ public class mainController {
     private void selectPartie() {
         selectPartie.setStyle("-fx-background-color: black");
         selectReplay.setStyle("");
+        selectStats.setStyle("");
 
         selectedPartie.setVisible(true);
         selectedReplay.setVisible(false);
+        selectedStats.setVisible(false);
     }
 
     @FXML
     private void selectReplay() {
         selectReplay.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
+        selectStats.setStyle("");
 
         selectedReplay.setVisible(true);
         selectedPartie.setVisible(false);
+        selectedStats.setVisible(false);
         BoutonRediffClicked();
     }
     //Méthode permettant de créer un fichier texte où seront stocké les coups joués
@@ -1183,61 +1196,69 @@ public class mainController {
     }
 
     //Méthode permettant d'ouvrir une boite de dialogue contenant l'ensemble des fichier de rediffusion
-    private void ouvrirDialogueDeFichier() {
+    private String ouvrirDialogueDeFichier() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir un fichier de rediffusion");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Fichiers texte", ".txt"),
                 new FileChooser.ExtensionFilter("Tous les fichiers", ".*"));
+        // Spécifier le répertoire initial
+        File initialDirectory = new File(DIRECTORY_PATH);
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
         Stage stage = (Stage) jeu.getScene().getWindow(); // Assurez-vous que 'jeu' est un composant de votre scène principale
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             fileName = selectedFile.getName();
             DIRECTORY_PATH = selectedFile.getParent(); // Met à jour le chemin du répertoire
-            try {
-                playMovesFromFile(selectedFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return selectedFile.getAbsolutePath();
         }
+        return "";
     }
+
+
+    @FXML
+    private void nextMoove()  throws IOException{
+        boutonNext.setOnAction(event -> {
+                    try {
+                        playMovesFromFile(ouvrirDialogueDeFichier());
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+        });
+    }
+
+
     //Méthode permettant la lecture d'un fichier texte
-    private void playMovesFromFile(String file) throws IOException {
+    private void playMovesFromFile(String file)  throws IOException{
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         System.out.println("reader = " + reader);
-        String line;
+        final String[] line = new String[1];
         AtomicInteger cpt = new AtomicInteger();
         AtomicInteger fromX = new AtomicInteger();
         AtomicInteger fromY = new AtomicInteger();
         AtomicInteger toY = new AtomicInteger();
         AtomicInteger toX = new AtomicInteger();
-
-        int i = 0;
-        while ((line = reader.readLine()) != null) {
-            ++i;
-            PauseTransition pause = new PauseTransition(Duration.seconds(i));
-
-            String finalLine = line;
-            pause.setOnFinished(event -> {
-                String[] parts = finalLine.split(",");
-                if (cpt.get() == 0) {
-                    fromX.set(Integer.parseInt(parts[0]));
-                    fromY.set(Integer.parseInt(parts[1]));
-                    cpt.set(1);
-                } else {
-                    toX.set(Integer.parseInt(parts[0]));
-                    toY.set(Integer.parseInt(parts[1]));
-                    cpt.set(0);
+                for (int i = 0; i < 2; i++) { // Read two lines for one move
+                    if ((line[0] = reader.readLine()) != null) {
+                        String[] parts = line[0].split(",");
+                        if (cpt.get() == 0) {
+                            fromX.set(Integer.parseInt(parts[0]));
+                            fromY.set(Integer.parseInt(parts[1]));
+                            cpt.set(1);
+                        } else {
+                            toX.set(Integer.parseInt(parts[0]));
+                            toY.set(Integer.parseInt(parts[1]));
+                            cpt.set(0);
+                        }
+                    } else {
+                        System.out.println("End of file reached");
+                        return;
+                    }
                 }
-                System.out.println(selectedPiece);
-
-                selectionnerPieceForRediff(fromX.get(), fromY.get());
-                if(selectedPiece != null) deplacerPiecePourRediff(toX.get(), toY.get());
-            });
-            pause.play();
-        }
-        reader.close();
     }
 
     //méthode permettant de sélectionner une pièce sur le plateau par le fichier texte en mode rediffusion
@@ -1365,7 +1386,7 @@ public class mainController {
 
     @FXML
     private void selectStats() {
-        selectedStats.setStyle("-fx-background-color: black");
+        selectStats.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
         selectReplay.setStyle("");
 

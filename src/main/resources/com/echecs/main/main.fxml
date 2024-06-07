@@ -22,7 +22,7 @@
                             <children>
                                 <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@images/joueur_blanc.png" />
+                                        <Image url="@images/joueur_noir.png" />
                                     </image>
                                     <HBox.margin>
                                         <Insets left="5.0" />
@@ -51,7 +51,7 @@
                             <children>
                                 <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@images/joueur_noir.png" />
+                                        <Image url="@images/joueur_blanc.png" />
                                     </image>
                                     <HBox.margin>
                                         <Insets left="5.0" />
@@ -92,19 +92,9 @@
                                 <Button fx:id="selectStats" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#selectStats" text="Statistiques" HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
-                        <VBox fx:id="selectedPartie">
+                        <VBox fx:id="selectedPartie" prefHeight="319.0" prefWidth="212.0">
                             <children>
                                 <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
-                                <Button fx:id="boutonTournoi" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerTournoi" styleClass="player-button" text="Tournoi 8 joueurs">
-                                    <VBox.margin>
-                                        <Insets top="5.0" />
-                                    </VBox.margin>
-                                </Button>
-                                <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                </Button>
                                 <ComboBox fx:id="tempsComboBox" maxWidth="1.7976931348623157E308" prefHeight="50.0" promptText="Choisir le temps">
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
@@ -119,7 +109,27 @@
                                     <padding>
                                         <Insets left="10.0" />
                                     </padding>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
                                 </ComboBox>
+                                <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                           <opaqueInsets>
+                              <Insets top="10.0" />
+                           </opaqueInsets>
+                                </Button>
+                                <Button fx:id="boutonTournoi" alignment="BOTTOM_CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerTournoi" styleClass="player-button" text="Tournoi 8 joueurs">
+                                    <VBox.margin>
+                                        <Insets top="5.0" />
+                                    </VBox.margin>
+                           <opaqueInsets>
+                              <Insets top="30.0" />
+                           </opaqueInsets>
+                                </Button>
+                        <Button mnemonicParsing="false" text=">" fx:id="boutonNext" onAction="#nextMoove"/>
                             </children>
                         </VBox>
                         <VBox fx:id="selectedReplay" visible="false" />

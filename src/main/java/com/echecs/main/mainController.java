@@ -17,7 +17,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class mainController {
@@ -84,6 +86,12 @@ public class mainController {
     private Joueur joueur2Actuel;
 
     private List<Joueur> nextPartieJoueurs = new ArrayList<>();
+
+    private File logFile;
+    private String data = " ";
+    private final static String DIRECTORY_PATH = "src/main/resources/com/echecs/main/partyFiles/";
+    private List<Coordinate> coordinates;
+    private String fileName;
 
     @FXML
     private void playComputer() throws IOException {
@@ -184,6 +192,9 @@ public class mainController {
 
     @FXML
     private void jouerClicked() {
+        //appel la fonction pour créer le fichier
+        createLogFile();
+
         if(joueursListe.size() < joueursSize) {
             tournoi = false;
             joueursSize = 2;
@@ -760,6 +771,11 @@ public class mainController {
                 runPartieTournoi();
             }
         }
+        //ajoute les coordonnée dans le fichier texte
+        data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
+        ajoutDataToFile(data);
+        coordinates = readCoordinatesFromFile();
+        coordinates.forEach(System.out::println);
         selectedPiece = null;
         //change le tour
         tourBlanc = !tourBlanc;
@@ -968,6 +984,117 @@ public class mainController {
 
         selectedReplay.setVisible(true);
         selectedPartie.setVisible(false);
+        BoutonRediffClicked();
     }
+    //Partie enregistrement des coups
+    private void createLogFile() {
+        try {
+            // Chemin et nom du fichier, ici le fichier est nommé avec la date et l'heure actuelles
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            fileName = "Parties_" + LocalDateTime.now().format(formatter) + ".txt";
+            // Combine le chemin et le nom du fichier
+            File directory = new File(DIRECTORY_PATH);
+            if(!directory.exists()) directory.mkdir();
+            logFile = new File(directory, fileName);
+
+            // Crée le fichier s'il n'existe pas
+            if (logFile.createNewFile()) {
+                System.out.println("Fichier créé : " + logFile.getName());
+                // Écriture initiale dans le fichier
+                try (FileWriter writer = new FileWriter(logFile)) {
+                    //writer.write("Application ouverte à : " + LocalDateTime.now().format(formatter) + "\n");
+                }
+            } else {
+                System.out.println("Le fichier existe déjà.");
+            }
+        } catch (IOException e) {
+            System.out.println("Une erreur est survenue.");
+            e.printStackTrace();
+        }
+    }
+    private void ajoutDataToFile(String fileName) {
+        try (FileWriter writer = new FileWriter(logFile, true)) {
+            writer.write(data);
+        } catch (IOException e) {
+            System.out.println("Une erreur est survenue lors de l'écriture des données.");
+            e.printStackTrace();
+        }
+    }
+    private List<Coordinate> readCoordinatesFromFile() {
+        List<Coordinate> coordinates = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.matches("\\d+,\\d+")) { // Vérifie si la ligne correspond au format x,y
+                    String[] parts = line.split(",");
+                    int x = Integer.parseInt(parts[0]);
+                    int y = Integer.parseInt(parts[1]);
+                    coordinates.add(new Coordinate(x, y));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Une erreur est survenue lors de la lecture des données.");
+            e.printStackTrace();
+        }
+        return coordinates;
+    }
+
+    private void BoutonRediffClicked() {
+        reinitialiserPlateau();
+        configurerPieces();
+        mettreAJourPieces();
+        updateGameSize();
+        try {
+            String file = DIRECTORY_PATH + fileName;
+            playMovesFromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void playMovesFromFile(String file) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        System.out.println("reader = " + reader);
+        String line;
+        int cpt = 0;
+        int fromX = 0;
+        int fromY = 0;
+        int toY = 0;
+        int toX = 0;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (cpt == 0) {
+                fromX = Integer.parseInt(parts[0]);
+                fromY = Integer.parseInt(parts[1]);
+                cpt = 1;
+            } else {
+                toX = Integer.parseInt(parts[0]);
+                toY = Integer.parseInt(parts[1]);
+                cpt = 0;
+            }
+            selectionnerPieceForRediff(fromX, fromY);
+            System.out.println(selectedPiece);
+            deplacerPiece(toX, toY);
+
+            try {
+                Thread.sleep(1000); // 1 second delay between moves
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        reader.close();
+    }
+    public void selectionnerPieceForRediff(int ligne, int col) {
+        for (Piece pion : pions) {
+            if (pion.getX() == ligne && pion.getY() == col) {
+                selectedPiece = pion;
+                System.out.println("test = " + selectedPiece.getX() + "," + selectedPiece.getY());
+                VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
+                selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
+                break;
+            }
+        }
+    }
+
 }
 

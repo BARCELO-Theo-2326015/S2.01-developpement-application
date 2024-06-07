@@ -186,7 +186,8 @@ public class mainController {
         timeline.play();
     }
 
-    //Méthode permettant de réniatiliser le timer du jeu à la fin d'une partie
+
+    //Méthode permettantréorganisation complète de mainController et gestion de quelques bugs de réniatiliser le timer du jeu à la fin d'une partie
     private void reinitialiserTimer() {
         // Arrête la timeline si elle est en cours
         if (timeline != null) {

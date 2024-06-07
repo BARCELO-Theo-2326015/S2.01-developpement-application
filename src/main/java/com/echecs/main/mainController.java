@@ -21,33 +21,29 @@ import java.io.IOException;
 import java.util.*;
 
 public class mainController {
+    private Stage stage;
+    private Stage selectStage;
+
     @FXML
     private GridPane jeu;
 
     @FXML
     private Button boutonJouer;
+    @FXML
+    private Button boutonTournoi;
 
     @FXML
-    Button playComputer;
-
-    Stage stage;
-
-    Stage selectStage;
+    private Button playComputer;
 
     @FXML
-    private void playComputer() throws IOException {
-        Stage stage = new Stage();
+    private Button selectPartie;
+    @FXML
+    private Button selectReplay;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("bot.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 700, 500);
-
-        BotController controller = fxmlLoader.getController();
-        stage.setOnShown(controller::setResizeEvents);
-
-        stage.setTitle("Echecs");
-        stage.setScene(scene);
-        stage.show();
-    }
+    @FXML
+    private VBox selectedPartie;
+    @FXML
+    private VBox selectedReplay;
 
     @FXML
     private Label labelTempsBlancs; // Label pour afficher le temps restant pour les blancs
@@ -57,6 +53,14 @@ public class mainController {
 
     @FXML
     private ComboBox<String> tempsComboBox;
+
+    @FXML
+    private Label joueur1;
+    @FXML
+    private Label joueur2;
+
+    private boolean tournoi = false;
+
     private int tempsInitialBlancs ;// Temps initial en secondes pour les blancs
     private int tempsInitialNoirs ; // Temps initial en secondes pour les noirs (10 minutes)
     private int tempsRestantBlancs = tempsInitialBlancs; // 10 minutes en secondes
@@ -71,9 +75,33 @@ public class mainController {
     private Double width = 0.0;
 
     private List<String> joueurs;
+    private List<Joueur> joueursListe = new ArrayList<>();
+    private int joueursSize = 2;
 
-    private Joueur j1 = null;
-    private Joueur j2 = null;
+    private List<Joueur> joueursPartie = new ArrayList<>();
+
+    private Joueur joueur1Actuel;
+    private Joueur joueur2Actuel;
+
+    private List<Joueur> nextPartieJoueurs = new ArrayList<>();
+
+    @FXML
+    private void playComputer() throws IOException {
+        Stage stg = new Stage();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("bot.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+
+        BotController controller = fxmlLoader.getController();
+        stg.setOnShown(controller::setResizeEvents);
+
+        stg.setTitle("Echecs");
+        stg.setScene(scene);
+        stg.show();
+
+        stage.close();
+        selectStage.close();
+    }
 
     private void demarrerTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -146,6 +174,8 @@ public class mainController {
 
     @FXML
     private void jouerClicked() {
+        if(joueursListe.size() < joueursSize) return;
+
         tourBlanc = true; // Les blancs commencent toujours
         // Récupérer le temps initial sélectionné dans le ComboBox
         String selectedTemps = tempsComboBox.getValue();
@@ -156,6 +186,62 @@ public class mainController {
         mettreAJourPieces();
         updateGameSize();
         reinitialiserTimer(); // Démarrer le timer lorsque le jeu commence
+    }
+
+    @FXML
+    // jouerTournoi est appelé lorsque le bouton "Jouer Tournoi" est cliqué
+    // cela permet de lancer un tournoi entre les joueurs sélectionnés
+    // on va se servir de setJoueursPartieTournoi pour charger les parties qui doivent être jouées
+    private void jouerTournoi() {
+        if(joueursListe.size() < joueursSize) return;
+        tournoi = true;
+        setJoueursPartieTournoi();
+    }
+
+    // fonction appelée dans jouerTournoi qui permet de charger les parties qui doivent être jouéer dans une partie du tournoi
+    // ainsi si on est sur la premiere partie d'un tournoi 8 joueurs, on charge dans la liste 2 parties, donc les 4 premiers joueurs
+    // si on était dans une partie 16 joueurs, on chargerait 4 parties, donc les 8 premiers joueurs
+    // ensuite on appelle la fontion runPartieTournoi qui permet de jouer la partie actuelle
+    private void setJoueursPartieTournoi() {
+        // on charge les joueurs de la partie actuelle
+        for(int i = 0; i < joueursSize; i++) {
+            joueursPartie.add(joueursListe.get(i));
+        }
+        runPartieTournoi(joueursPartie);
+    }
+
+    private void runPartieTournoi(List<Joueur> joueursPartie) {
+        joueur1Actuel = joueursPartie.get(0);
+        joueur2Actuel = joueursPartie.get(1);
+
+        // Récupérer le temps initial sélectionné dans le ComboBox
+        String selectedTemps = tempsComboBox.getValue();
+
+        tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
+        tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
+
+        // on modifie les labels pour afficher les noms des joueurs
+        joueur1.setText(joueur1Actuel.getNomJoueur());
+        joueur2.setText(joueur2Actuel.getNomJoueur());
+
+        joueursPartie.remove(0);
+        joueursPartie.remove(1);
+
+        runJeuTournoi();
+    }
+
+    private void runJeuTournoi() {
+        reinitialiserPlateau();
+        configurerPieces();
+        mettreAJourPieces();
+        updateGameSize();
+        reinitialiserTimer(); // Démarrer le timer lorsque le jeu commence
+    }
+
+    private void finPartie() {
+        // on filtre dans la liste des joueurs ceux qui ont gagné, donc ceux qui sont aussi dans nextPartieJoueurs
+        // on ajoute les joueurs gagnants dans la liste des joueurs pour la prochaine partie
+        runPartieTournoi(nextPartieJoueurs);
     }
 
     private void reinitialiserPlateau() {
@@ -743,35 +829,6 @@ public class mainController {
     private void initialize() {
         tempsComboBox.setItems(FXCollections.observableArrayList("10", "3", "1"));
         tempsComboBox.getSelectionModel().selectFirst();
-        joueurs = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            joueurs.add("Joueur " + i);
-        }
-        jouerClicked();
-    }
-
-    public void setPlayer(Joueur j) {
-        if(j1 == null && j != null) {
-            j1 = j;
-
-            selectStage.close();
-
-            try {
-                selectStage = new Stage();
-                FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("PlayerSelection.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 700, 500);
-                PlayerSelectionController controller = fxmlLoader.getController();
-                controller.setMain(this);
-
-                selectStage.setTitle("j2");
-                selectStage.setScene(scene);
-                selectStage.show();
-            } catch(Exception e) {};
-        } else if(j2 == null && j != null) {
-            j2 = j;
-            selectStage.close();
-            stage.show();
-        }
     }
 
     public void setResizeEvents(WindowEvent windowEvent) {
@@ -793,14 +850,32 @@ public class mainController {
             updateGameSize();
         });
 
+        launchPlayer("J1");
+    }
+
+    public void setPlayer(Joueur j) {
+        if(j == null) return;
+        joueursListe.add(j);
+        selectStage.close();
+        if(joueursListe.size() >= joueursSize) {
+            //jouerClicked();
+            // joueur 1 blanc
+            joueur1.setText(joueursListe.get(0).getNomJoueur());
+            // joueur 2 noir
+            joueur2.setText(joueursListe.get(1).getNomJoueur());
+        } else launchPlayer("J"+(joueursListe.size()+1));
+    }
+
+    public void launchPlayer(String nomJoueur) {
         try {
+            if(selectStage != null) selectStage.close();
             selectStage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("PlayerSelection.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+            Scene scene = new Scene(fxmlLoader.load(), 400, 500);
             PlayerSelectionController controller = fxmlLoader.getController();
             controller.setMain(this);
 
-            selectStage.setTitle("J1");
+            selectStage.setTitle(nomJoueur);
             selectStage.setScene(scene);
             selectStage.show();
         } catch (Exception e) {};
@@ -829,6 +904,24 @@ public class mainController {
                 symbole.setFitHeight(superVal/8);
             }
         }
+    }
+
+    @FXML
+    private void selectPartie() {
+        selectPartie.setStyle("-fx-background-color: black");
+        selectReplay.setStyle("");
+
+        selectedPartie.setVisible(true);
+        selectedReplay.setVisible(false);
+    }
+
+    @FXML
+    private void selectReplay() {
+        selectReplay.setStyle("-fx-background-color: black");
+        selectPartie.setStyle("");
+
+        selectedReplay.setVisible(true);
+        selectedPartie.setVisible(false);
     }
 }
 

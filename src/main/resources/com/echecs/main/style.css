@@ -33,6 +33,15 @@
     -fx-background-color: linear-gradient(#6b6b6b, #424242); /* Gradient gris clair lorsqu'on survole */
 }
 
+.mini-button {
+    -fx-background-color: linear-gradient(#484848, #2f2f2f); /* Gradient gris */
+    -fx-background-radius: 8; /* Bord arrondi */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 10pt; /* Taille du texte */
+    -fx-padding: 10px; /* Padding pour agrandir le bouton */
+}
+
 /* Style du header label */
 .header-label {
     -fx-font-size: 18pt; /* Taille du texte en grand */

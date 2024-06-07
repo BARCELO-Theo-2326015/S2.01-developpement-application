@@ -40,22 +40,22 @@ public class BotController {
 
     private Bot joueurNoir;
 
-    Stage theStage;
+    Stage stage;
 
     @FXML
     private void playPlayer() throws IOException {
-        Stage stage = new Stage();
+        Stage stg = new Stage();
 
         FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("main.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 500);
 
         mainController controller = fxmlLoader.getController();
-        stage.setOnShown(controller::setResizeEvents);
+        stg.setOnShown(controller::setResizeEvents);
 
-        stage.setTitle("Echecs");
-        stage.setScene(scene);
-        stage.show();
-        theStage.close();
+        stg.setTitle("Echecs");
+        stg.setScene(scene);
+        stg.show();
+        stage.close();
     }
 
     @FXML
@@ -695,7 +695,7 @@ public class BotController {
 
     public void setResizeEvents(WindowEvent windowEvent) {
         // Get the stage
-        Stage stage = (Stage) boutonJouer.getScene().getWindow();
+        stage = (Stage) boutonJouer.getScene().getWindow();
 
         width = stage.getWidth();
         height = stage.getHeight();
@@ -736,10 +736,6 @@ public class BotController {
                 symbole.setFitHeight(superVal/8);
             }
         }
-    }
-
-    void setClose(WindowEvent windowEvent) {
-        theStage = (Stage) playPlayer.getScene().getWindow();
     }
 }
 

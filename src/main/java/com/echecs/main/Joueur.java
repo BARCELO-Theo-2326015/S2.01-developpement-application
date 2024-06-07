@@ -1,19 +1,15 @@
 package com.echecs.main;
 
-import javafx.scene.control.Label;
-
 public class Joueur {
     // Initialisation des paramètres
     private String nomJoueur;
     private int nbParties;
     private int nbPartiesGagne;
-    private boolean isOrdinateurPlayer;
 
-    public Joueur(String nomJoueur, boolean isOrdinateurPlayer){
+    public Joueur(String nomJoueur, int nbParties, int nbPartiesGagne) {
         this.nomJoueur = nomJoueur;
-        this.nbParties = 0;
-        this.nbPartiesGagne = 0;
-        this.isOrdinateurPlayer = isOrdinateurPlayer;
+        this.nbParties = nbParties;
+        this.nbPartiesGagne = nbPartiesGagne;
     }
 
     // Getter et setter
@@ -41,14 +37,6 @@ public class Joueur {
         this.nbPartiesGagne = nbPartiesGagne;
     }
 
-    public boolean isOrdinateurPlayer() {
-        return isOrdinateurPlayer;
-    }
-
-    public void setIsOrdinateurPlayer(boolean isOrdinateurPlayer) {
-        this.isOrdinateurPlayer = isOrdinateurPlayer;
-    }
-
     public void incrementNbParties() {
         this.nbParties++;
     }
@@ -64,7 +52,6 @@ public class Joueur {
             "NomJoueur='" + nomJoueur + '\'' +
             ", NbParties=" + nbParties +
             ", NbPartiesGagne=" + nbPartiesGagne +
-            ", isOrdinateurPlayer=" + isOrdinateurPlayer +
         '}' ;
     }
 }

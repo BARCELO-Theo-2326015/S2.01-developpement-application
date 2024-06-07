@@ -244,10 +244,8 @@ public class mainController {
         joueur1.setText(joueur1Actuel.getNomJoueur());
         joueur2.setText(joueur2Actuel.getNomJoueur());
 
-        System.out.println(joueursPartie);
         joueursPartie.remove(0);
         joueursPartie.remove(0);
-        System.out.println(joueursPartie);
 
         runJeuTournoi();
     }

@@ -54,7 +54,7 @@ public class PlayerSelectionController {
     private void createNewPlayer() {
         String playerName = newPlayerTextField.getText().trim();
         if (!playerName.isEmpty()) {
-            Joueur newPlayer = new Joueur(playerName, false); // Assuming new player is not a computer player
+            Joueur newPlayer = new Joueur(playerName, 0, 0); // Assuming new player is not a computer player
             players.add(newPlayer);
             playerComboBox.setItems(FXCollections.observableArrayList(players.stream().map(Joueur::getNomJoueur).collect(Collectors.toList())));
             savePlayers();
@@ -81,8 +81,9 @@ public class PlayerSelectionController {
             while (scanner.hasNextLine()) {
                 String[] data = scanner.nextLine().split(",");
                 String name = data[0];
-                boolean isComputerPlayer = Boolean.parseBoolean(data[1]);
-                Joueur player = new Joueur(name, isComputerPlayer);
+                int nbParties = Integer.parseInt(data[1]);
+                int nbPartiesGagne = Integer.parseInt(data[2]);
+                Joueur player = new Joueur(name, nbParties, nbPartiesGagne);
                 players.add(player);
             }
         } catch (FileNotFoundException e) {
@@ -93,7 +94,9 @@ public class PlayerSelectionController {
     private void savePlayers() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
             for (Joueur player : players) {
-                writer.println(player.getNomJoueur() + "," + player.isOrdinateurPlayer());
+                writer.println(player.getNomJoueur() + "," +
+                        player.getNbParties() + "," +
+                        player.getNbPartiesGagne());
             }
         } catch (IOException e) {
             e.printStackTrace();

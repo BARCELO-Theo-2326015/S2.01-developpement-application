@@ -1,6 +1,7 @@
 package com.echecs.main;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -21,6 +22,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class mainController {
     private Stage stage;
@@ -345,6 +347,13 @@ public class mainController {
             if (pion.getX() == ligne && pion.getY() == col) {
                 if ((tourBlanc && "WHITE".equals(pion.getEquipe())) || (!tourBlanc && "BLACK".equals(pion.getEquipe()))) {
                     selectedPiece = pion;
+
+                    //ajoute les coordonnée dans le fichier texte
+                    data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
+                    ajoutDataToFile(data);
+                    coordinates = readCoordinatesFromFile();
+                    coordinates.forEach(System.out::println);
+
                     VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
                     selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
                 }
@@ -771,11 +780,13 @@ public class mainController {
                 runPartieTournoi();
             }
         }
+
         //ajoute les coordonnée dans le fichier texte
         data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
         ajoutDataToFile(data);
         coordinates = readCoordinatesFromFile();
         coordinates.forEach(System.out::println);
+
         selectedPiece = null;
         //change le tour
         tourBlanc = !tourBlanc;
@@ -1044,6 +1055,7 @@ public class mainController {
         configurerPieces();
         mettreAJourPieces();
         updateGameSize();
+
         try {
             String file = DIRECTORY_PATH + fileName;
             playMovesFromFile(file);
@@ -1056,31 +1068,35 @@ public class mainController {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         System.out.println("reader = " + reader);
         String line;
-        int cpt = 0;
-        int fromX = 0;
-        int fromY = 0;
-        int toY = 0;
-        int toX = 0;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            if (cpt == 0) {
-                fromX = Integer.parseInt(parts[0]);
-                fromY = Integer.parseInt(parts[1]);
-                cpt = 1;
-            } else {
-                toX = Integer.parseInt(parts[0]);
-                toY = Integer.parseInt(parts[1]);
-                cpt = 0;
-            }
-            selectionnerPieceForRediff(fromX, fromY);
-            System.out.println(selectedPiece);
-            deplacerPiece(toX, toY);
+        AtomicInteger cpt = new AtomicInteger();
+        AtomicInteger fromX = new AtomicInteger();
+        AtomicInteger fromY = new AtomicInteger();
+        AtomicInteger toY = new AtomicInteger();
+        AtomicInteger toX = new AtomicInteger();
 
-            try {
-                Thread.sleep(1000); // 1 second delay between moves
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        int i = 0;
+        while ((line = reader.readLine()) != null) {
+                ++i;
+                PauseTransition pause = new PauseTransition(Duration.seconds(i));
+
+            String finalLine = line;
+            pause.setOnFinished(event -> {
+                    String[] parts = finalLine.split(",");
+                    if (cpt.get() == 0) {
+                        fromX.set(Integer.parseInt(parts[0]));
+                        fromY.set(Integer.parseInt(parts[1]));
+                        cpt.set(1);
+                    } else {
+                        toX.set(Integer.parseInt(parts[0]));
+                        toY.set(Integer.parseInt(parts[1]));
+                        cpt.set(0);
+                    }
+                    System.out.println(selectedPiece);
+
+                    selectionnerPieceForRediff(fromX.get(), fromY.get());
+                    if(selectedPiece != null) deplacerPiece(toX.get(), toY.get());
+                });
+                pause.play();
         }
         reader.close();
     }

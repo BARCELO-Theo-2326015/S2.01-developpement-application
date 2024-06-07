@@ -482,14 +482,6 @@ public class mainController {
             return false;
         }
         List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
-        if (!mouvementsLegaux.isEmpty()) {
-            for (int[] mouvement : mouvementsLegaux) {
-                int newX = mouvement[0];
-                int newY = mouvement[1];
-                VBox selectedCase = (VBox) jeu.getChildren().get(newX * 8 + newY);
-                selectedCase.setStyle("-fx-border-color: yellow; -fx-border-style: solid; -fx-border-width: 10;");
-            }
-        }
         if(mouvementsLegaux.isEmpty()) {
             List<Piece> copiePions = new ArrayList<>(pions);
             List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());

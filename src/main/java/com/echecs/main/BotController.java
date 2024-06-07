@@ -117,8 +117,7 @@ public class BotController {
             selectionnerPiece(nouvelleLigne, nouvelleCol);
         } else {
             deplacerPiece(nouvelleLigne, nouvelleCol);
-            Piece roi = trouverRoi("BLACK");
-            if((!tourBlanc)) joueurNoir.jouer();
+            if ((!tourBlanc)) joueurNoir.jouer();
         }
     }
 
@@ -158,7 +157,7 @@ public class BotController {
         return false;
     }
 
-    private boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+    public boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         // Vérifier si le déplacement met le roi en échec
         Piece pieceTemp = null;
         for (Piece p : pions) {
@@ -401,14 +400,6 @@ public class BotController {
             return false;
         }
         List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
-        if (!mouvementsLegaux.isEmpty()) {
-            for (int[] mouvement : mouvementsLegaux) {
-                int newX = mouvement[0];
-                int newY = mouvement[1];
-                VBox selectedCase = (VBox) jeu.getChildren().get(newX * 8 + newY);
-                selectedCase.setStyle("-fx-border-color: yellow; -fx-border-style: solid; -fx-border-width: 10;");
-            }
-        }
         if(mouvementsLegaux.isEmpty()) {
             List<Piece> copiePions = new ArrayList<>(pions);
             List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());

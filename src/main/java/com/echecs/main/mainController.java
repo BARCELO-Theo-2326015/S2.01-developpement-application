@@ -74,12 +74,9 @@ public class mainController {
     private Double height = 0.0;
     private Double width = 0.0;
 
-<<<<<<< Updated upstream
     private List<String> joueurs;
-=======
     private List<Joueur> joueursListe = new ArrayList<>();
     private int joueursSize = 2;
->>>>>>> Stashed changes
 
     private List<Joueur> joueursPartie = new ArrayList<>();
 
@@ -184,10 +181,7 @@ public class mainController {
         String selectedTemps = tempsComboBox.getValue();
         tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
         tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
         reinitialiserPlateau();
         configurerPieces();
         mettreAJourPieces();

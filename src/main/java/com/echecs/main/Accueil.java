@@ -16,7 +16,6 @@ public class Accueil extends Application {
 
         AccueilController controller = fxmlLoader.getController();
         primaryStage.setOnShown(controller::setClose);
-
         primaryStage.setResizable(false);
         primaryStage.setTitle("Jeu d'échecs");
         primaryStage.setScene(scene);

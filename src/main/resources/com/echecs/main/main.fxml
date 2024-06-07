@@ -12,145 +12,135 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.mainController">
-   <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox alignment="CENTER" prefHeight="369.0" prefWidth="328.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefHeight="40.0" styleClass="otherBackground">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/joueur_blanc.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label fx:id="joueur2" text="J2" textFill="WHITE">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <VBox alignment="CENTER_RIGHT" maxHeight="40.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label fx:id="labelTempsNoirs" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" /> <!-- Label pour afficher le temps restant pour les noirs -->
-                           </children>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
+    <children>
+        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox alignment="CENTER" prefHeight="369.0" prefWidth="328.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefHeight="40.0" styleClass="otherBackground">
+                            <children>
+                                <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/joueur_blanc.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="5.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label fx:id="joueur2" text="J2" textFill="WHITE">
+                                    <HBox.margin>
+                                        <Insets left="10.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <VBox alignment="CENTER_RIGHT" maxHeight="40.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="labelTempsNoirs" alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" /> <!-- Label pour afficher le temps restant pour les noirs -->
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </HBox>
+                        <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS"/>
+                        <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
+                            <children>
+                                <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/joueur_noir.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="5.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label fx:id="joueur1" text="J1" textFill="WHITE">
+                                    <HBox.margin>
+                                        <Insets left="10.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <VBox alignment="CENTER_RIGHT" prefHeight="120.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label fx:id="labelTempsBlancs" alignment="BOTTOM_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" />
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </VBox> <!-- Label pour afficher le temps restant pour les blancs -->
+                            </children>
+                            <VBox.margin>
+                                <Insets />
+                            </VBox.margin>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </HBox>
+                    </children>
+                </VBox>
+                <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox prefHeight="70.0">
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                            <children>
+                                <Button fx:id="selectPartie" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#selectPartie" style="-fx-background-color: black;" text="Partie" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="selectReplay" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#selectReplay" text="Replay" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                        <VBox fx:id="selectedPartie">
+                            <children>
+                                <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
+                                <Button fx:id="boutonTournoi" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerTournoi" styleClass="player-button" text="Tournoi 8 joueurs">
+                                    <VBox.margin>
+                                        <Insets top="5.0" />
+                                    </VBox.margin>
+                                </Button>
+                                <ComboBox fx:id="tempsComboBox" maxWidth="1.7976931348623157E308" prefHeight="50.0" promptText="Choisir le temps">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="1" />
+                                            <String fx:value="3" />
+                                            <String fx:value="10" />
+                                        </FXCollections>
+                                    </items>
+                                    <VBox.margin>
+                                        <Insets bottom="10.0" top="10.0" />
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </ComboBox>
+                            </children>
                         </VBox>
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
-<<<<<<< Updated upstream
-                  <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS"/>
-                  <HBox alignment="CENTER_LEFT" maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
-=======
-                  <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
-                  <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
->>>>>>> Stashed changes
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/joueur_noir.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label fx:id="joueur1" text="J1" textFill="WHITE">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <VBox alignment="CENTER_RIGHT" prefHeight="120.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label fx:id="labelTempsBlancs" alignment="BOTTOM_RIGHT" prefHeight="20.0" prefWidth="90.0" style="-fx-text-fill: white;" textFill="WHITE" />
-                           </children>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </VBox> <!-- Label pour afficher le temps restant pour les blancs -->
-                     </children>
-                     <VBox.margin>
+                        <VBox fx:id="tournoiBox" spacing="10" alignment="CENTER">
+                            <children>
+                                <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                                    <VBox.margin>
+                                        <Insets top="10.0" />
+                                    </VBox.margin>
+                                </Button>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="20.0" />
+                            </VBox.margin>
+                        </VBox>
+                        <VBox fx:id="selectedReplay" visible="false" />
+                    </children>
+                    <HBox.margin>
                         <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </HBox>
-               </children>
-            </VBox>
-            <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
-               <children>
-                  <HBox prefHeight="70.0">
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                     <children>
-                        <Button fx:id="selectPartie" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#selectPartie" style="-fx-background-color: black;" text="Partie" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="selectReplay" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#selectReplay" text="Replay" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <VBox fx:id="selectedPartie">
-                     <children>
-                        <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
-                        <Button fx:id="boutonTournoi" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerTournoi" styleClass="player-button" text="Tournoi 8 joueurs">
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </Button>
-                        <ComboBox fx:id="tempsComboBox" maxWidth="1.7976931348623157E308" prefHeight="50.0" promptText="Choisir le temps">
-                           <items>
-                              <FXCollections fx:factory="observableArrayList">
-                                 <String fx:value="1" />
-                                 <String fx:value="3" />
-                                 <String fx:value="10" />
-                              </FXCollections>
-                           </items>
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                        </ComboBox>
-<<<<<<< Updated upstream
-                     </children></VBox>
-                  <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
-                     <VBox fx:id="tournoiBox" spacing="10" alignment="CENTER"/>
-                     <VBox.margin>
+                    </HBox.margin>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <opaqueInsets>
                         <Insets top="20.0" />
-                     </VBox.margin></Button>
-=======
-                        <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playComputer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre l'ordinateur" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  <VBox fx:id="selectedReplay" visible="false" />
->>>>>>> Stashed changes
-
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <opaqueInsets>
-                  <Insets top="20.0" />
-               </opaqueInsets>
-            </VBox>
-         </children>
-      </HBox>
-   </children>
+                    </opaqueInsets>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
 </VBox>

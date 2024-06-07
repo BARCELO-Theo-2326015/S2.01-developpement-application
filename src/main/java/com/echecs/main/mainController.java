@@ -111,6 +111,9 @@ public class mainController {
 
     private String fileName;
 
+    @FXML
+    private VBox selectedStats;
+
 
     //méthode permettant de switcher sr l'interface de partie avec un bot
     @FXML
@@ -149,6 +152,10 @@ public class mainController {
                     terminerPartie("Les Noirs remportent la partie par temps écoulé !");
                     timeline.stop();
 
+                    joueur2Actuel.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne() + 1);
+                    joueur1Actuel.setNbParties((joueur1Actuel.getNbParties() + 1));
+                    joueur2Actuel.setNbParties((joueur2Actuel.getNbParties() + 1));
+
                     if(tournoi) {
                         nextPartieJoueurs.add(joueur2Actuel);
                         finPartie();
@@ -163,6 +170,10 @@ public class mainController {
                 if (tempsRestantNoirs <= 0) {
                     terminerPartie("Les Blancs remportent la partie par temps écoulé !");
                     timeline.stop();
+
+                    joueur1Actuel.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne() + 1);
+                    joueur1Actuel.setNbParties((joueur1Actuel.getNbParties() + 1));
+                    joueur2Actuel.setNbParties((joueur2Actuel.getNbParties() + 1));
 
                     if(tournoi) {
                         nextPartieJoueurs.add(joueur1Actuel);
@@ -1328,6 +1339,47 @@ public class mainController {
         selectedPiece = null;
         //change le tour
         tourBlanc = !tourBlanc;
+    }
+
+
+
+
+
+    private ArrayList<Joueur> loadPlayers() {
+        ArrayList<Joueur> players = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("players.csv"))) {
+            while (scanner.hasNextLine()) {
+                String[] data = scanner.nextLine().split(",");
+                String name = data[0];
+                int nbParties = Integer.parseInt(data[1]);
+                int nbPartiesGagne = Integer.parseInt(data[2]);
+                Joueur player = new Joueur(name, nbParties, nbPartiesGagne);
+                players.add(player);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return players;
+    }
+
+    @FXML
+    private void selectStats() {
+        selectedStats.setStyle("-fx-background-color: black");
+        selectPartie.setStyle("");
+        selectReplay.setStyle("");
+
+        selectedStats.setVisible(true);
+        selectedPartie.setVisible(false);
+        selectedReplay.setVisible(false);
+
+        // load all stats from all Joueurs with loadPlayers function and show it
+        ArrayList<Joueur> players = loadPlayers();
+        selectedStats.getChildren().clear();
+        for (Joueur player : players) {
+            Label statLabel = new Label(player.getNomJoueur() + " : " + player.getNbParties() + " parties, " + player.getNbPartiesGagne() + " parties gagnées");
+            statLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white");
+            selectedStats.getChildren().add(statLabel);
+        }
     }
 
 }

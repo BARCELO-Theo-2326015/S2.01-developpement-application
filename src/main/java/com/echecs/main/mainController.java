@@ -115,6 +115,11 @@ public class mainController {
                 if (tempsRestantBlancs <= 0) {
                     terminerPartie("Les Noirs remportent la partie par temps écoulé !");
                     timeline.stop();
+
+                    if(tournoi) {
+                        nextPartieJoueurs.add(joueur2Actuel);
+                        finPartie();
+                    }
                 }
             } else {
                 tempsRestantNoirs--;
@@ -125,6 +130,11 @@ public class mainController {
                 if (tempsRestantNoirs <= 0) {
                     terminerPartie("Les Blancs remportent la partie par temps écoulé !");
                     timeline.stop();
+
+                    if(tournoi) {
+                        nextPartieJoueurs.add(joueur1Actuel);
+                        finPartie();
+                    }
                 }
             }
         }));
@@ -174,7 +184,12 @@ public class mainController {
 
     @FXML
     private void jouerClicked() {
-        if(joueursListe.size() < joueursSize) return;
+        if(joueursListe.size() < joueursSize) {
+            tournoi = false;
+            joueursSize = 2;
+            launchPlayer("J1");
+            return;
+        };
 
         tourBlanc = true; // Les blancs commencent toujours
         // Récupérer le temps initial sélectionné dans le ComboBox
@@ -194,8 +209,12 @@ public class mainController {
     // cela permet de lancer un tournoi entre les joueurs sélectionnés
     // on va se servir de setJoueursPartieTournoi pour charger les parties qui doivent être jouées
     private void jouerTournoi() {
-        if(joueursListe.size() < joueursSize) return;
-        tournoi = true;
+        if(joueursListe.size() < joueursSize) {
+            tournoi = true;
+            joueursSize = 8;
+            launchPlayer("J1");
+            return;
+        };
         setJoueursPartieTournoi();
     }
 
@@ -208,10 +227,10 @@ public class mainController {
         for(int i = 0; i < joueursSize; i++) {
             joueursPartie.add(joueursListe.get(i));
         }
-        runPartieTournoi(joueursPartie);
+        runPartieTournoi();
     }
 
-    private void runPartieTournoi(List<Joueur> joueursPartie) {
+    private void runPartieTournoi() {
         joueur1Actuel = joueursPartie.get(0);
         joueur2Actuel = joueursPartie.get(1);
 
@@ -225,8 +244,10 @@ public class mainController {
         joueur1.setText(joueur1Actuel.getNomJoueur());
         joueur2.setText(joueur2Actuel.getNomJoueur());
 
+        System.out.println(joueursPartie);
         joueursPartie.remove(0);
-        joueursPartie.remove(1);
+        joueursPartie.remove(0);
+        System.out.println(joueursPartie);
 
         runJeuTournoi();
     }
@@ -242,7 +263,21 @@ public class mainController {
     private void finPartie() {
         // on filtre dans la liste des joueurs ceux qui ont gagné, donc ceux qui sont aussi dans nextPartieJoueurs
         // on ajoute les joueurs gagnants dans la liste des joueurs pour la prochaine partie
-        runPartieTournoi(nextPartieJoueurs);
+        if(joueursPartie.size() <= 1) {
+            joueursPartie = nextPartieJoueurs;
+            if(nextPartieJoueurs.size() <= 1) {
+                // si il ne reste qu'un joueur, on affiche un message de fin de tournoi
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Fin du tournoi");
+                alert.setHeaderText(null);
+                alert.setContentText("Le tournoi est terminé ! " + nextPartieJoueurs.get(0).getNomJoueur() + " a gagné le tournoi !");
+                alert.show();
+                return;
+            }
+            runPartieTournoi();
+        } else {
+            runPartieTournoi();
+        }
     }
 
     private void reinitialiserPlateau() {
@@ -706,6 +741,11 @@ public class mainController {
             alert.setHeaderText(null);
             alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
             alert.showAndWait();
+
+            if(tournoi) {
+                nextPartieJoueurs.add(tourBlanc ? joueur1Actuel : joueur2Actuel);
+                finPartie();
+            }
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
             timeline.stop();
@@ -714,6 +754,13 @@ public class mainController {
             alert.setHeaderText(null);
             alert.setContentText("Pat ! La partie est nulle.");
             alert.showAndWait();
+
+            // on retente la partie (ajout des 2 joueurs au tout debut et on retente)
+            if(tournoi) {
+                joueursPartie.addLast(joueur2Actuel);
+                joueursPartie.addFirst(joueur1Actuel);
+                runPartieTournoi();
+            }
         }
         selectedPiece = null;
         //change le tour
@@ -850,8 +897,6 @@ public class mainController {
             height = (Double) newVal;
             updateGameSize();
         });
-
-        launchPlayer("J1");
     }
 
     public void setPlayer(Joueur j) {
@@ -864,6 +909,8 @@ public class mainController {
             joueur1.setText(joueursListe.get(0).getNomJoueur());
             // joueur 2 noir
             joueur2.setText(joueursListe.get(1).getNomJoueur());
+            if(!tournoi) jouerClicked();
+            else jouerTournoi();
         } else launchPlayer("J"+(joueursListe.size()+1));
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
@@ -8,58 +9,68 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.BotController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.BotController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
             <children>
                 <VBox alignment="CENTER" prefHeight="369.0" prefWidth="328.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <HBox maxHeight="40.0" VBox.vgrow="ALWAYS">
+                        <HBox maxHeight="1.7976931348623157E308" prefHeight="40.0" VBox.vgrow="ALWAYS">
                             <children>
                                 <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@images/joueur_blanc.png" />
+                                        <Image url="@images/joueur_noir.png" />
                                     </image>
                            <HBox.margin>
-                              <Insets left="10.0" />
+                              <Insets left="5.0" />
                            </HBox.margin>
                                 </ImageView>
                             </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
                         </HBox>
                         <GridPane fx:id="jeu" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" VBox.vgrow="ALWAYS" />
-                        <HBox alignment="CENTER_LEFT" maxHeight="40.0" styleClass="otherBackground" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefHeight="40.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                <VBox prefHeight="200.0">
                                     <children>
                                         <ImageView fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
-                                                <Image url="@images/joueur_noir.png" />
+                                                <Image url="@images/joueur_blanc.png" />
                                             </image>
                                             <VBox.margin>
-                                                <Insets left="10.0" />
+                                                <Insets left="5.0" />
                                             </VBox.margin>
                                         </ImageView>
                                     </children>
                                 </VBox>
                             </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
                         </HBox>
                     </children>
                 </VBox>
-                <VBox alignment="TOP_CENTER" prefWidth="0.0" styleClass="otherBackground" HBox.hgrow="ALWAYS">
+                <VBox alignment="TOP_CENTER" prefWidth="0.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Button fx:id="boutonJouer" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#jouerClicked" styleClass="player-button" text="Jouer" />
-                        <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playPlayer" prefHeight="78.0" prefWidth="185.0" styleClass="computer-button" text="Jouer contre un ami" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                        <Button fx:id="playComputer" maxWidth="1.7976931348623157E308" onAction="#playPlayer" styleClass="computer-button" text="Jouer contre un ami" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin></Button>
 
                     </children>
                     <HBox.margin>
-                        <Insets />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </HBox.margin>
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
+               <styleClass>
+                  <String fx:value="otherBackground" />
+                  <String fx:value="right" />
+               </styleClass>
                 </VBox>
             </children>
         </HBox>

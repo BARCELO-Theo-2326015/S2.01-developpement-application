@@ -7,39 +7,62 @@
 
 /* Style des boutons pour jouer avec un autre joueur */
 .player-button {
-    -fx-background-color: linear-gradient(#64dd17, #1b5e20); /* Gradient vert */
+    -fx-background-color: #81B64C; /* Gradient vert */
     -fx-background-radius: 8; /* Bord arrondi */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+
     -fx-text-fill: white; /* Couleur du texte */
     -fx-font-size: 14pt; /* Taille du texte */
+    -fx-font-weight: 800;
+
     -fx-padding: 10px; /* Padding pour agrandir le bouton */
+
+    -fx-border-color: #45753C;
+    -fx-border-width: 0px 0px 5px 0px;
+    -fx-border-radius: 8;
 }
 
 .player-button:hover {
-    -fx-background-color: linear-gradient(#76ff03, #388e3c); /* Gradient vert clair lorsqu'on survole */
+    -fx-background-color: #95d358; /* Gradient vert clair lorsqu'on survole */
 }
 
 /* Style des boutons pour jouer avec l'ordinateur */
 .computer-button {
-    -fx-background-color: linear-gradient(#484848, #2f2f2f); /* Gradient gris */
+    -fx-background-color: #454341; /* Gradient gris */
     -fx-background-radius: 8; /* Bord arrondi */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+
     -fx-text-fill: white; /* Couleur du texte */
     -fx-font-size: 14pt; /* Taille du texte */
+    -fx-font-weight: 800;
+
     -fx-padding: 10px; /* Padding pour agrandir le bouton */
+
+    -fx-border-color: #3E3C3A;
+    -fx-border-width: 0px 0px 5px 0px;
+    -fx-border-radius: 8;
 }
 
 .computer-button:hover {
-    -fx-background-color: linear-gradient(#6b6b6b, #424242); /* Gradient gris clair lorsqu'on survole */
+    -fx-background-color: #605d5a; /* Gradient gris clair lorsqu'on survole */
 }
 
 .mini-button {
-    -fx-background-color: linear-gradient(#484848, #2f2f2f); /* Gradient gris */
+    -fx-background-color: #1E1E1B;
     -fx-background-radius: 8; /* Bord arrondi */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 5, 0, 2, 2); /* Ombre portée */
+
     -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-weight: 800;
     -fx-font-size: 10pt; /* Taille du texte */
-    -fx-padding: 10px; /* Padding pour agrandir le bouton */
+
+    -fx-padding: 12px; /* Padding pour agrandir le bouton */
+
+    -fx-border-color: #121210;
+    -fx-border-width: 0px 0px 1px 0px;
+    -fx-border-radius: 8px;
+}
+
+.mini-button:hover {
+    -fx-background-color: #151513;
+
 }
 
 /* Style du header label */
@@ -59,9 +82,46 @@
 
 /* Style du BorderPane pour le fond en gris noir */
 .root-pane {
-    -fx-background-color: #2f2f2f; /* Couleur de fond noir */
+    -fx-background-color: #302E2B; /* Couleur de fond noir */
 }
 
 .otherBackground {
-    -fx-background-color: #212121;
+    -fx-background-color: #262522;
+}
+
+.menu {
+    -fx-background-color: #21201D;
+
+    -fx-text-fill: white;
+    -fx-font-weight: 200;
+
+    -fx-pref-width: 25%;
+    -fx-pref-height: 70px;
+    -fx-min-height: 70px;
+    -fx-background-radius: 0px;
+}
+
+.timer {
+    -fx-background-color: #2B2926;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #82817F;
+    -fx-font-weight: 400;
+    -fx-font-size: 20px;
+}
+
+.timer2 {
+    -fx-background-color: #989795;
+    -fx-background-radius: 5px;
+    -fx-text-fill: #61605D;
+    -fx-font-weight: 400;
+    -fx-font-size: 20px;
+}
+
+.selecter {
+    -fx-background-color: #3C3B39;
+    -fx-text-fill: white;
+}
+
+.right {
+    -fx-background-radius: 5px;;
 }

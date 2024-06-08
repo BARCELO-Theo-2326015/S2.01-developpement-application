@@ -1183,7 +1183,7 @@ public class mainController {
     //
     @FXML
     private void selectPartie() {
-        selectPartie.setStyle("-fx-background-color: black");
+        selectPartie.setStyle("-fx-background-color: #262522");
         selectReplay.setStyle("");
         selectStats.setStyle("");
 
@@ -1198,7 +1198,7 @@ public class mainController {
 
     @FXML
     private void selectReplay() {
-        selectReplay.setStyle("-fx-background-color: black");
+        selectReplay.setStyle("-fx-background-color: #262522");
         selectPartie.setStyle("");
         selectStats.setStyle("");
 
@@ -1533,7 +1533,7 @@ public class mainController {
 
     @FXML
     private void selectStats() {
-        selectStats.setStyle("-fx-background-color: black");
+        selectStats.setStyle("-fx-background-color: #262522");
         selectPartie.setStyle("");
         selectReplay.setStyle("");
 

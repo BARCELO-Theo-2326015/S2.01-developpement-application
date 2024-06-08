@@ -9,20 +9,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="400.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.PlayerSelectionController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="400.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.PlayerSelectionController">
     <children>
       <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/joueur_blanc.png" />
          </image>
       </ImageView>
-        <ComboBox fx:id="playerComboBox" maxWidth="1.7976931348623157E308" prefHeight="68.0" prefWidth="379.0" promptText="Select a player" VBox.vgrow="ALWAYS">
+        <ComboBox fx:id="playerComboBox" maxWidth="1.7976931348623157E308" prefHeight="68.0" prefWidth="379.0" promptText="Select a player" styleClass="selecter" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin></ComboBox>
       <HBox alignment="CENTER">
          <children>
-              <TextField fx:id="newPlayerTextField" prefHeight="46.0" prefWidth="125.0" promptText="Enter player name">
+              <TextField fx:id="newPlayerTextField" prefHeight="46.0" prefWidth="125.0" promptText="Enter player name" styleClass="selecter">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>

@@ -296,8 +296,10 @@ public class mainController {
         if(joueursListe.size() >= joueursSize) {
             // joueur 1 blanc
             joueur1.setText(joueursListe.get(0).getNomJoueur());
+            joueur1Actuel = joueursListe.get(0);
             // joueur 2 noir
             joueur2.setText(joueursListe.get(1).getNomJoueur());
+            joueur2Actuel = joueursListe.get(1);
             if(!tournoi) jouerClicked();
             else jouerTournoi();
         } else launchPlayer("J"+(joueursListe.size()+1));

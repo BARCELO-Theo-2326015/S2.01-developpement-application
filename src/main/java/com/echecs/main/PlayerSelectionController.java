@@ -94,9 +94,7 @@ public class PlayerSelectionController {
     private void savePlayers() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
             for (Joueur player : players) {
-                writer.println(player.getNomJoueur() + "," +
-                        player.getNbParties() + "," +
-                        player.getNbPartiesGagne());
+                writer.println(player.getNomJoueur() + "," + player.getNbParties() + "," + player.getNbPartiesGagne());
             }
         } catch (IOException e) {
             e.printStackTrace();

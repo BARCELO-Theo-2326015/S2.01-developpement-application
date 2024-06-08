@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.echecs.main.BotController">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.BotController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
             <children>

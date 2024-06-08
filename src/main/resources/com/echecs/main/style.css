@@ -125,3 +125,62 @@
 .right {
     -fx-background-radius: 5px;;
 }
+
+/* Styles pour ListView */
+.list-view {
+    -fx-background-color: #212121;
+    -fx-control-inner-background: #212121;
+    -fx-cell-hover-color: transparent; /* Optionnel : enlève la couleur de survol */
+}
+
+.list-cell {
+    -fx-background-color: #212121;
+    -fx-text-fill: white; /* Change la couleur du texte en blanc */
+    -fx-font-size: 16px; /* Taille de la police */
+    -fx-border-color: #3c3f41; /* Couleur de la bordure */
+    -fx-border-width: 1px; /* Épaisseur de la bordure */
+    -fx-border-style: solid; /* Style de la bordure */
+}
+
+/* Styles pour le texte dans ListView */
+.list-view .text {
+    -fx-fill: white; /* Change la couleur du texte en blanc */
+}
+
+/* Style de la barre de défilement */
+.scroll-bar {
+    -fx-background-color: #2b2b2b; /* Gris foncé pour la barre de défilement */
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #3c3f41; /* Gris moyen pour le pouce (la partie draggable) */
+}
+
+.scroll-bar .track {
+    -fx-background-color: #2b2b2b; /* Gris foncé pour la piste */
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #2b2b2b; /* Gris foncé pour les boutons d'incrément/décrément */
+}
+
+/* Style des cellules du ComboBox */
+.combo-box .list-cell {
+    -fx-background-color: #605d5a; /* Gris foncé pour les cellules du ComboBox */
+    -fx-text-fill: #ffffff; /* Blanc pour le texte */
+    -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #605d5a; /* Gris foncé pour le bouton de l'arrow */
+    -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
+}
+
+/* Style du ComboBox */
+.combo-box {
+    -fx-background-color: #605d5a; /* Gris foncé pour le ComboBox */
+    -fx-control-inner-background: #605d5a; /* Gris foncé pour l'intérieur */
+    -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
+    -fx-border-width: 0; /* Pas de largeur de bordure */
+}

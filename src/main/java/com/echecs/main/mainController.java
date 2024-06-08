@@ -276,7 +276,6 @@ public class mainController {
         listView.setItems(fileList);
         watchDir = Paths.get(System.getProperty("user.dir"), DIRECTORY_PATH);
 
-        System.out.println("Watching directory: " + watchDir.toAbsolutePath());
         // Handle double-click events on the ListView items
         listView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {  // Double click
@@ -377,7 +376,6 @@ public class mainController {
     @FXML
     private void jouerClicked() {
         //appel la fonction pour créer le fichier
-        createLogFile();
 
         if(joueursListe.size() < joueursSize) {
             tournoi = false;
@@ -386,6 +384,7 @@ public class mainController {
             return;
         }
 
+        createLogFile();
         tourBlanc = true; // Les blancs commencent toujours
         // Récupérer le temps initial sélectionné dans le ComboBox
         String selectedTemps = tempsComboBox.getValue();
@@ -472,7 +471,6 @@ public class mainController {
     public void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
-                System.out.println(tourBlanc);
                 if ((tourBlanc && "WHITE".equals(pion.getEquipe())) || (!tourBlanc && "BLACK".equals(pion.getEquipe()))) {
                     selectedPiece = pion;
 
@@ -481,7 +479,6 @@ public class mainController {
                         data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
                         ajoutDataToFile(data);
                         coordinates = readCoordinatesFromFile();
-                        coordinates.forEach(System.out::println);
                     }
                     VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
                     selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
@@ -623,7 +620,6 @@ public class mainController {
             data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
             ajoutDataToFile(data);
             coordinates = readCoordinatesFromFile();
-            coordinates.forEach(System.out::println);
         }
         selectedPiece = null;
         //change le tour
@@ -1183,7 +1179,7 @@ public class mainController {
     //
     @FXML
     private void selectPartie() {
-        selectPartie.setStyle("-fx-background-color: #262522");
+        selectPartie.setStyle("-fx-background-color: black");
         selectReplay.setStyle("");
         selectStats.setStyle("");
 
@@ -1198,7 +1194,7 @@ public class mainController {
 
     @FXML
     private void selectReplay() {
-        selectReplay.setStyle("-fx-background-color: #262522");
+        selectReplay.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
         selectStats.setStyle("");
 
@@ -1214,25 +1210,14 @@ public class mainController {
     }
     //Méthode permettant de créer un fichier texte où seront stocké les coups joués
     private void createLogFile() {
-        try {
-            // Chemin et nom du fichier, ici le fichier est nommé avec la date et l'heure actuelles
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-            fileName = "Parties_" + LocalDateTime.now().format(formatter) + ".txt";
-            // Combine le chemin et le nom du fichier
-            File directory = new File(DIRECTORY_PATH);
-            if(!directory.exists()) directory.mkdir();
-            logFile = new File(directory, fileName);
+        // Chemin et nom du fichier, ici le fichier est nommé avec la date et l'heure actuelles
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        fileName = joueur1Actuel.getNomJoueur()+" contre "+joueur2Actuel.getNomJoueur() +" "+ LocalDateTime.now().format(formatter) ;
+        // Combine le chemin et le nom du fichier
+        File directory = new File(DIRECTORY_PATH);
+        if(!directory.exists()) directory.mkdir();
+        logFile = new File(directory, fileName);
 
-            // Crée le fichier s'il n'existe pas
-            if (logFile.createNewFile()) {
-                System.out.println("Fichier créé : " + logFile.getName());
-            } else {
-                System.out.println("Le fichier existe déjà.");
-            }
-        } catch (IOException e) {
-            System.out.println("Une erreur est survenue.");
-            e.printStackTrace();
-        }
     }
 
     //Méthode gérant l'écriture du fichier texte de la partie en cours
@@ -1267,12 +1252,6 @@ public class mainController {
 
     //méthode
     private void BoutonRediffClicked() {
-    //    reinitialiserPlateau();
-    //    configurerPieces();
-    //    mettreAJourPieces();
-    //    updateGameSize();
-
-     //   ouvrirDialogueDeFichier(); // Ouvre le dialogue de sélection de fichier
     }
 
     @FXML
@@ -1310,9 +1289,7 @@ public class mainController {
                     // This will print the newly created file name
                     if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
                         Path newPath = watchDir.resolve((Path) event.context());
-                        System.out.println("New file detected: " + newPath);
                         Platform.runLater(() -> {
-                            System.out.println("Updating ListView with new file: " + newPath.getFileName().toString());
                             fileList.add(newPath.getFileName().toString());
                         });
                     }
@@ -1328,31 +1305,6 @@ public class mainController {
         }
     }
 
-
-    //Méthode permettant d'ouvrir une boite de dialogue contenant l'ensemble des fichier de rediffusion
-    private void ouvrirDialogueDeFichier() {
-        FileChooser fileChooser = new FileChooser();
-        // Spécifier le répertoire initial
-        File initialDirectory = new File(DIRECTORY_PATH);
-        if (initialDirectory.exists()) {
-            fileChooser.setInitialDirectory(initialDirectory);
-        }
-        fileChooser.setTitle("Choisir un fichier de rediffusion");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Fichiers texte", "*.txt"),
-                new FileChooser.ExtensionFilter("Tous les fichiers", "*"));
-        Stage stage = (Stage) jeu.getScene().getWindow();
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            fileName = selectedFile.getName();
-            DIRECTORY_PATH = selectedFile.getParent(); // Met à jour le chemin du répertoire
-            try {
-                playMovesFromFile(selectedFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     //Méthode permettant la lecture d'un fichier texte
     private void playMovesFromFile(String file) throws IOException {
         reinitialiserPlateau();
@@ -1361,7 +1313,6 @@ public class mainController {
         updateGameSize();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        System.out.println("reader = " + reader);
         String line;
         AtomicInteger cpt = new AtomicInteger();
         AtomicInteger fromX = new AtomicInteger();
@@ -1386,8 +1337,6 @@ public class mainController {
                     toY.set(Integer.parseInt(parts[1]));
                     cpt.set(0);
                 }
-                System.out.println(selectedPiece);
-
                 selectionnerPieceForRediff(fromX.get(), fromY.get());
                 if(selectedPiece != null) deplacerPiecePourRediff(toX.get(), toY.get());
             });
@@ -1401,9 +1350,6 @@ public class mainController {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
                 selectedPiece = pion;
-                System.out.println("test = " + selectedPiece.getX() + "," + selectedPiece.getY());
-                VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
-                selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
                 break;
             }
         }
@@ -1465,7 +1411,6 @@ public class mainController {
         // Vérification de l'échec et mat après chaque déplacement
         Piece roi = trouverRoi(tourBlanc ? "BLACK" : "WHITE");
         if (estEchecEtMat(Objects.requireNonNull(roi))) {
-            timeline.stop();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Échec et mat");
             alert.setHeaderText(null);
@@ -1522,9 +1467,7 @@ public class mainController {
     private void savePlayers(ArrayList<Joueur> players) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
             for (Joueur player : players) {
-                writer.println(player.getNomJoueur() + "," +
-                        player.getNbParties() + "," +
-                        player.getNbPartiesGagne());
+                writer.println(player.getNomJoueur() + "," + player.getNbParties() + "," + player.getNbPartiesGagne());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -137,7 +137,7 @@ public class mainController {
         stg.show();
 
         stage.close();
-        selectStage.close();
+        if(selectStage != null) selectStage.close();
     }
 
 

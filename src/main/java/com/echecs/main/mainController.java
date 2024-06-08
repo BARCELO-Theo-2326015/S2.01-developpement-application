@@ -1187,11 +1187,16 @@ public class mainController {
     //Méthode permettant d'ouvrir une boite de dialogue contenant l'ensemble des fichier de rediffusion
     private void ouvrirDialogueDeFichier() {
         FileChooser fileChooser = new FileChooser();
+        // Spécifier le répertoire initial
+        File initialDirectory = new File(DIRECTORY_PATH);
+        if (initialDirectory.exists()) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
         fileChooser.setTitle("Choisir un fichier de rediffusion");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Fichiers texte", "*.txt"),
                 new FileChooser.ExtensionFilter("Tous les fichiers", "*"));
-        Stage stage = (Stage) jeu.getScene().getWindow(); // Assurez-vous que 'jeu' est un composant de votre scène principale
+        Stage stage = (Stage) jeu.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             fileName = selectedFile.getName();

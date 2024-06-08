@@ -3,7 +3,9 @@ package com.echecs.main;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import java.io.*;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -267,6 +270,29 @@ public class mainController {
     private void initialize() {
         tempsComboBox.setItems(FXCollections.observableArrayList("10", "3", "1"));
         tempsComboBox.getSelectionModel().selectFirst();
+
+
+        fileList = FXCollections.observableArrayList();
+        listView = new ListView<>(fileList);
+        watchDir = Paths.get(System.getProperty("user.dir"), DIRECTORY_PATH);
+
+        System.out.println("Watching directory: " + watchDir.toAbsolutePath());
+        // Handle double-click events on the ListView items
+        listView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {  // Double click
+                String selectedItem = listView.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    // Call your method to read and replay the chess game
+                    try {
+                        playMovesFromFile(selectedItem);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        new Thread(this::initializeWatchService).start();
     }
 
     public void setResizeEvents(WindowEvent windowEvent) {
@@ -1237,8 +1263,51 @@ public class mainController {
         mettreAJourPieces();
         updateGameSize();
 
-        ouvrirDialogueDeFichier(); // Ouvre le dialogue de sélection de fichier
+     //   ouvrirDialogueDeFichier(); // Ouvre le dialogue de sélection de fichier
     }
+
+    @FXML
+    private ListView<String> listView;
+    private ObservableList<String> fileList;
+    private Path watchDir;
+
+    private void initializeWatchService() {
+        try {
+            WatchService watchService = FileSystems.getDefault().newWatchService();
+            watchDir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+
+            while (true) {
+                WatchKey key;
+                try {
+                    key = watchService.take();
+                } catch (InterruptedException ex) {
+                    return;
+                }
+
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    WatchEvent.Kind<?> kind = event.kind();
+
+                    // This will print the newly created file name
+                    if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                        Path newPath = watchDir.resolve((Path) event.context());
+                        System.out.println("New file detected: " + newPath);
+                        Platform.runLater(() -> {
+                            System.out.println("Updating ListView with new file: " + newPath.getFileName().toString());
+                            fileList.add(newPath.getFileName().toString());
+                        });
+                    }
+                }
+
+                boolean valid = key.reset();
+                if (!valid) {
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     //Méthode permettant d'ouvrir une boite de dialogue contenant l'ensemble des fichier de rediffusion
     private void ouvrirDialogueDeFichier() {

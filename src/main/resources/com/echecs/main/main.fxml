@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ListView?>
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.mainController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -131,7 +132,11 @@
                                 </Button>
                             </children>
                         </VBox>
-                        <VBox fx:id="selectedReplay" visible="false" />
+                        <VBox fx:id="selectedReplay" visible="false" >
+                            <children>
+                                <ListView fx:id="listView" />
+                            </children>
+                        </VBox>
                         <VBox fx:id="selectedStats" visible="false" />
                     </children>
                     <HBox.margin>

@@ -47,6 +47,8 @@ public class mainController {
     private Button selectPartie;
     @FXML
     private Button selectReplay;
+    @FXML
+    private Button selectStats;
 
     @FXML
     private VBox selectedPartie;
@@ -156,6 +158,20 @@ public class mainController {
                     joueur1Actuel.setNbParties((joueur1Actuel.getNbParties() + 1));
                     joueur2Actuel.setNbParties((joueur2Actuel.getNbParties() + 1));
 
+                    // load players, modify players to update the number of games played and games won, save players
+                    ArrayList<Joueur> players = loadPlayers();
+                    players.forEach(j -> {
+                        if(j.getNomJoueur().equals(joueur1Actuel.getNomJoueur())) {
+                            j.setNbParties(joueur1Actuel.getNbParties());
+                            j.setNbPartiesGagne(joueur1Actuel.getNbPartiesGagne());
+                        }
+                        if(j.getNomJoueur().equals(joueur2Actuel.getNomJoueur())) {
+                            j.setNbParties(joueur2Actuel.getNbParties());
+                            j.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne());
+                        }
+                    });
+                    savePlayers(players);
+
                     if(tournoi) {
                         nextPartieJoueurs.add(joueur2Actuel);
                         finPartie();
@@ -174,6 +190,20 @@ public class mainController {
                     joueur1Actuel.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne() + 1);
                     joueur1Actuel.setNbParties((joueur1Actuel.getNbParties() + 1));
                     joueur2Actuel.setNbParties((joueur2Actuel.getNbParties() + 1));
+
+                    // load players, modify players to update the number of games played and games won, save players
+                    ArrayList<Joueur> players = loadPlayers();
+                    players.forEach(j -> {
+                        if(j.getNomJoueur().equals(joueur1Actuel.getNomJoueur())) {
+                            j.setNbParties(joueur1Actuel.getNbParties());
+                            j.setNbPartiesGagne(joueur1Actuel.getNbPartiesGagne());
+                        }
+                        if(j.getNomJoueur().equals(joueur2Actuel.getNomJoueur())) {
+                            j.setNbParties(joueur2Actuel.getNbParties());
+                            j.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne());
+                        }
+                    });
+                    savePlayers(players);
 
                     if(tournoi) {
                         nextPartieJoueurs.add(joueur1Actuel);
@@ -519,6 +549,26 @@ public class mainController {
             alert.setHeaderText(null);
             alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
             alert.show();
+
+            // update the number of games played and games won for the players
+            joueur1Actuel.setNbParties(joueur1Actuel.getNbParties() + 1);
+            joueur2Actuel.setNbParties(joueur2Actuel.getNbParties() + 1);
+            if(tourBlanc) joueur1Actuel.setNbPartiesGagne(joueur1Actuel.getNbPartiesGagne() + 1);
+            else joueur2Actuel.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne() + 1);
+
+            // load players, modify players to update the number of games played and games won, save players
+            ArrayList<Joueur> players = loadPlayers();
+            players.forEach(j -> {
+                if(j.getNomJoueur().equals(joueur1Actuel.getNomJoueur())) {
+                    j.setNbParties(joueur1Actuel.getNbParties());
+                    j.setNbPartiesGagne(joueur1Actuel.getNbPartiesGagne());
+                }
+                if(j.getNomJoueur().equals(joueur2Actuel.getNomJoueur())) {
+                    j.setNbParties(joueur2Actuel.getNbParties());
+                    j.setNbPartiesGagne(joueur2Actuel.getNbPartiesGagne());
+                }
+            });
+            savePlayers(players);
 
             if(tournoi) {
                 nextPartieJoueurs.add(tourBlanc ? joueur1Actuel : joueur2Actuel);
@@ -1107,18 +1157,22 @@ public class mainController {
     private void selectPartie() {
         selectPartie.setStyle("-fx-background-color: black");
         selectReplay.setStyle("");
+        selectStats.setStyle("");
 
         selectedPartie.setVisible(true);
         selectedReplay.setVisible(false);
+        selectedStats.setVisible(false);
     }
 
     @FXML
     private void selectReplay() {
         selectReplay.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
+        selectStats.setStyle("");
 
         selectedReplay.setVisible(true);
         selectedPartie.setVisible(false);
+        selectedStats.setVisible(false);
         BoutonRediffClicked();
     }
     //Méthode permettant de créer un fichier texte où seront stocké les coups joués
@@ -1370,9 +1424,21 @@ public class mainController {
         return players;
     }
 
+    private void savePlayers(ArrayList<Joueur> players) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
+            for (Joueur player : players) {
+                writer.println(player.getNomJoueur() + "," +
+                        player.getNbParties() + "," +
+                        player.getNbPartiesGagne());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void selectStats() {
-        selectedStats.setStyle("-fx-background-color: black");
+        selectStats.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
         selectReplay.setStyle("");
 

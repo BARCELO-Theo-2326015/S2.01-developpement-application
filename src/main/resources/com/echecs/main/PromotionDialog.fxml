@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane prefHeight="97.0" prefWidth="460.0" styleClass="otherBackground" stylesheets="@style.css" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" fx:controller="com.echecs.main.PromotionDialogController">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+    <Label prefHeight="28.0" prefWidth="345.0" text="Choisissez une pièce pour la promotion:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <ChoiceBox fx:id="choiceBox" prefHeight="28.0" prefWidth="91.0" styleClass="combo-box" GridPane.columnIndex="1" GridPane.rowIndex="0">
+      <padding>
+         <Insets bottom="10.0" />
+      </padding></ChoiceBox>
+    <Button onAction="#onConfirm" prefHeight="14.0" prefWidth="68.0" styleClass="player-button" text="OK" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Button onAction="#onCancel" prefHeight="50.0" prefWidth="98.0" styleClass="computer-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <padding>
+         <Insets top="20.0" />
+      </padding></Button>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

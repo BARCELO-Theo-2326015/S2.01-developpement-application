@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -17,6 +18,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -622,7 +624,6 @@ public class mainController {
             if (pion.getX() == ligne && pion.getY() == col) {
                 if ((tourBlanc && "WHITE".equals(pion.getEquipe())) || (!tourBlanc && "BLACK".equals(pion.getEquipe()))) {
                     selectedPiece = pion;
-
                     //ajoute les coordonnée dans le fichier texte
                     if(!tournoi) {
                         data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
@@ -639,26 +640,35 @@ public class mainController {
 
 
     private void promouvoirPion(Piece pion) {
-        // Afficher une boîte de dialogue pour choisir la nouvelle pièce
-        List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("QUEEN", choix);
-        dialog.setTitle("Promotion");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Choisissez une pièce pour la promotion:");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("PromotionDialog.fxml"));
+            Parent root = loader.load();
 
-        // Récupérer le choix de l'utilisateur
-        Optional<String> result = dialog.showAndWait();
-        String nouvellePieceType = result.orElse("QUEEN");
+            PromotionDialogController controller = loader.getController();
 
-        // Remplacer le pion par la nouvelle pièce
-        pion.setType(nouvellePieceType);
-        pion.generateSymbol((String) pieceBox.getValue());
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Promotion");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
 
-        // Mettre à jour l'affichage de la pièce
-        VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
-        caseCible.getChildren().clear();
-        caseCible.getChildren().add(pion.getSymbole());
-        updateGameSize();
+            String nouvellePieceType = controller.getSelectedPiece();
+            if (nouvellePieceType == null) {
+                nouvellePieceType = "QUEEN";
+            }
+
+            // Remplacer le pion par la nouvelle pièce
+            pion.setType(nouvellePieceType);
+            pion.generateSymbol((String) pieceBox.getValue());
+
+            // Mettre à jour l'affichage de la pièce
+            VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
+            caseCible.getChildren().clear();
+            caseCible.getChildren().add(pion.getSymbole());
+            updateGameSize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //Méthode permettant de déplacer une pièce en respectant toutes les règles des échecs tout en vérifiant les différentes connditions de fins de partie permettant de mettre fin à celle-ci après un mouvement décisif
@@ -718,11 +728,7 @@ public class mainController {
         Piece roi = trouverRoi(tourBlanc ? "BLACK" : "WHITE");
         if (estEchecEtMat(Objects.requireNonNull(roi))) {
             timeline.stop();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Échec et mat");
-            alert.setHeaderText(null);
-            alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
-            alert.show();
+            showAlert(tourBlanc);
 
             // update the number of games played and games won for the players
             joueur1Actuel.setNbParties(joueur1Actuel.getNbParties() + 1);
@@ -751,11 +757,7 @@ public class mainController {
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
             timeline.stop();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Pat");
-            alert.setHeaderText(null);
-            alert.setContentText("Pat ! La partie est nulle.");
-            alert.show();
+            showAlert2(tourBlanc);
 
             // on retente la partie (ajout des 2 joueurs au tout debut et on retente)
             if(tournoi) {
@@ -1573,11 +1575,7 @@ public class mainController {
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
             timeline.stop();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Pat");
-            alert.setHeaderText(null);
-            alert.setContentText("Pat ! La partie est nulle.");
-            alert.show();
+            showAlert2(tourBlanc);
 
             // on retente la partie (ajout des 2 joueurs au tout debut et on retente)
             if(tournoi) {
@@ -1644,6 +1642,39 @@ public class mainController {
             Label statLabel = new Label(player.getNomJoueur() + " : " + player.getNbParties() + " parties, " + player.getNbPartiesGagne() + " parties gagnées");
             statLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white");
             selectedStats.getChildren().add(statLabel);
+        }
+    }
+
+    public void showAlert(boolean tourBlanc) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
+            VBox alertRoot = fxmlLoader.load();
+            echecEtMatController controller = fxmlLoader.getController();
+            controller.setMessage2(joueur1Actuel.getNomJoueur()+"   "+joueur1Actuel.getNbPartiesGagne()+" - "+joueur2Actuel.getNbPartiesGagne()+"   "+joueur2Actuel.getNomJoueur());
+            controller.setMessage((tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
+            Stage alertStage = new Stage();
+            alertStage.setTitle("Échec et mat");
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.setScene(new Scene(alertRoot));
+            alertStage.showAndWait();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void showAlert2(boolean tourBlanc) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));
+            VBox alertRoot = fxmlLoader.load();
+            estPatController controller = fxmlLoader.getController();
+            controller.setMessagePat(joueur1Actuel.getNomJoueur()+"   "+joueur1Actuel.getNbPartiesGagne()+" - "+joueur2Actuel.getNbPartiesGagne()+"   "+joueur2Actuel.getNomJoueur());
+            Stage alertStage = new Stage();
+            alertStage.setTitle("Pat");
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.setScene(new Scene(alertRoot));
+            alertStage.showAndWait();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

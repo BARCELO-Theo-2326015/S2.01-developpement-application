@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -558,24 +559,44 @@ public class BotController {
     private void promouvoirPion(Piece pion) {
         // Afficher une boîte de dialogue pour choisir la nouvelle pièce
         List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("QUEEN", choix);
-        dialog.setTitle("Promotion");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Choisissez une pièce pour la promotion:");
+        if(tourBlanc){
+            ChoiceDialog<String> dialog = new ChoiceDialog<>("QUEEN", choix);
+            dialog.setTitle("Promotion");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Choisissez une pièce pour la promotion:");
 
-        // Récupérer le choix de l'utilisateur
-        Optional<String> result = dialog.showAndWait();
-        String nouvellePieceType = result.orElse("QUEEN");
+            // Récupérer le choix de l'utilisateur
+            Optional<String> result = dialog.showAndWait();
+            String nouvellePieceType = result.orElse("QUEEN");
 
-        // Remplacer le pion par la nouvelle pièce
-        pion.setType(nouvellePieceType);
-        pion.generateSymbol((String) pieceBox.getValue());
+            // Remplacer le pion par la nouvelle pièce
+            pion.setType(nouvellePieceType);
+            pion.generateSymbol((String) pieceBox.getValue());
 
-        // Mettre à jour l'affichage de la pièce
-        VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
-        caseCible.getChildren().clear();
-        caseCible.getChildren().add(pion.getSymbole());
-        updateGameSize();
+            // Mettre à jour l'affichage de la pièce
+            VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
+            caseCible.getChildren().clear();
+            caseCible.getChildren().add(pion.getSymbole());
+            updateGameSize();
+        }
+        else{
+            // Créer une instance de Random
+            Random random = new Random();
+            // Obtenir un index aléatoire de la liste
+            int randomIndex = random.nextInt(choix.size());
+            //choix aléatoire pour le bot
+            String choice = choix.get(randomIndex);
+            // Remplacer le pion par la nouvelle pièce
+            pion.setType(choice);
+            pion.generateSymbol((String) pieceBox.getValue());
+
+            // Mettre à jour l'affichage de la pièce
+            VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
+            caseCible.getChildren().clear();
+            caseCible.getChildren().add(pion.getSymbole());
+            updateGameSize();
+        }
+
     }
 
     public void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
@@ -633,18 +654,10 @@ public class BotController {
         // Vérification de l'échec et mat après chaque déplacement
         Piece roi = trouverRoi(tourBlanc ? "BLACK" : "WHITE");
         if (estEchecEtMat(Objects.requireNonNull(roi))) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Échec et mat");
-            alert.setHeaderText(null);
-            alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
-            alert.showAndWait();
+           showAlert(tourBlanc);
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Pat");
-            alert.setHeaderText(null);
-            alert.setContentText("Pat ! La partie est nulle.");
-            alert.showAndWait();
+        showAlert2(tourBlanc);
         }
         selectedPiece = null;
         //change le tour
@@ -810,6 +823,36 @@ public class BotController {
                 symbole.setFitWidth(superVal/8);
                 symbole.setFitHeight(superVal/8);
             }
+        }
+    }
+
+    public void showAlert(boolean tourBlanc) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
+            VBox alertRoot = fxmlLoader.load();
+            echecEtMatController controller = fxmlLoader.getController();
+            controller.setMessage((tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
+            Stage alertStage = new Stage();
+            alertStage.setTitle("Échec et mat");
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.setScene(new Scene(alertRoot));
+            alertStage.showAndWait();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void showAlert2(boolean tourBlanc) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));
+            VBox alertRoot = fxmlLoader.load();
+            Stage alertStage = new Stage();
+            alertStage.setTitle("Pat");
+            alertStage.initModality(Modality.APPLICATION_MODAL);
+            alertStage.setScene(new Scene(alertRoot));
+            alertStage.showAndWait();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

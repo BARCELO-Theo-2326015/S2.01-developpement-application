@@ -196,3 +196,42 @@
     -fx-text-fill: #ffffff; /* Couleur du texte */
     -fx-font-weight: bold; /* Texte en gras */
 }
+
+.alert {
+             /* Couleur du texte */
+}
+
+.dialog-pane {
+    -fx-background-color: #2b2b2b; /* Couleur de fond du panneau de dialogue */
+}
+
+.dialog-pane .content {
+    -fx-font-size: 14px;           /* Taille de la police du contenu */
+}
+
+.custom-alert {
+    -fx-background-color: #2b2b2b; /* Couleur de fond */
+    -fx-text-fill: white;          /* Couleur du texte */
+}
+
+.custom-alert .dialog-pane {
+    -fx-background-color: #2b2b2b; /* Couleur de fond du panneau de dialogue */
+}
+
+.custom-alert .dialog-pane .content {
+    -fx-font-size: 14px;           /* Taille de la police du contenu */
+}
+
+.custom-alert .button {
+    -fx-background-color: #4caf50; /* Couleur de fond des boutons */
+    -fx-text-fill: white;          /* Couleur du texte des boutons */
+}
+
+.custom-alert .button:hover {
+    -fx-background-color: #45a049; /* Couleur de fond des boutons au survol */
+}
+.label{
+        -fx-text-fill: #ffffff; /* Blanc pour le texte */
+        -fx-font-weight: bold; /* Texte en gras */
+        -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
+    }

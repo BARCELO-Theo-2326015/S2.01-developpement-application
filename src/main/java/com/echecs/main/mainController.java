@@ -70,33 +70,33 @@ public class mainController {
     private boolean tournoi = false;
 
     private int tempsInitialBlancs ;// Temps initial en secondes pour les blancs
-    
+
     private int tempsInitialNoirs ; // Temps initial en secondes pour les noirs (10 minutes)
-    
+
     private int tempsRestantBlancs = tempsInitialBlancs; // 10 minutes en secondes
-    
+
     private int tempsRestantNoirs = tempsInitialNoirs; // 10 minutes en secondes
-    
+
     private Timeline timeline ;
-    
+
     public List<Piece> pions = new ArrayList<>();
-    
+
     private boolean tourBlanc = true; // true si c'est le tour des blancs, false si c'est le tour des noirs
 
     private Piece selectedPiece = null;
 
     private Double height = 0.0;
-    
+
     private Double width = 0.0;
-    
+
     private final List<Joueur> joueursListe = new ArrayList<>();
-    
+
     private int joueursSize = 2;
 
     private List<Joueur> joueursPartie = new ArrayList<>();
 
     private Joueur joueur1Actuel;
-    
+
     private Joueur joueur2Actuel;
 
     private final List<Joueur> nextPartieJoueurs = new ArrayList<>();
@@ -113,12 +113,6 @@ public class mainController {
 
     @FXML
     private VBox selectedStats;
-
-    @FXML
-    private Button selectStats;
-
-    @FXML
-    private Button boutonNext ;
 
 
     //méthode permettant de switcher sr l'interface de partie avec un bot
@@ -350,8 +344,8 @@ public class mainController {
 
 
 
-    //Partie de code pour la génération du plateau et des pièces 
-    
+    //Partie de code pour la génération du plateau et des pièces
+
 
     //méthode permettant de réniatiliser le plateau à chaque fin de partie
     private void reinitialiserPlateau() {
@@ -548,12 +542,10 @@ public class mainController {
         }
         if(!tournoi) {
             //ajoute les coordonnée dans le fichier texte
-            if(selectedPiece.getX() != nouvelleLigne && selectedPiece.getY() != nouvelleCol) {
-                data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
-                ajoutDataToFile(data);
-                coordinates = readCoordinatesFromFile();
-                coordinates.forEach(System.out::println);
-            }
+            data = selectedPiece.getX() + "," + selectedPiece.getY() + "\n";
+            ajoutDataToFile(data);
+            coordinates = readCoordinatesFromFile();
+            coordinates.forEach(System.out::println);
         }
         selectedPiece = null;
         //change le tour
@@ -686,7 +678,7 @@ public class mainController {
 
 
 
-//Méthode permettant de trouver un roi d'une équipe renseignée sur le plateau
+    //Méthode permettant de trouver un roi d'une équipe renseignée sur le plateau
     private Piece trouverRoi(String equipe) {
         for (Piece piece : pions) {
             if (piece.getType().equals("KING") && piece.getEquipe().equals(equipe)) {
@@ -967,6 +959,7 @@ public class mainController {
         return false;
     }
 
+
     //Méthode permettant de vérifier si une équipe est en situation de pat
     private boolean estPat(String equipe) {
 
@@ -1047,7 +1040,7 @@ public class mainController {
         runPartieTournoi();
     }
 
-//méthode permettant de lancer une partie d'un tournoi
+    //méthode permettant de lancer une partie d'un tournoi
     private void runPartieTournoi() {
         joueur1Actuel = joueursPartie.get(0);
         joueur2Actuel = joueursPartie.get(1);
@@ -1109,27 +1102,23 @@ public class mainController {
 
 
 
-//
+    //
     @FXML
     private void selectPartie() {
         selectPartie.setStyle("-fx-background-color: black");
         selectReplay.setStyle("");
-        selectStats.setStyle("");
 
         selectedPartie.setVisible(true);
         selectedReplay.setVisible(false);
-        selectedStats.setVisible(false);
     }
 
     @FXML
     private void selectReplay() {
         selectReplay.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
-        selectStats.setStyle("");
 
         selectedReplay.setVisible(true);
         selectedPartie.setVisible(false);
-        selectedStats.setVisible(false);
         BoutonRediffClicked();
     }
     //Méthode permettant de créer un fichier texte où seront stocké les coups joués
@@ -1185,7 +1174,7 @@ public class mainController {
         return coordinates;
     }
 
-//méthode
+    //méthode
     private void BoutonRediffClicked() {
         reinitialiserPlateau();
         configurerPieces();
@@ -1196,69 +1185,61 @@ public class mainController {
     }
 
     //Méthode permettant d'ouvrir une boite de dialogue contenant l'ensemble des fichier de rediffusion
-    private String ouvrirDialogueDeFichier() {
+    private void ouvrirDialogueDeFichier() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir un fichier de rediffusion");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Fichiers texte", ".txt"),
-                new FileChooser.ExtensionFilter("Tous les fichiers", ".*"));
-        // Spécifier le répertoire initial
-        File initialDirectory = new File(DIRECTORY_PATH);
-        if (initialDirectory.exists()) {
-            fileChooser.setInitialDirectory(initialDirectory);
-        }
+                new FileChooser.ExtensionFilter("Fichiers texte", "*.txt"),
+                new FileChooser.ExtensionFilter("Tous les fichiers", "*"));
         Stage stage = (Stage) jeu.getScene().getWindow(); // Assurez-vous que 'jeu' est un composant de votre scène principale
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             fileName = selectedFile.getName();
             DIRECTORY_PATH = selectedFile.getParent(); // Met à jour le chemin du répertoire
-            return selectedFile.getAbsolutePath();
+            try {
+                playMovesFromFile(selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return "";
     }
-
-
-    @FXML
-    private void nextMoove()  throws IOException{
-        boutonNext.setOnAction(event -> {
-                    try {
-                        playMovesFromFile(ouvrirDialogueDeFichier());
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-        });
-    }
-
-
     //Méthode permettant la lecture d'un fichier texte
-    private void playMovesFromFile(String file)  throws IOException{
+    private void playMovesFromFile(String file) throws IOException {
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         System.out.println("reader = " + reader);
-        final String[] line = new String[1];
+        String line;
         AtomicInteger cpt = new AtomicInteger();
         AtomicInteger fromX = new AtomicInteger();
         AtomicInteger fromY = new AtomicInteger();
         AtomicInteger toY = new AtomicInteger();
         AtomicInteger toX = new AtomicInteger();
-                for (int i = 0; i < 2; i++) { // Read two lines for one move
-                    if ((line[0] = reader.readLine()) != null) {
-                        String[] parts = line[0].split(",");
-                        if (cpt.get() == 0) {
-                            fromX.set(Integer.parseInt(parts[0]));
-                            fromY.set(Integer.parseInt(parts[1]));
-                            cpt.set(1);
-                        } else {
-                            toX.set(Integer.parseInt(parts[0]));
-                            toY.set(Integer.parseInt(parts[1]));
-                            cpt.set(0);
-                        }
-                    } else {
-                        System.out.println("End of file reached");
-                        return;
-                    }
+
+        int i = 0;
+        while ((line = reader.readLine()) != null) {
+            ++i;
+            PauseTransition pause = new PauseTransition(Duration.seconds(i));
+
+            String finalLine = line;
+            pause.setOnFinished(event -> {
+                String[] parts = finalLine.split(",");
+                if (cpt.get() == 0) {
+                    fromX.set(Integer.parseInt(parts[0]));
+                    fromY.set(Integer.parseInt(parts[1]));
+                    cpt.set(1);
+                } else {
+                    toX.set(Integer.parseInt(parts[0]));
+                    toY.set(Integer.parseInt(parts[1]));
+                    cpt.set(0);
                 }
+                System.out.println(selectedPiece);
+
+                selectionnerPieceForRediff(fromX.get(), fromY.get());
+                if(selectedPiece != null) deplacerPiecePourRediff(toX.get(), toY.get());
+            });
+            pause.play();
+        }
+        reader.close();
     }
 
     //méthode permettant de sélectionner une pièce sur le plateau par le fichier texte en mode rediffusion
@@ -1386,7 +1367,7 @@ public class mainController {
 
     @FXML
     private void selectStats() {
-        selectStats.setStyle("-fx-background-color: black");
+        selectedStats.setStyle("-fx-background-color: black");
         selectPartie.setStyle("");
         selectReplay.setStyle("");
 
@@ -1405,4 +1386,3 @@ public class mainController {
     }
 
 }
-

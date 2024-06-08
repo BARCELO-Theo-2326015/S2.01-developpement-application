@@ -129,7 +129,6 @@
                               <Insets top="30.0" />
                            </opaqueInsets>
                                 </Button>
-                        <Button mnemonicParsing="false" text=">" fx:id="boutonNext" onAction="#nextMoove"/>
                             </children>
                         </VBox>
                         <VBox fx:id="selectedReplay" visible="false" />

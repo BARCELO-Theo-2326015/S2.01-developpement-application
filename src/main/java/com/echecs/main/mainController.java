@@ -273,7 +273,7 @@ public class mainController {
 
 
         fileList = FXCollections.observableArrayList();
-        listView = new ListView<>(fileList);
+        listView.setItems(fileList);
         watchDir = Paths.get(System.getProperty("user.dir"), DIRECTORY_PATH);
 
         System.out.println("Watching directory: " + watchDir.toAbsolutePath());
@@ -284,7 +284,7 @@ public class mainController {
                 if (selectedItem != null) {
                     // Call your method to read and replay the chess game
                     try {
-                        playMovesFromFile(selectedItem);
+                        playMovesFromFile(DIRECTORY_PATH + selectedItem);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -1258,10 +1258,10 @@ public class mainController {
 
     //méthode
     private void BoutonRediffClicked() {
-        reinitialiserPlateau();
-        configurerPieces();
-        mettreAJourPieces();
-        updateGameSize();
+    //    reinitialiserPlateau();
+    //    configurerPieces();
+    //    mettreAJourPieces();
+    //    updateGameSize();
 
      //   ouvrirDialogueDeFichier(); // Ouvre le dialogue de sélection de fichier
     }
@@ -1272,6 +1272,17 @@ public class mainController {
     private Path watchDir;
 
     private void initializeWatchService() {
+        // add already existing files to the list
+        File directory = new File(DIRECTORY_PATH);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    fileList.add(file.getName());
+                }
+            }
+        }
+
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
             watchDir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
@@ -1335,6 +1346,10 @@ public class mainController {
     }
     //Méthode permettant la lecture d'un fichier texte
     private void playMovesFromFile(String file) throws IOException {
+        reinitialiserPlateau();
+        configurerPieces();
+        mettreAJourPieces();
+        updateGameSize();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         System.out.println("reader = " + reader);

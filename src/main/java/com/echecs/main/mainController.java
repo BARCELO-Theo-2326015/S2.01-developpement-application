@@ -19,6 +19,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import java.io.*;
 import java.nio.file.*;
@@ -276,6 +277,31 @@ public class mainController {
         listView.setItems(fileList);
         watchDir = Paths.get(System.getProperty("user.dir"), DIRECTORY_PATH);
 
+        listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty || item == null) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            HBox container = new HBox();
+                            container.getStyleClass().add("list-cell-container");
+
+                            Label label = new Label(item);
+                            label.setStyle("-fx-font-size: 16px; -fx-text-fill: #ffffff;");
+                            container.getChildren().add(label);
+
+                            setGraphic(container);
+                        }
+                    }
+                };
+            }
+        });
         // Handle double-click events on the ListView items
         listView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {  // Double click

@@ -128,18 +128,17 @@
 
 /* Styles pour ListView */
 .list-view {
-    -fx-background-color: #212121;
-    -fx-control-inner-background: #212121;
+    -fx-background-color: #262522;
+    -fx-control-inner-background: #262522;
     -fx-cell-hover-color: transparent; /* Optionnel : enlève la couleur de survol */
 }
 
 .list-cell {
-    -fx-background-color: #212121;
+    -fx-background-color: #262522;
     -fx-text-fill: white; /* Change la couleur du texte en blanc */
     -fx-font-size: 16px; /* Taille de la police */
-    -fx-border-color: #3c3f41; /* Couleur de la bordure */
-    -fx-border-width: 1px; /* Épaisseur de la bordure */
-    -fx-border-style: solid; /* Style de la bordure */
+    -fx-border-width: 0px; /* Épaisseur de la bordure */
+
 }
 
 /* Styles pour le texte dans ListView */
@@ -169,6 +168,7 @@
 .combo-box .list-cell {
     -fx-background-color: #605d5a; /* Gris foncé pour les cellules du ComboBox */
     -fx-text-fill: #ffffff; /* Blanc pour le texte */
+    -fx-font-weight: bold; /* Texte en gras */
     -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
 }
 
@@ -179,8 +179,20 @@
 
 /* Style du ComboBox */
 .combo-box {
+    -fx-background-radius: 10px; /* Rayon des coins */
     -fx-background-color: #605d5a; /* Gris foncé pour le ComboBox */
     -fx-control-inner-background: #605d5a; /* Gris foncé pour l'intérieur */
     -fx-border-color: transparent; /* Transparent pour supprimer les bordures */
     -fx-border-width: 0; /* Pas de largeur de bordure */
+}
+
+.list-cell-container {
+    -fx-background-color: #605d5a; /* Couleur de fond */
+    -fx-padding: 10px; /* Espacement intérieur */
+    -fx-background-radius: 10px; /* Rayon des coins */
+    -fx-border-radius: 10px; /* Rayon des coins pour les bordures */
+    -fx-border-color: #605d5a; /* Couleur de la bordure */
+    -fx-border-width: 2px; /* Épaisseur de la bordure */
+    -fx-text-fill: #ffffff; /* Couleur du texte */
+    -fx-font-weight: bold; /* Texte en gras */
 }

@@ -1,6 +1,7 @@
 package com.echecs.main;
 
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -31,16 +33,24 @@ public class BotController {
     private Button boutonJouer;
 
     public List<Piece> pions = new ArrayList<>();
+
     private boolean tourBlanc = true; // true si c'est le tour des blancs, false si c'est le tour des noirs
 
     private Piece selectedPiece = null;
 
     private Double height = 0.0;
+
     private Double width = 0.0;
 
     private Bot joueurNoir;
 
     Stage stage;
+
+    @FXML
+    public ComboBox themeBox;
+
+    @FXML
+    public ComboBox pieceBox;
 
     @FXML
     private void playPlayer() throws IOException {
@@ -82,31 +92,132 @@ public class BotController {
         }
     }
 
+    //Méthode créeant les différentes cases du plateau sous forme de VBox
     private VBox createCase(int ligne, int col) {
         VBox caseRect = new VBox();
         caseRect.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         caseRect.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
         caseRect.setAlignment(Pos.CENTER);
         caseRect.setOnMouseClicked(event -> clickEvent(caseRect));
-        if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Color.WHITE));
-        else caseRect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
+        String selectedTheme = (String) themeBox.getValue();
+        switch (selectedTheme) {
+            case "Classique" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#EBECD0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#739552")));
+            }
+            case "Océan" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#D5E0E5")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#779AB0")));
+            }
+            case "Bois" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#EDD6B0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#B88762")));
+            }
+            case "Pierre" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#C8C3BC")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#545350")));
+            }
+            case "Violet" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#F0F1F0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#8476BA")));
+            }
+        }
         return caseRect;
     }
 
+
+    //Méthode configurant les pièces à leur position initiales sur le plateau
     public void configurerPieces() {
-        for (int ligne = 0; ligne < 8; ++ligne) {
-            for (int col = 0; col < 8; ++col) {
-                Piece p = null;
-                if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
-                if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if (p != null) pions.add(p);
+        String selectedTheme = (String) pieceBox.getValue();
+        switch (selectedTheme) {
+            case "Classique" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Classique");
+                            pions.add(p);
+                        }
+                    }
+                }
+            }
+            case "Old school" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Old school");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Red vs Blue" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Red vs Blue");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Neo" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Neo");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Master" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Master");
+                            pions.add(p);
+                        }                    }
+                }
             }
         }
+
     }
 
     private void clickEvent(Node rect) {
@@ -202,37 +313,6 @@ public class BotController {
         }
         return true; // Aucun obstacle trouvé
     }
-
-    private List<int[]> genererTousLesMouvementsLegaux(String equipe) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-        List<Piece> copiePions = new ArrayList<>(pions); // Créer une copie de la liste des pièces pour éviter la modification concurrente
-        for (Piece piece : copiePions) {
-            if (piece.getEquipe().equals(equipe)) {
-                // Pour chaque pièce, générer les mouvements possibles
-                for (int[] mouvement : piece.genererMouvementsPossibles()) {
-                    int nouvelleX = mouvement[0];
-                    int nouvelleY = mouvement[1];
-                    Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                    if (piece.getType().equals("KNIGHT") || cheminLibre(piece, nouvelleX, nouvelleY)) {
-                        if (autrePieceSelectionnee == null) {
-                            String valide = deplacementPieceValide(piece, nouvelleX, nouvelleY, piece.getX(), piece.getY());
-                            if (!valide.equals("false")) {
-                                mouvementsLegaux.add(mouvement);
-                            }
-
-                            if (deplacementPossibleSansEchec(piece, nouvelleY, nouvelleX, piece.getY(), piece.getX())) {
-                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return mouvementsLegaux;
-    }
-
 
     // l'ajout d'une fonction de vérification de mouvement légaux pour chaque type de pièce a été nécéssaire dans un souci de débogage premièrement puis ont été laissé de manière permanente
     private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
@@ -432,58 +512,47 @@ public class BotController {
         }
         return false;
     }
-    
-    //méthode permettant au bot de récuperer les lmouvements réalisable lors d'une mise en échec 
-    private  List<int[]> recupMoove(){
-        Piece roi = trouverRoi("BLACK");
-        if (!!estEchecEtMat(roi)){
-            List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
-            if(mouvementsLegaux.isEmpty()) {
-                List<Piece> copiePions = new ArrayList<>(pions);
-                List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
-                for (Piece piece : copiePions) {
-                    if (piece.getEquipe().equals(roi.getEquipe())) {
-                        if (piece.getType().equals("KNIGHT")) {
-                            mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
-                        }
-                        if (piece.getType().equals("ROOK")) {
-                            mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
-                        }
-                        if (piece.getType().equals("BISHOP")) {
-                            mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
-                        }
-                        if (piece.getType().equals("QUEEN")) {
-                            mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
-                        }
-                        if (piece.getType().equals("PAWN")) {
-                            mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
-                        }
-                    }
-                }
-                for (int i = 0; i < mouvementsLegaux2.size(); i++) {
-                    if (mouvementsLegaux2.get(i).isEmpty()) {
-                        mouvementsLegaux2.remove(i);
-                        i--; // Décrémenter i car la taille de la liste a changé
-                    }
-                }
-                List<int[]> mouvementsLegauxCombine = new ArrayList<>();
-                for (List<int[]> liste : mouvementsLegaux2) {
-                    mouvementsLegauxCombine.addAll(liste);
-                }
-                return mouvementsLegauxCombine;
-            }
-            return mouvementsLegaux;
-        }
-        return null;
-    }
-    
+
+
+
     private boolean estPat(String equipe) {
+
         if (roiEnEchec(equipe)) {
             return false;
         }
+        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(Objects.requireNonNull(trouverRoi("BLACK")));
+        if(mouvementsLegaux.isEmpty()) {
+            List<Piece> copiePions = new ArrayList<>(pions);
+            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+            for (Piece piece : copiePions) {
+                if (piece.getEquipe().equals(equipe)) {
+                    if (piece.getType().equals("KNIGHT")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                    }
+                    if (piece.getType().equals("ROOK")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                    }
+                    if (piece.getType().equals("BISHOP")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                    }
+                    if (piece.getType().equals("QUEEN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                    }
+                    if (piece.getType().equals("PAWN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                    }
+                }
+            }
 
-        List<int[]> mouvementsLegaux = genererTousLesMouvementsLegaux(equipe);
-        return mouvementsLegaux.isEmpty();
+            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
+                if (mouvementsLegaux2.get(i).isEmpty()) {
+                    mouvementsLegaux2.remove(i);
+                    i--; // Décrémenter i car la taille de la liste a changé
+                }
+            }
+            return mouvementsLegaux2.isEmpty();
+        }
+        return false;
     }
 
     private void promouvoirPion(Piece pion) {
@@ -500,7 +569,7 @@ public class BotController {
 
         // Remplacer le pion par la nouvelle pièce
         pion.setType(nouvellePieceType);
-        pion.generateSymbol();
+        pion.generateSymbol((String) pieceBox.getValue());
 
         // Mettre à jour l'affichage de la pièce
         VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
@@ -690,6 +759,12 @@ public class BotController {
 
     @FXML
     private void initialize() {
+        themeBox.setItems(FXCollections.observableArrayList("Classique", "Océan", "Bois","Pierre","Violet"));
+        themeBox.getSelectionModel().selectFirst();
+
+        pieceBox.setItems(FXCollections.observableArrayList("Classique", "Old school", "Red vs Blue","Neo","Master"));
+        pieceBox.getSelectionModel().selectFirst();
+
         jouerClicked();
     }
 

@@ -9,6 +9,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.BotController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -59,7 +61,46 @@
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin></Button>
-
+                        <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le thème" fx:id="themeBox">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Classique" />
+                                    <String fx:value="Océan" />
+                                    <String fx:value="Bois" />
+                                    <String fx:value="Pierre" />
+                                    <String fx:value="Violet" />
+                                </FXCollections>
+                            </items>
+                            <VBox.margin>
+                                <Insets bottom="10.0" top="10.0" />
+                            </VBox.margin>
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </ComboBox>
+                        <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le style des pièces" fx:id="pieceBox">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Classique" />
+                                    <String fx:value="Old school" />
+                                    <String fx:value="Red vs Blue" />
+                                    <String fx:value="Neo" />
+                                    <String fx:value="Master" />
+                                </FXCollections>
+                            </items>
+                            <VBox.margin>
+                                <Insets bottom="10.0" top="10.0" />
+                            </VBox.margin>
+                            <padding>
+                                <Insets left="10.0" />
+                            </padding>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </ComboBox>
                     </children>
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

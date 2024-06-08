@@ -59,6 +59,7 @@ public class Piece {
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
+    
     public boolean getHasMoved(){
         return hasMoved;
     }
@@ -69,38 +70,134 @@ public class Piece {
         this.x = x;
         this.y = y;
         this.hasMoved = false;
-        generateSymbol();
     }
 
-    public void generateSymbol() {
+    public void generateSymbol(String theme) {
 
         // load the image
         Image image = null;
 
         symbole = new ImageView();
 
-        if (equipe.equals("WHITE")) {
-            image = switch (type) {
-                case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_white.png")));
-                case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_white.png")));
-                case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_white.png")));
-                case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_white.png")));
-                case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_white.png")));
-                case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_white.png")));
-                default -> image;
-            };
-        } else if (equipe.equals("BLACK")) {
-            image = switch (type) {
-                case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_black.png")));
-                case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_black.png")));
-                case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_black.png")));
-                case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_black.png")));
-                case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_black.png")));
-                case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_black.png")));
-                default -> image;
-            };
+        switch (theme) {
+            case "Classique" -> {
+                if (equipe.equals("WHITE")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_white.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_white.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_white.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_white.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_white.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_white.png")));
+                        default -> image;
+                    };
+                } else if (equipe.equals("BLACK")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/king_black.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/queen_black.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/rook_black.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/bishop_black.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/knight_black.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pawn_black.png")));
+                        default -> image;
+                    };
 
+                }
+            }
+            case "Old school" -> {
+                if (equipe.equals("WHITE")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roiblancjeu2.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reineblancjeu2.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tourblancjeu2.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/foublancjeu2.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavalierblancjeu2.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionblancjeu2.png")));
+                        default -> image;
+                    };
+                } else if (equipe.equals("BLACK")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roinoirjeu2.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reinenoirjeu2.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tournoijeu2.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/founoirjeu2.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavaliernoirjeu2.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionnoirjeu2.png")));
+                        default -> image;
+                    };
+                }
+            }
+            case "Red vs Blue" -> {
+                if (equipe.equals("WHITE")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roiblancjeu4.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reineblanchejeu4.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tourblancjeu4.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/foublancjeu4.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavalierblancjeu4.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionblancjeu4.png")));
+                        default -> image;
+                    };
+                } else if (equipe.equals("BLACK")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roinoirjeu4.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reinenoirjeu4.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tournoirjeu4.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/founoirjeu4.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavaliernoirjeu4.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionnoirjeu4.png")));
+                        default -> image;
+                    };
+                }
+            }
+            case "Neo" -> {
+                if (equipe.equals("WHITE")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roiblancjeu3.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reineblancjeu3.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tourblancjeu3.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/foublancjeu3.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavalierblancjeu3.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionblancjeu3.png")));
+                        default -> image;
+                    };
+                } else if (equipe.equals("BLACK")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roinoirjeu3.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reinenoirjeu3.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tournoirjeu3.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/founoirjeu3.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavaliernoirjeu3.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionnoirjeu3.png")));
+                        default -> image;
+                    };
+                }
+            }
+            case "Master" -> {
+                if (equipe.equals("WHITE")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roiblancjeu1.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reineblancjeu1.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tourblancjeu1.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/foublancjeu1.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavalierblancjeu1.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionblancjeu1.png")));
+                        default -> image;
+                    };
+                } else if (equipe.equals("BLACK")) {
+                    image = switch (type) {
+                        case "KING" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/roinoirjeu1.png")));
+                        case "QUEEN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/reinenoirjeu1.png")));
+                        case "ROOK" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/tournoirjeu1.png")));
+                        case "BISHOP" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/founoirjeu1.png")));
+                        case "KNIGHT" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/cavaliernoirjeu1.png")));
+                        case "PAWN" -> new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/pionnoirjeu1.png")));
+                        default -> image;
+                    };
+                }
+            }
         }
+
 
         if (image != null) {
             symbole.setPreserveRatio(true);

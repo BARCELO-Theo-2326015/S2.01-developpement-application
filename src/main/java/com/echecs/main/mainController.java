@@ -33,6 +33,9 @@ public class mainController {
     @FXML
     public ComboBox themeBox;
 
+    @FXML
+    public ComboBox pieceBox;
+
     //partie contenant la déclaration de l'ensemble des variables (attributs) utilisés dans cette classe
 
     private Stage stage;
@@ -278,6 +281,9 @@ public class mainController {
         themeBox.setItems(FXCollections.observableArrayList("Classique", "Océan", "Bois","Pierre","Violet"));
         themeBox.getSelectionModel().selectFirst();
 
+        pieceBox.setItems(FXCollections.observableArrayList("Classique", "Old school", "Red vs Blue","Neo","Master"));
+        pieceBox.getSelectionModel().selectFirst();
+
 
         fileList = FXCollections.observableArrayList();
         listView.setItems(fileList);
@@ -497,19 +503,96 @@ public class mainController {
 
     //Méthode configurant les pièces à leur position initiales sur le plateau
     public void configurerPieces() {
-        for (int ligne = 0; ligne < 8; ++ligne) {
-            for (int col = 0; col < 8; ++col) {
-                Piece p = null;
-                if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
-                if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
-                if (p != null) pions.add(p);
+        String selectedTheme = (String) pieceBox.getValue();
+        switch (selectedTheme) {
+            case "Classique" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Classique");
+                            pions.add(p);
+                        }
+                    }
+                }
+            }
+            case "Old school" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Old school");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Red vs Blue" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Red vs Blue");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Neo" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Neo");
+                            pions.add(p);
+                        }                    }
+                }
+            }
+            case "Master" -> {
+                for (int ligne = 0; ligne < 8; ++ligne) {
+                    for (int col = 0; col < 8; ++col) {
+                        Piece p = null;
+                        if (ligne == 1) p = new Piece("PAWN", "BLACK", ligne, col);
+                        if (ligne == 6) p = new Piece("PAWN", "WHITE", ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 0 || col == 7)) p = new Piece("ROOK", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 1 || col == 6)) p = new Piece("KNIGHT", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && (col == 2 || col == 5)) p = new Piece("BISHOP", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 3) p = new Piece("QUEEN", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if ((ligne == 0 || ligne == 7) && col == 4) p = new Piece("KING", (ligne == 0 ? "BLACK" : "WHITE"), ligne, col);
+                        if (p != null) {
+                            p.generateSymbol("Master");
+                            pions.add(p);
+                        }                    }
+                }
             }
         }
+
     }
 
 
@@ -569,7 +652,7 @@ public class mainController {
 
         // Remplacer le pion par la nouvelle pièce
         pion.setType(nouvellePieceType);
-        pion.generateSymbol();
+        pion.generateSymbol((String) pieceBox.getValue());
 
         // Mettre à jour l'affichage de la pièce
         VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());

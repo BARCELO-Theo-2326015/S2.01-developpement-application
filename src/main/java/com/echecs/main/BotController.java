@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -560,24 +561,35 @@ public class BotController {
         // Afficher une boîte de dialogue pour choisir la nouvelle pièce
         List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
         if(tourBlanc){
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("QUEEN", choix);
-            dialog.setTitle("Promotion");
-            dialog.setHeaderText(null);
-            dialog.setContentText("Choisissez une pièce pour la promotion:");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("PromotionDialog.fxml"));
+                Parent root = loader.load();
 
-            // Récupérer le choix de l'utilisateur
-            Optional<String> result = dialog.showAndWait();
-            String nouvellePieceType = result.orElse("QUEEN");
+                PromotionDialogController controller = loader.getController();
 
-            // Remplacer le pion par la nouvelle pièce
-            pion.setType(nouvellePieceType);
-            pion.generateSymbol((String) pieceBox.getValue());
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Promotion");
+                stage.setScene(new Scene(root));
+                stage.showAndWait();
 
-            // Mettre à jour l'affichage de la pièce
-            VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
-            caseCible.getChildren().clear();
-            caseCible.getChildren().add(pion.getSymbole());
-            updateGameSize();
+                String nouvellePieceType = controller.getSelectedPiece();
+                if (nouvellePieceType == null) {
+                    nouvellePieceType = "QUEEN";
+                }
+
+                // Remplacer le pion par la nouvelle pièce
+                pion.setType(nouvellePieceType);
+                pion.generateSymbol((String) pieceBox.getValue());
+
+                // Mettre à jour l'affichage de la pièce
+                VBox caseCible = (VBox) jeu.getChildren().get(pion.getX() * 8 + pion.getY());
+                caseCible.getChildren().clear();
+                caseCible.getChildren().add(pion.getSymbole());
+                updateGameSize();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else{
             // Créer une instance de Random

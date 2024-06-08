@@ -1190,6 +1190,10 @@ public class mainController {
         selectedPartie.setVisible(true);
         selectedReplay.setVisible(false);
         selectedStats.setVisible(false);
+
+        selectedPartie.setManaged(true);
+        selectedReplay.setManaged(false);
+        selectedStats.setManaged(false);
     }
 
     @FXML
@@ -1201,6 +1205,11 @@ public class mainController {
         selectedReplay.setVisible(true);
         selectedPartie.setVisible(false);
         selectedStats.setVisible(false);
+
+        selectedReplay.setManaged(true);
+        selectedPartie.setManaged(false);
+        selectedStats.setManaged(false);
+
         BoutonRediffClicked();
     }
     //Méthode permettant de créer un fichier texte où seront stocké les coups joués
@@ -1531,6 +1540,10 @@ public class mainController {
         selectedStats.setVisible(true);
         selectedPartie.setVisible(false);
         selectedReplay.setVisible(false);
+
+        selectedStats.setManaged(true);
+        selectedPartie.setManaged(false);
+        selectedReplay.setManaged(false);
 
         // load all stats from all Joueurs with loadPlayers function and show it
         ArrayList<Joueur> players = loadPlayers();

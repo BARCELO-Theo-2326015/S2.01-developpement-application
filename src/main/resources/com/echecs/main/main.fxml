@@ -132,12 +132,12 @@
                                 </Button>
                             </children>
                         </VBox>
-                        <VBox fx:id="selectedReplay" visible="false" >
+                        <VBox fx:id="selectedReplay" visible="false" managed="false">
                             <children>
                                 <ListView fx:id="listView" />
                             </children>
                         </VBox>
-                        <VBox fx:id="selectedStats" visible="false" />
+                        <VBox fx:id="selectedStats" visible="false" managed="false"/>
                     </children>
                     <HBox.margin>
                         <Insets />

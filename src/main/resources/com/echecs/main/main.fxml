@@ -148,7 +148,7 @@
                                         <Insets top="5.0" />
                                     </VBox.margin>
                            <opaqueInsets>
-                              <Insets top="30.0" />
+                              <Insets top="40.0" />
                            </opaqueInsets>
                                 </Button>
                             </children>
@@ -171,6 +171,26 @@
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding></VBox>
+                  <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le thème" fx:id="themeBox">
+                      <items>
+                          <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="Classique" />
+                              <String fx:value="Océan" />
+                              <String fx:value="Bois" />
+                              <String fx:value="Pierre" />
+                              <String fx:value="Violet" />
+                          </FXCollections>
+                      </items>
+                      <VBox.margin>
+                          <Insets bottom="10.0" top="10.0" />
+                      </VBox.margin>
+                      <padding>
+                          <Insets left="10.0" />
+                      </padding>
+                      <opaqueInsets>
+                          <Insets />
+                      </opaqueInsets>
+                  </ComboBox>
                     </children>
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

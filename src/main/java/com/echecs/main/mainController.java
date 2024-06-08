@@ -30,6 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class mainController {
 
+    @FXML
+    public ComboBox themeBox;
+
     //partie contenant la déclaration de l'ensemble des variables (attributs) utilisés dans cette classe
 
     private Stage stage;
@@ -272,6 +275,9 @@ public class mainController {
         tempsComboBox.setItems(FXCollections.observableArrayList("10 minutes", "3 minutes", "1 minute"));
         tempsComboBox.getSelectionModel().selectFirst();
 
+        themeBox.setItems(FXCollections.observableArrayList("Classique", "Océan", "Bois","Pierre","Violet"));
+        themeBox.getSelectionModel().selectFirst();
+
 
         fileList = FXCollections.observableArrayList();
         listView.setItems(fileList);
@@ -463,8 +469,29 @@ public class mainController {
         caseRect.setMinSize(Double.MIN_VALUE, Double.MIN_VALUE);
         caseRect.setAlignment(Pos.CENTER);
         caseRect.setOnMouseClicked(event -> clickEvent(caseRect));
-        if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Color.WHITE));
-        else caseRect.setBackground(Background.fill(Paint.valueOf("#6bbd41")));
+        String selectedTheme = (String) themeBox.getValue();
+        switch (selectedTheme) {
+            case "Classique" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#EBECD0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#739552")));
+            }
+            case "Océan" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#D5E0E5")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#779AB0")));
+            }
+            case "Bois" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#EDD6B0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#B88762")));
+            }
+            case "Pierre" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#C8C3BC")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#545350")));
+            }
+            case "Violet" -> {
+                if ((ligne + col) % 2 == 0) caseRect.setBackground(Background.fill(Paint.valueOf("#F0F1F0")));
+                else caseRect.setBackground(Background.fill(Paint.valueOf("#8476BA")));
+            }
+        }
         return caseRect;
     }
 

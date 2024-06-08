@@ -269,7 +269,7 @@ public class mainController {
 
     @FXML
     private void initialize() {
-        tempsComboBox.setItems(FXCollections.observableArrayList("10", "3", "1"));
+        tempsComboBox.setItems(FXCollections.observableArrayList("10 minutes", "3 minutes", "1 minute"));
         tempsComboBox.getSelectionModel().selectFirst();
 
 
@@ -414,8 +414,21 @@ public class mainController {
         tourBlanc = true; // Les blancs commencent toujours
         // Récupérer le temps initial sélectionné dans le ComboBox
         String selectedTemps = tempsComboBox.getValue();
-        tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
-        tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
+        switch (selectedTemps) {
+            case "10 minutes" -> {
+                tempsInitialBlancs = 10 * 60;
+                tempsInitialNoirs = 10 * 60;
+            }
+            case "3 minutes" -> {
+                tempsInitialBlancs = 3 * 60;
+                tempsInitialNoirs = 3 * 60;
+            }
+            case "1 minute" -> {
+                tempsInitialBlancs = 60;
+                tempsInitialNoirs = 60;
+            }
+        }
+
 
         reinitialiserPlateau();
         configurerPieces();

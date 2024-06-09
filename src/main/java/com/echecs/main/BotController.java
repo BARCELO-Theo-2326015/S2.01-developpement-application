@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class BotController {
+
+    //Partie du code dédiée à la declaration des attributs de la classe
     @FXML
     private GridPane jeu;
 
@@ -54,6 +56,8 @@ public class BotController {
     @FXML
     public ComboBox pieceBox;
 
+
+    //Méthode permettant de passer à l'interface de joueur contre joueur depuis un bouton
     @FXML
     private void playPlayer() throws IOException {
         Stage stg = new Stage();
@@ -70,6 +74,11 @@ public class BotController {
         stage.close();
     }
 
+
+    //Partie du code dédiée a la mise en place d'une partie
+
+
+    //Méthode initialisant une partie quand on clique sur le bouton jouer
     @FXML
     private void jouerClicked() {
         tourBlanc = true; // Les blancs commencent toujours
@@ -79,6 +88,7 @@ public class BotController {
         updateGameSize();
     }
 
+    //Méthode permettant de reinitialiser le plateau
     private void reinitialiserPlateau() {
         jeu.getChildren().clear();
         pions.clear();
@@ -222,6 +232,7 @@ public class BotController {
 
     }
 
+    //Méthode permettant la gestion d'un clic sur une pièce sur le plateau
     private void clickEvent(Node rect) {
         int nouvelleLigne = GridPane.getRowIndex(rect);
         int nouvelleCol = GridPane.getColumnIndex(rect);
@@ -234,6 +245,7 @@ public class BotController {
         }
     }
 
+    //Méthode permettant de gérer la selection d'une pièce
     public void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
@@ -247,316 +259,7 @@ public class BotController {
         }
     }
 
-    private boolean roiEnEchec(String equipe) {
-        // Trouver la position du roi
-        int roiX = -1;
-        int roiY = -1;
-        for (Piece p : pions) {
-            if ("KING".equals(p.getType()) && equipe.equals(p.getEquipe())) {
-                roiX = p.getX();
-                roiY = p.getY();
-                break;
-            }
-        }
-        if (roiX == -1 || roiY == -1) return false; // Roi introuvable
-
-        // Vérifier si une pièce adverse peut capturer le roi
-        for (Piece p : pions) {
-            if (!equipe.equals(p.getEquipe())) {
-                String valide = deplacementPieceValide(p, p.getY(), p.getX(), roiY, roiX);
-                if (valide.equals("CAPTURE")||valide.equals("true")) return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
-        // Vérifier si le déplacement met le roi en échec
-        Piece pieceTemp = null;
-        for (Piece p : pions) {
-            if (p.getX() == ligne && p.getY() == col) {
-                pieceTemp = p;
-                break;
-            }
-        }
-
-        // Simuler le déplacement pour vérifier l'échec
-        if (pieceTemp != null) {
-            pions.remove(pieceTemp);
-        }
-        piece.setX(ligne);
-        piece.setY(col);
-        boolean enEchec = roiEnEchec(piece.getEquipe());
-        piece.setX(ligneActuelle);
-        piece.setY(colActuelle);
-        if (pieceTemp != null) {
-            pions.add(pieceTemp);
-        }
-        return !enEchec;
-    }
-    //méthode nécéssaire car celle de base beug de façon inexpliquée avec la méthode de vérification de tous les mouvements légaux
-    private boolean cheminLibre(Piece piece, int nouvelleX, int nouvelleY) {
-        int x = piece.getX();
-        int y = piece.getY();
-
-        // Calculer les directions de déplacement
-        int dx = Integer.compare(nouvelleX, x); // 1, -1 ou 0
-        int dy = Integer.compare(nouvelleY, y); // 1, -1 ou 0
-
-        // Avancer jusqu'à la case cible
-        x += dx;
-        y += dy;
-        while (x != nouvelleX || y != nouvelleY) {
-            if (getPieceAt(x, y) != null) {
-                return false; // Il y a une pièce sur le chemin
-            }
-            x += dx;
-            y += dy;
-        }
-        return true; // Aucun obstacle trouvé
-    }
-
-    // l'ajout d'une fonction de vérification de mouvement légaux pour chaque type de pièce a été nécéssaire dans un souci de débogage premièrement puis ont été laissé de manière permanente
-    private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (roi.getType().equals("KING")) {
-            for (int[] mouvement : roi.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(roi.getEquipe())) {
-                    String valide = deplacementPieceValide(roi, nouvelleX, nouvelleY, roi.getX(), roi.getY());
-                    if (!valide.equals("false")) {
-                        if (deplacementPossibleSansEchec(roi, nouvelleY, nouvelleX, roi.getY(), roi.getX())) {
-                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                        }
-                    }
-                }
-            }
-        }
-        return mouvementsLegaux;
-    }
-
-    private List<int[]> genererMouvementsLegauxReine(Piece reine) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (reine.getType().equals("QUEEN")) {
-            for (int[] mouvement : reine.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(reine.getEquipe())) {
-                    if (cheminLibre(reine, nouvelleX, nouvelleY)) {
-                        String valide = deplacementPieceValide(reine, nouvelleX, nouvelleY, reine.getX(), reine.getY());
-                        if (!valide.equals("false")) {
-                            if (deplacementPossibleSansEchec(reine, nouvelleY, nouvelleX, reine.getY(), reine.getX())) {
-                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return mouvementsLegaux;
-    }
-
-    private List<int[]> genererMouvementsLegauxFou(Piece fou) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (fou.getType().equals("BISHOP")) {
-            for (int[] mouvement : fou.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(fou.getEquipe())) {
-                    if (cheminLibre(fou, nouvelleX, nouvelleY)) {
-                        String valide = deplacementPieceValide(fou, nouvelleX, nouvelleY, fou.getX(), fou.getY());
-                        if (!valide.equals("false")) {
-                            if (deplacementPossibleSansEchec(fou, nouvelleY, nouvelleX, fou.getY(), fou.getX())) {
-                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return mouvementsLegaux;
-    }
-
-    private List<int[]> genererMouvementsLegauxTour(Piece tour) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (tour.getType().equals("ROOK")) {
-            for (int[] mouvement : tour.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(tour.getEquipe())) {
-                    if (cheminLibre(tour, nouvelleX, nouvelleY)) {
-                        String valide = deplacementPieceValide(tour, nouvelleX, nouvelleY, tour.getX(), tour.getY());
-                        if (!valide.equals("false")) {
-                            if (deplacementPossibleSansEchec(tour, nouvelleY, nouvelleX, tour.getY(), tour.getX())) {
-                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return mouvementsLegaux;
-    }
-
-
-    private List<int[]> genererMouvementsLegauxPion(Piece pion) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (pion.getType().equals("PAWN")) {
-            for (int[] mouvement : pion.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                // Vérifier si la case est vide
-                if (autrePieceSelectionnee == null) {
-                    String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
-                    if (!valide.equals("false")) {
-                        if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
-                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                        }
-                    }
-                } else {
-                    // Vérifier si la case contient une pièce adverse
-                    if (!autrePieceSelectionnee.getEquipe().equals(pion.getEquipe())) {
-                        String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
-                        if (!valide.equals("false") && valide.equals("CAPTURE")) {
-                            if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
-                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        return mouvementsLegaux;
-    }
-
-    private List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
-        List<int[]> mouvementsLegaux = new ArrayList<>();
-
-        if (cavalier.getType().equals("KNIGHT")) {
-            for (int[] mouvement : cavalier.genererMouvementsPossibles()) {
-                int nouvelleX = mouvement[0];
-                int nouvelleY = mouvement[1];
-                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
-
-                // Vérifier si la case est vide ou contient une pièce adverse
-                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(cavalier.getEquipe())) {
-                    String valide = deplacementPieceValide(cavalier, nouvelleX, nouvelleY, cavalier.getX(), cavalier.getY());
-                    if (!valide.equals("false")) {
-                        if (deplacementPossibleSansEchec(cavalier, nouvelleY, nouvelleX, cavalier.getY(), cavalier.getX())) {
-                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
-                        }
-                    }
-                }
-            }
-        }
-        return mouvementsLegaux;
-    }
-
-    private Piece trouverRoi(String equipe) {
-        for (Piece piece : pions) {
-            if (piece.getType().equals("KING") && piece.getEquipe().equals(equipe)) {
-                return piece;
-            }
-        }
-        return null;
-    }
-
-    private boolean estEchecEtMat(Piece roi) {
-        if (!roiEnEchec(roi.getEquipe())) {
-            return false;
-        }
-        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
-        if(mouvementsLegaux.isEmpty()) {
-            List<Piece> copiePions = new ArrayList<>(pions);
-            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
-            for (Piece piece : copiePions) {
-                if (piece.getEquipe().equals(roi.getEquipe())) {
-                    if (piece.getType().equals("KNIGHT")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
-                    }
-                    if (piece.getType().equals("ROOK")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
-                    }
-                    if (piece.getType().equals("BISHOP")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
-                    }
-                    if (piece.getType().equals("QUEEN")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
-                    }
-                    if (piece.getType().equals("PAWN")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
-                    }
-                }
-            }
-            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
-                if (mouvementsLegaux2.get(i).isEmpty()) {
-                    mouvementsLegaux2.remove(i);
-                    i--; // Décrémenter i car la taille de la liste a changé
-                }
-            }
-            return mouvementsLegaux2.isEmpty() ;
-        }
-        return false;
-    }
-
-
-
-    private boolean estPat(String equipe) {
-
-        if (roiEnEchec(equipe)) {
-            return false;
-        }
-        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(Objects.requireNonNull(trouverRoi("BLACK")));
-        if(mouvementsLegaux.isEmpty()) {
-            List<Piece> copiePions = new ArrayList<>(pions);
-            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
-            for (Piece piece : copiePions) {
-                if (piece.getEquipe().equals(equipe)) {
-                    if (piece.getType().equals("KNIGHT")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
-                    }
-                    if (piece.getType().equals("ROOK")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
-                    }
-                    if (piece.getType().equals("BISHOP")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
-                    }
-                    if (piece.getType().equals("QUEEN")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
-                    }
-                    if (piece.getType().equals("PAWN")) {
-                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
-                    }
-                }
-            }
-
-            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
-                if (mouvementsLegaux2.get(i).isEmpty()) {
-                    mouvementsLegaux2.remove(i);
-                    i--; // Décrémenter i car la taille de la liste a changé
-                }
-            }
-            return mouvementsLegaux2.isEmpty();
-        }
-        return false;
-    }
-
+//Méthode gérant le système de promotion d'un pion
     private void promouvoirPion(Piece pion) {
         // Afficher une boîte de dialogue pour choisir la nouvelle pièce
         List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
@@ -611,6 +314,7 @@ public class BotController {
 
     }
 
+    //méthode permettant de déplacer une pièce sur le plateau
     public void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
         VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
         selectedCase.setStyle("");
@@ -669,7 +373,7 @@ public class BotController {
            showAlert(tourBlanc);
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
-        showAlert2(tourBlanc);
+        showAlert2();
         }
         selectedPiece = null;
         //change le tour
@@ -685,103 +389,9 @@ public class BotController {
     }
 
 
-    public String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (colActuelle < 0 || colActuelle >= 8 || ligneActuelle < 0 || ligneActuelle >= 8) return "false";
-        if(colActuelle == col && ligneActuelle == ligne) return "false";
-
-        String typePiece = piece.getType();
-
-        return switch (typePiece) {
-            case "PAWN" -> validerDeplacementPion(piece, col, ligne, colActuelle, ligneActuelle);
-            case "ROOK" -> validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
-            case "KNIGHT" -> validerDeplacementCavalier(col, ligne, colActuelle, ligneActuelle);
-            case "BISHOP" -> validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
-            case "QUEEN" -> validerDeplacementReine(col, ligne, colActuelle, ligneActuelle);
-            case "KING" -> validerDeplacementRoi(col, ligne, colActuelle, ligneActuelle);
-            default -> "false";
-        };
-    }
-
-    private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
-        String equipePiece = piece.getEquipe();
-        if (equipePiece.equals("WHITE")) {
-            if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
-            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle+1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
-            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle + 1) return "CAPTURE";
-        } else if (equipePiece.equals("BLACK")) {
-            if (col == colActuelle && ligne == ligneActuelle - 1) return "AVANCE";
-            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle-1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
-            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle - 1) return "CAPTURE";
-        }
-        return "false";
-
-    }
 
 
-
-
-    private String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (col == colActuelle) {
-            int step = (ligne > ligneActuelle) ? 1 : -1;
-            for (int i = ligneActuelle + step; i != ligne; i += step) {
-                if (getPieceAt(colActuelle, i) != null) return "false";
-            }
-            return "true";
-        } else if (ligne == ligneActuelle) {
-            int step = (col > colActuelle) ? 1 : -1;
-            for (int i = colActuelle + step; i != col; i += step) {
-                if (getPieceAt(i, ligneActuelle) != null) return "false";
-            }
-            return "true";
-        }
-        return "false";
-    }
-
-    private String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
-        int deltaX = Math.abs(col - colActuelle);
-        int deltaY = Math.abs(ligne - ligneActuelle);
-        if ((deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2)) {
-            return "true";
-        }
-        return "false";
-    }
-
-    private String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
-            int colStep = (col > colActuelle) ? 1 : -1;
-            int ligneStep = (ligne > ligneActuelle) ? 1 : -1;
-            for (int i = 1; i < Math.abs(col - colActuelle); i++) {
-                if (getPieceAt(colActuelle + i * colStep, ligneActuelle + i * ligneStep) != null) return "false";
-            }
-            return "true";
-        }
-
-        return "false";
-    }
-
-    private String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (col == colActuelle || ligne == ligneActuelle) {
-            return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
-        } else if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
-            return validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
-        }
-        return "false";
-    }
-
-    private String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
-        if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
-            return "true";
-        }
-        return "false";
-    }
-
-    public Piece getPieceAt(int col, int ligne) {
-        for (Piece p : pions) {
-            if (p.getX() == ligne && p.getY() == col) return p;
-        }
-        return null;
-    }
-
+    //Méthode permettant d'initialiser certains éléments du stage à l'execution qui ont des comportements liés à des méthodes dans ce controller
     @FXML
     private void initialize() {
         themeBox.setItems(FXCollections.observableArrayList("Classique", "Océan", "Bois","Pierre","Violet"));
@@ -793,6 +403,7 @@ public class BotController {
         jouerClicked();
     }
 
+    //Méthode permettant la gestion de la redimension de la fenêtre
     public void setResizeEvents(WindowEvent windowEvent) {
         // Get the stage
         stage = (Stage) boutonJouer.getScene().getWindow();
@@ -813,6 +424,7 @@ public class BotController {
         });
     }
 
+    //méthode permettant d'adapter la taille des éléments après la redimension de la fenêtre
     public void updateGameSize() {
         double superVal;
         if(width > height) superVal = height;
@@ -838,6 +450,454 @@ public class BotController {
         }
     }
 
+
+
+    //Partie du code dédiée à la vérification d'un mouvement spécifique durant une partie
+
+
+
+
+
+
+//méthode permettant de vérifier un déplacement d'une quelconque pièce
+    public String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (colActuelle < 0 || colActuelle >= 8 || ligneActuelle < 0 || ligneActuelle >= 8) return "false";
+        if(colActuelle == col && ligneActuelle == ligne) return "false";
+
+        String typePiece = piece.getType();
+
+        return switch (typePiece) {
+            case "PAWN" -> validerDeplacementPion(piece, col, ligne, colActuelle, ligneActuelle);
+            case "ROOK" -> validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
+            case "KNIGHT" -> validerDeplacementCavalier(col, ligne, colActuelle, ligneActuelle);
+            case "BISHOP" -> validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
+            case "QUEEN" -> validerDeplacementReine(col, ligne, colActuelle, ligneActuelle);
+            case "KING" -> validerDeplacementRoi(col, ligne, colActuelle, ligneActuelle);
+            default -> "false";
+        };
+    }
+
+    //méthode permettant de vérifier un mouvement d'un pion
+    private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        String equipePiece = piece.getEquipe();
+        if (equipePiece.equals("WHITE")) {
+            if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
+            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle + 2 && getPieceAt(col, ligneActuelle+1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
+            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle + 1) return "CAPTURE";
+        } else if (equipePiece.equals("BLACK")) {
+            if (col == colActuelle && ligne == ligneActuelle - 1) return "AVANCE";
+            if (!piece.getHasMoved() && col == colActuelle && ligne == ligneActuelle - 2 && getPieceAt(col, ligneActuelle-1) == null && getPieceAt(col, ligneActuelle) == null) return "AVANCE";
+            if (Math.abs(col - colActuelle) == 1 && ligne == ligneActuelle - 1) return "CAPTURE";
+        }
+        return "false";
+
+    }
+
+    //méthode permettant de vérifier le déplacement d'une tour
+    private String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (col == colActuelle) {
+            int step = (ligne > ligneActuelle) ? 1 : -1;
+            for (int i = ligneActuelle + step; i != ligne; i += step) {
+                if (getPieceAt(colActuelle, i) != null) return "false";
+            }
+            return "true";
+        } else if (ligne == ligneActuelle) {
+            int step = (col > colActuelle) ? 1 : -1;
+            for (int i = colActuelle + step; i != col; i += step) {
+                if (getPieceAt(i, ligneActuelle) != null) return "false";
+            }
+            return "true";
+        }
+        return "false";
+    }
+
+    //méthode permettant de vérifier le déplacement d'un cavalier
+    private String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
+        int deltaX = Math.abs(col - colActuelle);
+        int deltaY = Math.abs(ligne - ligneActuelle);
+        if ((deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2)) {
+            return "true";
+        }
+        return "false";
+    }
+
+    //méthode permettant de vérifier le déplacement d'un fou
+    private String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
+            int colStep = (col > colActuelle) ? 1 : -1;
+            int ligneStep = (ligne > ligneActuelle) ? 1 : -1;
+            for (int i = 1; i < Math.abs(col - colActuelle); i++) {
+                if (getPieceAt(colActuelle + i * colStep, ligneActuelle + i * ligneStep) != null) return "false";
+            }
+            return "true";
+        }
+
+        return "false";
+    }
+
+    //méthode permettant de vérifier le déplacement d'une reine
+    private String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (col == colActuelle || ligne == ligneActuelle) {
+            return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
+        } else if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
+            return validerDeplacementFou(col, ligne, colActuelle, ligneActuelle);
+        }
+        return "false";
+    }
+
+    //méthode permettant de vérifier le déplacement d'un roi
+    private String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
+        if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
+            return "true";
+        }
+        return "false";
+    }
+
+    //méthode permettant de vérifier si il y a une pièce à une position donnée
+    public Piece getPieceAt(int col, int ligne) {
+        for (Piece p : pions) {
+            if (p.getX() == ligne && p.getY() == col) return p;
+        }
+        return null;
+    }
+
+
+
+
+    //Partie du code contenant les méthode de vérification de fin de partie et de mise en échec
+
+
+
+    //méthode permettant de vérifier si un roi est en échec
+    private boolean roiEnEchec(String equipe) {
+        // Trouver la position du roi
+        int roiX = -1;
+        int roiY = -1;
+        for (Piece p : pions) {
+            if ("KING".equals(p.getType()) && equipe.equals(p.getEquipe())) {
+                roiX = p.getX();
+                roiY = p.getY();
+                break;
+            }
+        }
+        if (roiX == -1 || roiY == -1) return false; // Roi introuvable
+
+        // Vérifier si une pièce adverse peut capturer le roi
+        for (Piece p : pions) {
+            if (!equipe.equals(p.getEquipe())) {
+                String valide = deplacementPieceValide(p, p.getY(), p.getX(), roiY, roiX);
+                if (valide.equals("CAPTURE")||valide.equals("true")) return true;
+            }
+        }
+        return false;
+    }
+
+    //méthode permettant de vérifier si un déplacement est possible sans mettre le roi en échec
+    public boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+        // Vérifier si le déplacement met le roi en échec
+        Piece pieceTemp = null;
+        for (Piece p : pions) {
+            if (p.getX() == ligne && p.getY() == col) {
+                pieceTemp = p;
+                break;
+            }
+        }
+
+        // Simuler le déplacement pour vérifier l'échec
+        if (pieceTemp != null) {
+            pions.remove(pieceTemp);
+        }
+        piece.setX(ligne);
+        piece.setY(col);
+        boolean enEchec = roiEnEchec(piece.getEquipe());
+        piece.setX(ligneActuelle);
+        piece.setY(colActuelle);
+        if (pieceTemp != null) {
+            pions.add(pieceTemp);
+        }
+        return !enEchec;
+    }
+
+    //méthode permettant de vérifier si le chemin est libre entre l position initiale et la position d'arrivée d'une pièce (plus efficace que la version implémentée au dessus pour couvrir des larges vérifications comme l'échec et mat)
+    private boolean cheminLibre(Piece piece, int nouvelleX, int nouvelleY) {
+        int x = piece.getX();
+        int y = piece.getY();
+
+        // Calculer les directions de déplacement
+        int dx = Integer.compare(nouvelleX, x); // 1, -1 ou 0
+        int dy = Integer.compare(nouvelleY, y); // 1, -1 ou 0
+
+        // Avancer jusqu'à la case cible
+        x += dx;
+        y += dy;
+        while (x != nouvelleX || y != nouvelleY) {
+            if (getPieceAt(x, y) != null) {
+                return false; // Il y a une pièce sur le chemin
+            }
+            x += dx;
+            y += dy;
+        }
+        return true; // Aucun obstacle trouvé
+    }
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type roi
+    private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (roi.getType().equals("KING")) {
+            for (int[] mouvement : roi.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(roi.getEquipe())) {
+                    String valide = deplacementPieceValide(roi, nouvelleX, nouvelleY, roi.getX(), roi.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(roi, nouvelleY, nouvelleX, roi.getY(), roi.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
+    }
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type reine
+    private List<int[]> genererMouvementsLegauxReine(Piece reine) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (reine.getType().equals("QUEEN")) {
+            for (int[] mouvement : reine.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(reine.getEquipe())) {
+                    if (cheminLibre(reine, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(reine, nouvelleX, nouvelleY, reine.getX(), reine.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(reine, nouvelleY, nouvelleX, reine.getY(), reine.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
+    }
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type fou
+    private List<int[]> genererMouvementsLegauxFou(Piece fou) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (fou.getType().equals("BISHOP")) {
+            for (int[] mouvement : fou.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(fou.getEquipe())) {
+                    if (cheminLibre(fou, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(fou, nouvelleX, nouvelleY, fou.getX(), fou.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(fou, nouvelleY, nouvelleX, fou.getY(), fou.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
+    }
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type tour
+    private List<int[]> genererMouvementsLegauxTour(Piece tour) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (tour.getType().equals("ROOK")) {
+            for (int[] mouvement : tour.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(tour.getEquipe())) {
+                    if (cheminLibre(tour, nouvelleX, nouvelleY)) {
+                        String valide = deplacementPieceValide(tour, nouvelleX, nouvelleY, tour.getX(), tour.getY());
+                        if (!valide.equals("false")) {
+                            if (deplacementPossibleSansEchec(tour, nouvelleY, nouvelleX, tour.getY(), tour.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
+    }
+
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type pion
+    private List<int[]> genererMouvementsLegauxPion(Piece pion) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (pion.getType().equals("PAWN")) {
+            for (int[] mouvement : pion.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                // Vérifier si la case est vide
+                if (autrePieceSelectionnee == null) {
+                    String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                } else {
+                    // Vérifier si la case contient une pièce adverse
+                    if (!autrePieceSelectionnee.getEquipe().equals(pion.getEquipe())) {
+                        String valide = deplacementPieceValide(pion, nouvelleX, nouvelleY, pion.getX(), pion.getY());
+                        if (!valide.equals("false") && valide.equals("CAPTURE")) {
+                            if (deplacementPossibleSansEchec(pion, nouvelleY, nouvelleX, pion.getY(), pion.getX())) {
+                                mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return mouvementsLegaux;
+    }
+
+    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type cavalier
+    private List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
+        List<int[]> mouvementsLegaux = new ArrayList<>();
+
+        if (cavalier.getType().equals("KNIGHT")) {
+            for (int[] mouvement : cavalier.genererMouvementsPossibles()) {
+                int nouvelleX = mouvement[0];
+                int nouvelleY = mouvement[1];
+                Piece autrePieceSelectionnee = getPieceAt(nouvelleY, nouvelleX);
+
+                // Vérifier si la case est vide ou contient une pièce adverse
+                if (autrePieceSelectionnee == null || !autrePieceSelectionnee.getEquipe().equals(cavalier.getEquipe())) {
+                    String valide = deplacementPieceValide(cavalier, nouvelleX, nouvelleY, cavalier.getX(), cavalier.getY());
+                    if (!valide.equals("false")) {
+                        if (deplacementPossibleSansEchec(cavalier, nouvelleY, nouvelleX, cavalier.getY(), cavalier.getX())) {
+                            mouvementsLegaux.add(new int[]{nouvelleX, nouvelleY});
+                        }
+                    }
+                }
+            }
+        }
+        return mouvementsLegaux;
+    }
+
+    //méthode permettant de trouver le roi d'une équipe donnée sur le plateau
+    private Piece trouverRoi(String equipe) {
+        for (Piece piece : pions) {
+            if (piece.getType().equals("KING") && piece.getEquipe().equals(equipe)) {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    //méthode permettant de vérifer si un roi donné est en situation d'échec et mat
+    private boolean estEchecEtMat(Piece roi) {
+        if (!roiEnEchec(roi.getEquipe())) {
+            return false;
+        }
+        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(roi);
+        if(mouvementsLegaux.isEmpty()) {
+            List<Piece> copiePions = new ArrayList<>(pions);
+            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+            for (Piece piece : copiePions) {
+                if (piece.getEquipe().equals(roi.getEquipe())) {
+                    if (piece.getType().equals("KNIGHT")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                    }
+                    if (piece.getType().equals("ROOK")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                    }
+                    if (piece.getType().equals("BISHOP")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                    }
+                    if (piece.getType().equals("QUEEN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                    }
+                    if (piece.getType().equals("PAWN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                    }
+                }
+            }
+            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
+                if (mouvementsLegaux2.get(i).isEmpty()) {
+                    mouvementsLegaux2.remove(i);
+                    i--; // Décrémenter i, car la taille de la liste a changé
+                }
+            }
+            return mouvementsLegaux2.isEmpty() ;
+        }
+        return false;
+    }
+
+
+//méthode permettant de vérifier si une équipe donnée est en situation de pat
+    private boolean estPat(String equipe) {
+
+        if (roiEnEchec(equipe)) {
+            return false;
+        }
+        List<int[]> mouvementsLegaux = genererMouvementsLegauxRoi(Objects.requireNonNull(trouverRoi("BLACK")));
+        if(mouvementsLegaux.isEmpty()) {
+            List<Piece> copiePions = new ArrayList<>(pions);
+            List<List<int[]>> mouvementsLegaux2 = new ArrayList<>(List.of());
+            for (Piece piece : copiePions) {
+                if (piece.getEquipe().equals(equipe)) {
+                    if (piece.getType().equals("KNIGHT")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxCavalier(piece));
+                    }
+                    if (piece.getType().equals("ROOK")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxTour(piece));
+                    }
+                    if (piece.getType().equals("BISHOP")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxFou(piece));
+                    }
+                    if (piece.getType().equals("QUEEN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxReine(piece));
+                    }
+                    if (piece.getType().equals("PAWN")) {
+                        mouvementsLegaux2.add(genererMouvementsLegauxPion(piece));
+                    }
+                }
+            }
+
+            for (int i = 0; i < mouvementsLegaux2.size(); i++) {
+                if (mouvementsLegaux2.get(i).isEmpty()) {
+                    mouvementsLegaux2.remove(i);
+                    i--; // Décrémenter i, car la taille de la liste a changé
+                }
+            }
+            return mouvementsLegaux2.isEmpty();
+        }
+        return false;
+    }
+
+
+
+
+
+    //Partie du code dédiée au méthode de gestion d'alertes de fin de partie
+
+
+
+
+//méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
     public void showAlert(boolean tourBlanc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
@@ -854,7 +914,8 @@ public class BotController {
         }
     }
 
-    public void showAlert2(boolean tourBlanc) {
+    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
+    public void showAlert2() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));
             VBox alertRoot = fxmlLoader.load();

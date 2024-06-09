@@ -7,6 +7,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.GridPane?>
@@ -114,7 +116,7 @@
                            </graphic></Button>
                             </children>
                         </HBox>
-                        <VBox fx:id="selectedPartie" prefHeight="319.0" prefWidth="212.0">
+                        <VBox fx:id="selectedPartie" prefHeight="381.0" prefWidth="232.0">
                             <children>
                                 <ComboBox fx:id="tempsComboBox" maxWidth="1.7976931348623157E308" prefHeight="50.0" promptText="Choisir le temps" styleClass="selecter">
                                     <items>
@@ -158,6 +160,46 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
+                            <ComboBox fx:id="themeBox" cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="189.0" promptText="Choisir le thème">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Classique" />
+                                        <String fx:value="Océan" />
+                                        <String fx:value="Bois" />
+                                        <String fx:value="Pierre" />
+                                        <String fx:value="Violet" />
+                                    </FXCollections>
+                                </items>
+                                <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                </VBox.margin>
+                                <padding>
+                                    <Insets left="10.0" />
+                                </padding>
+                                <opaqueInsets>
+                                    <Insets left="10.0" top="20.0" />
+                                </opaqueInsets>
+                            </ComboBox>
+                            <ComboBox fx:id="pieceBox" cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="31.0" prefWidth="190.0" promptText="Choisir le style des pièces">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Classique" />
+                                        <String fx:value="Old school" />
+                                        <String fx:value="Red vs Blue" />
+                                        <String fx:value="Neo" />
+                                        <String fx:value="Master" />
+                                    </FXCollections>
+                                </items>
+                                <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                </VBox.margin>
+                                <padding>
+                                    <Insets left="10.0" />
+                                </padding>
+                                <opaqueInsets>
+                                    <Insets />
+                                </opaqueInsets>
+                            </ComboBox>
                         </VBox>
                         <VBox fx:id="selectedReplay" managed="false" visible="false">
                             <children>
@@ -170,47 +212,15 @@
                         <VBox fx:id="selectedStats" managed="false" visible="false">
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding></VBox>
-                  <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le thème" fx:id="themeBox">
-                      <items>
-                          <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="Classique" />
-                              <String fx:value="Océan" />
-                              <String fx:value="Bois" />
-                              <String fx:value="Pierre" />
-                              <String fx:value="Violet" />
-                          </FXCollections>
-                      </items>
-                      <VBox.margin>
-                          <Insets bottom="10.0" top="10.0" />
-                      </VBox.margin>
-                      <padding>
-                          <Insets left="10.0" />
-                      </padding>
-                      <opaqueInsets>
-                          <Insets />
-                      </opaqueInsets>
-                  </ComboBox>
-                        <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le style des pièces" fx:id="pieceBox">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Classique" />
-                                    <String fx:value="Old school" />
-                                    <String fx:value="Red vs Blue" />
-                                    <String fx:value="Neo" />
-                                    <String fx:value="Master" />
-                                </FXCollections>
-                            </items>
-                            <VBox.margin>
-                                <Insets bottom="10.0" top="10.0" />
-                            </VBox.margin>
-                            <padding>
-                                <Insets left="10.0" />
-                            </padding>
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                        </ComboBox>
+                     </padding>
+                            <TableView fx:id="statsTable" prefHeight="200.0" prefWidth="400.0" styleClass="list-view">
+                                <columns>
+                                    <TableColumn fx:id="nomColumn" prefWidth="150.0" text="Nom" />
+                                    <TableColumn fx:id="partiesColumn" prefWidth="150.0" text="Parties" />
+                                    <TableColumn fx:id="partiesGagneesColumn" prefWidth="150.0" text="Parties Gagnées" />
+                                </columns>
+                            </TableView>
+                        </VBox>
                     </children>
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

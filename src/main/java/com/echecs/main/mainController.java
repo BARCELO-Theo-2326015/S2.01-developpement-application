@@ -13,11 +13,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -91,7 +90,7 @@ public class mainController {
 
     private int tempsRestantNoirs = tempsInitialNoirs; // 10 minutes en secondes
 
-    private Timeline timeline ;
+    public Timeline timeline ;
 
     public List<Piece> pions = new ArrayList<>();
 
@@ -128,10 +127,21 @@ public class mainController {
     @FXML
     private VBox selectedStats;
 
+    @FXML
+    private TableView<Joueur> statsTable;
+
+    @FXML
+    private TableColumn<Joueur, String> nomColumn;
+
+    @FXML
+    private TableColumn<Joueur, Integer> partiesColumn;
+
+    @FXML
+    private TableColumn<Joueur, Integer> partiesGagneesColumn;
 
     //méthode permettant de switcher sr l'interface de partie avec un bot
     @FXML
-    private void playComputer() throws IOException {
+    public void playComputer() throws IOException {
         Stage stg = new Stage();
 
         FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("bot.fxml"));
@@ -153,7 +163,7 @@ public class mainController {
 
 
     //Méthode permettant de démarrer le timer au début d'une partie
-    private void demarrerTimer() {
+    public void demarrerTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Décrémente le temps restant pour chaque équipe
             if (tourBlanc) {
@@ -249,7 +259,7 @@ public class mainController {
     }
 
     // Méthode pour formater le temps restant en format minutes:secondes
-    private String formaterTemps(int tempsRestant) {
+    public String formaterTemps(int tempsRestant) {
         int minutes = tempsRestant / 60;
         int secondes = tempsRestant % 60;
         return String.format("%02d:%02d", minutes, secondes);
@@ -332,6 +342,14 @@ public class mainController {
         });
 
         new Thread(this::initializeWatchService).start();
+
+        // Définir les valeurs des colonnes
+        nomColumn.setCellValueFactory(new PropertyValueFactory<>("nomJoueur"));
+        partiesColumn.setCellValueFactory(new PropertyValueFactory<>("nbParties"));
+        partiesGagneesColumn.setCellValueFactory(new PropertyValueFactory<>("nbPartiesGagne"));
+
+        // Utiliser une politique de redimensionnement pour éviter la colonne vide
+        statsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     public void setResizeEvents(WindowEvent windowEvent) {
@@ -810,7 +828,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le céplacement d'un pion est valide
-    private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         String equipePiece = piece.getEquipe();
         if (equipePiece.equals("WHITE")) {
             if (col == colActuelle && ligne == ligneActuelle + 1) return "AVANCE";
@@ -826,7 +844,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le céplacement d'une tour est valide
-    private String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle) {
             int step = (ligne > ligneActuelle) ? 1 : -1;
             for (int i = ligneActuelle + step; i != ligne; i += step) {
@@ -844,7 +862,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le déplacement d'un cavalier est valide
-    private String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
         int deltaX = Math.abs(col - colActuelle);
         int deltaY = Math.abs(ligne - ligneActuelle);
         if ((deltaX == 2 && deltaY == 1) || (deltaX == 1 && deltaY == 2)) {
@@ -854,7 +872,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le déplacement d'un fou est valide
-    private String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
             int colStep = (col > colActuelle) ? 1 : -1;
             int ligneStep = (ligne > ligneActuelle) ? 1 : -1;
@@ -868,7 +886,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le déplacement d'une reine est valide
-    private String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle || ligne == ligneActuelle) {
             return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
         } else if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
@@ -878,7 +896,7 @@ public class mainController {
     }
 
     //Méthode permettant de vérifier si le déplacement d'un roi est valide
-    private String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
+    public String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
             return "true";
         }
@@ -987,7 +1005,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type roi
-    private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
+    public List<int[]> genererMouvementsLegauxRoi(Piece roi) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (roi.getType().equals("KING")) {
@@ -1009,7 +1027,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type reine
-    private List<int[]> genererMouvementsLegauxReine(Piece reine) {
+    public List<int[]> genererMouvementsLegauxReine(Piece reine) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (reine.getType().equals("QUEEN")) {
@@ -1034,7 +1052,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type fou
-    private List<int[]> genererMouvementsLegauxFou(Piece fou) {
+    public List<int[]> genererMouvementsLegauxFou(Piece fou) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (fou.getType().equals("BISHOP")) {
@@ -1059,7 +1077,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type tour
-    private List<int[]> genererMouvementsLegauxTour(Piece tour) {
+    public List<int[]> genererMouvementsLegauxTour(Piece tour) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (tour.getType().equals("ROOK")) {
@@ -1085,7 +1103,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type pion
-    private List<int[]> genererMouvementsLegauxPion(Piece pion) {
+    public List<int[]> genererMouvementsLegauxPion(Piece pion) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (pion.getType().equals("PAWN")) {
@@ -1120,7 +1138,7 @@ public class mainController {
     }
 
     //Méthode permettant de générer tous les mouvements légaux dune pièce de type cavalier
-    private List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
+    public List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
         if (cavalier.getType().equals("KNIGHT")) {
@@ -1231,7 +1249,7 @@ public class mainController {
 
 
 //Partie du code contenant la gestion de l'implémentation d'un mode de tournoi à 8 joueurs sur le jeu
-    //Beug de d'alternation de couleur d'équipe qui commencent la partie à gérer
+// Beug de d'alternation de couleur d'équipe qui commencent la partie à gérer
 
 
 
@@ -1241,7 +1259,7 @@ public class mainController {
     // jouerTournoi est appelé lorsque le bouton "Jouer Tournoi" est cliqué
     // cela permet de lancer un tournoi entre les joueurs sélectionnés
     // on va se servir de setJoueursPartieTournoi pour charger les parties qui doivent être jouées
-    private void jouerTournoi() {
+    public void jouerTournoi() {
         if(joueursListe.size() < joueursSize) {
             tourBlanc = true;
             tournoi = true;
@@ -1593,7 +1611,7 @@ public class mainController {
 
 
 
-
+//méthode permettant de charger les joueurs présents dans un fichier csv
     private ArrayList<Joueur> loadPlayers() {
         ArrayList<Joueur> players = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File("players.csv"))) {
@@ -1611,6 +1629,7 @@ public class mainController {
         return players;
     }
 
+    //méthode permettant d'enregistrer un joueur dans un fichier csv
     private void savePlayers(ArrayList<Joueur> players) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
             for (Joueur player : players) {
@@ -1621,6 +1640,7 @@ public class mainController {
         }
     }
 
+    //méthode permettant d'aller sur la page de stats des joueurs
     @FXML
     private void selectStats() {
         selectStats.setStyle("-fx-background-color: #262522");
@@ -1635,16 +1655,23 @@ public class mainController {
         selectedPartie.setManaged(false);
         selectedReplay.setManaged(false);
 
-        // load all stats from all Joueurs with loadPlayers function and show it
-        ArrayList<Joueur> players = loadPlayers();
-        selectedStats.getChildren().clear();
-        for (Joueur player : players) {
-            Label statLabel = new Label(player.getNomJoueur() + " : " + player.getNbParties() + " parties, " + player.getNbPartiesGagne() + " parties gagnées");
-            statLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white");
-            selectedStats.getChildren().add(statLabel);
-        }
+        // Charger les données des joueurs
+        ObservableList<Joueur> joueurData = FXCollections.observableArrayList(loadPlayers());
+
+        // Afficher les données dans la table
+        statsTable.setItems(joueurData);
     }
 
+
+
+
+
+    //Partie du code dédiée au méthode de gestion d'alertes de fin de partie
+
+
+
+
+    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
     public void showAlert(boolean tourBlanc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
@@ -1662,6 +1689,7 @@ public class mainController {
         }
     }
 
+    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
     public void showAlert2(boolean tourBlanc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));

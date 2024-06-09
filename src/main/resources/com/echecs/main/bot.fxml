@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
 <VBox alignment="CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" styleClass="root-pane" stylesheets="@style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.echecs.main.BotController">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -27,6 +28,11 @@
                               <Insets left="5.0" />
                            </HBox.margin>
                                 </ImageView>
+                        <Label prefHeight="41.0" prefWidth="73.0" text="Bot 1">
+                           <opaqueInsets>
+                              <Insets top="10.0" />
+                           </opaqueInsets>
+                        </Label>
                             </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -47,6 +53,7 @@
                                         </ImageView>
                                     </children>
                                 </VBox>
+                        <Label text="Moi" />
                             </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -61,7 +68,7 @@
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin></Button>
-                        <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le thème" fx:id="themeBox">
+                        <ComboBox fx:id="themeBox" cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le thème">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Classique" />
@@ -81,7 +88,7 @@
                                 <Insets />
                             </opaqueInsets>
                         </ComboBox>
-                        <ComboBox cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le style des pièces" fx:id="pieceBox">
+                        <ComboBox fx:id="pieceBox" cache="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="169.0" promptText="Choisir le style des pièces">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Classique" />

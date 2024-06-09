@@ -290,34 +290,18 @@
     -fx-text-fill: white; /* Couleur du texte en blanc */
 }
 
-/* Style pour les têtes de colonne */
-.table-view .column-header-background {
-    -fx-background-color: black; /* Couleur de fond des têtes de colonne */
-}
 
 .table-view .column-header .label {
     -fx-text-fill: white; /* Couleur du texte des têtes de colonne en blanc */
 }
 
-/* Style de la barre de défilement */
-.scroll-bar {
-    -fx-background-color: #2b2b2b; /* Couleur de fond de la barre de défilement */
+
+.table-view .column-header {
+    -fx-background-color: #21201D; /* Couleur de fond des têtes de colonne */
+    -fx-border-color: transparent; /* Suppression des bordures si nécessaire */
 }
 
-.scroll-bar .thumb {
-    -fx-background-color: #3c3f41; /* Couleur du pouce (la partie draggable) */
-}
-
-.scroll-bar .track {
-    -fx-background-color: #2b2b2b; /* Couleur de la piste */
-}
-
-.scroll-bar .increment-button,
-.scroll-bar .decrement-button {
-    -fx-background-color: #2b2b2b; /* Couleur des boutons d'incrément/décrément */
-}
-
-.table-view .table-column-header {
-    -fx-background-color: black; /* Couleur de fond des têtes de colonne */
+.table-view .column-header-background .filler {
+    -fx-background-color: #21201D; /* Couleur de fond des têtes de colonne */
     -fx-border-color: transparent; /* Suppression des bordures si nécessaire */
 }

@@ -138,8 +138,17 @@ public class mainController {
 
     @FXML
     private TableColumn<Joueur, Integer> partiesGagneesColumn;
+    @FXML
+    private ListView<String> listView;
 
-    //méthode permettant de switcher sr l'interface de partie avec un bot
+    private ObservableList<String> fileList;
+
+    private Path watchDir;
+
+    /**
+     * méthode permettant de switcher sr l'interface de partie avec un bot
+     * @throws IOException
+     */
     @FXML
     public void playComputer() throws IOException {
         Stage stg = new Stage();
@@ -162,7 +171,10 @@ public class mainController {
     //Partie de code gérant la mise en place du timer dans le jeu
 
 
-    //Méthode permettant de démarrer le timer au début d'une partie
+
+    /**
+     * Méthode permettant de démarrer le timer au début d'une partie
+     */
     public void demarrerTimer() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             // Décrémente le temps restant pour chaque équipe
@@ -239,7 +251,10 @@ public class mainController {
     }
 
 
-    //Méthode permettantréorganisation complète de mainController et gestion de quelques bugs de réniatiliser le timer du jeu à la fin d'une partie
+
+    /**
+     *     Méthode permettant la réorganisation complète de mainController et gestion de quelques bugs de réniatiliser le timer du jeu à la fin d'une partie
+     */
     private void reinitialiserTimer() {
         // Arrête la timeline si elle est en cours
         if (timeline != null) {
@@ -258,7 +273,12 @@ public class mainController {
         demarrerTimer();
     }
 
-    // Méthode pour formater le temps restant en format minutes:secondes
+
+    /**
+     *      Méthode pour formater le temps restant en format minutes:secondes
+     * @param tempsRestant
+     * @return
+     */
     public String formaterTemps(int tempsRestant) {
         int minutes = tempsRestant / 60;
         int secondes = tempsRestant % 60;
@@ -267,7 +287,11 @@ public class mainController {
 
 
 
-    // Méthode permettant d'afficher un message de fin de partie quand le chrono 'une des deux équipes atteint zéro
+
+    /**
+     *      Méthode permettant d'afficher un message de fin de partie quand le chrono 'une des deux équipes atteint zéro
+     * @param message
+     */
     private void terminerPartie(String message) {
         // Afficher un message indiquant la fin de la partie
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -286,6 +310,9 @@ public class mainController {
 
 
     @FXML
+    /**
+     * Méthode permettant d'initialiser les éléments du fxml nécéssaires au controller
+     */
     private void initialize() {
         tempsComboBox.setItems(FXCollections.observableArrayList("10 minutes", "3 minutes", "1 minute"));
         tempsComboBox.getSelectionModel().selectFirst();
@@ -352,6 +379,10 @@ public class mainController {
         statsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
+    /**
+     * Méthode permettant de redimensionner la fenêtre correctement
+     * @param windowEvent
+     */
     public void setResizeEvents(WindowEvent windowEvent) {
         // Get the stage
         stage = (Stage) boutonJouer.getScene().getWindow();
@@ -372,6 +403,10 @@ public class mainController {
         });
     }
 
+    /**
+     * Méthode permettant de définir les joueurs au début d'une partie
+     * @param j
+     */
     public void setPlayer(Joueur j) {
         if(j == null) return;
         joueursListe.add(j);
@@ -388,6 +423,10 @@ public class mainController {
         } else launchPlayer("J"+(joueursListe.size()+1));
     }
 
+    /**
+     * Méthode permettant de charger l'interface de choix de joueurs avant une partie
+     * @param nomJoueur
+     */
     public void launchPlayer(String nomJoueur) {
         try {
             if(selectStage != null) selectStage.close();
@@ -405,6 +444,9 @@ public class mainController {
         }
     }
 
+    /**
+     * Méthode permettant de mettre à jour la taille des éléments quand on resize la fenêtre
+     */
     public void updateGameSize() {
         double superVal;
         if(width > height) superVal = height;
@@ -430,7 +472,10 @@ public class mainController {
         }
     }
 
-    //Méthode permettant de lancer une partie quand on clique sur le bouton jouer
+
+    /**
+     *     Méthode permettant de lancer une partie quand on clique sur le bouton jouer
+     */
     @FXML
     private void jouerClicked() {
         //appel la fonction pour créer le fichier
@@ -475,7 +520,10 @@ public class mainController {
     //Partie de code pour la génération du plateau et des pièces
 
 
-    //méthode permettant de réniatiliser le plateau à chaque fin de partie
+
+    /**
+     *     méthode permettant de réniatiliser le plateau à chaque fin de partie
+     */
     private void reinitialiserPlateau() {
         jeu.getChildren().clear();
         pions.clear();
@@ -488,7 +536,13 @@ public class mainController {
         }
     }
 
-    //Méthode créeant les différentes cases du plateau sous forme de VBox
+
+    /**
+     *     Méthode créeant les différentes cases du plateau sous forme de VBox
+     * @param ligne
+     * @param col
+     * @return
+     */
     private VBox createCase(int ligne, int col) {
         VBox caseRect = new VBox();
         caseRect.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -521,7 +575,10 @@ public class mainController {
         return caseRect;
     }
 
-    //Méthode configurant les pièces à leur position initiales sur le plateau
+
+    /**
+     *     Méthode configurant les pièces à leur position initiales sur le plateau
+     */
     public void configurerPieces() {
         String selectedTheme = (String) pieceBox.getValue();
         switch (selectedTheme) {
@@ -623,7 +680,12 @@ public class mainController {
 
 
 
-    //Méthode permettant de récupérer les information d'un clique sur une case pour ainsi pouvoir sélectionner et déplacer une pièce dans une autre case
+
+
+    /**
+     * Méthode permettant de récupérer les information d'un clique sur une case pour ainsi pouvoir sélectionner et déplacer une pièce dans une autre case
+     * @param rect
+     */
     private void clickEvent(Node rect) {
         int nouvelleLigne = GridPane.getRowIndex(rect);
         int nouvelleCol = GridPane.getColumnIndex(rect);
@@ -636,7 +698,12 @@ public class mainController {
         }
     }
 
-    //méthode permettant de sélectionner une pièce
+
+    /**
+     * méthode permettant de sélectionner une pièce
+     * @param ligne
+     * @param col
+     */
     public void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
@@ -649,7 +716,7 @@ public class mainController {
                         coordinates = readCoordinatesFromFile();
                     }
                     VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
-                    selectedCase.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 10;");
+                    selectedCase.setStyle("-fx-background-color: #F5F682;");
                 }
                 break;
             }
@@ -657,6 +724,10 @@ public class mainController {
     }
 
 
+    /**
+     * méthode permettant la gestion de la promotion d'un pion
+     * @param pion
+     */
     private void promouvoirPion(Piece pion) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("PromotionDialog.fxml"));
@@ -689,7 +760,12 @@ public class mainController {
         }
     }
 
-    //Méthode permettant de déplacer une pièce en respectant toutes les règles des échecs tout en vérifiant les différentes connditions de fins de partie permettant de mettre fin à celle-ci après un mouvement décisif
+
+    /**
+     * Méthode permettant de déplacer une pièce en respectant toutes les règles des échecs tout en vérifiant les différentes connditions de fins de partie permettant de mettre fin à celle-ci après un mouvement décisif
+     * @param nouvelleLigne
+     * @param nouvelleCol
+     */
     public void deplacerPiece(int nouvelleLigne, int nouvelleCol) {
         VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
         selectedCase.setStyle("");
@@ -775,7 +851,7 @@ public class mainController {
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
             timeline.stop();
-            showAlert2(tourBlanc);
+            showAlert2();
 
             // on retente la partie (ajout des 2 joueurs au tout debut et on retente)
             if(tournoi) {
@@ -795,6 +871,9 @@ public class mainController {
         tourBlanc = !tourBlanc;
     }
 
+    /**
+     * méthode permettant de mettre à jour les puèces sur le plateau
+     */
     public void mettreAJourPieces() {
         jeu.getChildren().forEach(node -> ((VBox) node).getChildren().clear());
         for (Piece p : pions) {
@@ -809,7 +888,16 @@ public class mainController {
 
 
 
-    //Méthode permettant de vérifier si le déplacement d'une pièce quelconque vers une position donnée est possible
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'une pièce quelconque vers une position donnée est possible
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         if (colActuelle < 0 || colActuelle >= 8 || ligneActuelle < 0 || ligneActuelle >= 8) return "false";
         if(colActuelle == col && ligneActuelle == ligne) return "false";
@@ -827,7 +915,16 @@ public class mainController {
         };
     }
 
-    //Méthode permettant de vérifier si le céplacement d'un pion est valide
+
+    /**
+     * Méthode permettant de vérifier si le céplacement d'un pion est valide
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         String equipePiece = piece.getEquipe();
         if (equipePiece.equals("WHITE")) {
@@ -843,7 +940,15 @@ public class mainController {
 
     }
 
-    //Méthode permettant de vérifier si le céplacement d'une tour est valide
+
+    /**
+     * Méthode permettant de vérifier si le céplacement d'une tour est valide
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle) {
             int step = (ligne > ligneActuelle) ? 1 : -1;
@@ -861,7 +966,15 @@ public class mainController {
         return "false";
     }
 
-    //Méthode permettant de vérifier si le déplacement d'un cavalier est valide
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'un cavalier est valide
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
         int deltaX = Math.abs(col - colActuelle);
         int deltaY = Math.abs(ligne - ligneActuelle);
@@ -871,7 +984,15 @@ public class mainController {
         return "false";
     }
 
-    //Méthode permettant de vérifier si le déplacement d'un fou est valide
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'un fou est valide
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
             int colStep = (col > colActuelle) ? 1 : -1;
@@ -885,7 +1006,16 @@ public class mainController {
         return "false";
     }
 
-    //Méthode permettant de vérifier si le déplacement d'une reine est valide
+
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'une reine est valide
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle || ligne == ligneActuelle) {
             return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
@@ -895,7 +1025,15 @@ public class mainController {
         return "false";
     }
 
-    //Méthode permettant de vérifier si le déplacement d'un roi est valide
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'un roi est valide
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
             return "true";
@@ -903,7 +1041,14 @@ public class mainController {
         return "false";
     }
 
-    //Méthode permettant de vérifier si une pièce se trouve aux positions données
+
+
+    /**
+     * Méthode permettant de vérifier si une pièce se trouve aux positions données
+     * @param col
+     * @param ligne
+     * @return
+     */
     public Piece getPieceAt(int col, int ligne) {
         for (Piece p : pions) {
             if (p.getX() == ligne && p.getY() == col) return p;
@@ -921,7 +1066,13 @@ public class mainController {
 
 
 
-    //Méthode permettant de trouver un roi d'une équipe renseignée sur le plateau
+
+
+    /**
+     * Méthode permettant de trouver un roi d'une équipe renseignée sur le plateau
+     * @param equipe
+     * @return
+     */
     private Piece trouverRoi(String equipe) {
         for (Piece piece : pions) {
             if (piece.getType().equals("KING") && piece.getEquipe().equals(equipe)) {
@@ -931,7 +1082,13 @@ public class mainController {
         return null;
     }
 
-    //Méthode permettant de vérifier si un roi d'une équipe renseigné est en échec
+
+
+    /**
+     * Méthode permettant de vérifier si un roi d'une équipe renseigné est en échec
+     * @param equipe
+     * @return
+     */
     private boolean roiEnEchec(String equipe) {
         // Trouver la position du roi
         int roiX = -1;
@@ -955,7 +1112,17 @@ public class mainController {
         return false;
     }
 
-    //Méthode permettant de vérifier si le déplacement d'une pièce est possible sans mettre en échec ou maintenir la mise en échec du roi de son équipe
+
+
+    /**
+     * Méthode permettant de vérifier si le déplacement d'une pièce est possible sans mettre en échec ou maintenir la mise en échec du roi de son équipe
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         // Vérifier si le déplacement met le roi en échec
         Piece pieceTemp = null;
@@ -981,8 +1148,15 @@ public class mainController {
         return !enEchec;
     }
 
-    //méthode nécéssaire car celle utilisé pour les pièces précédémment dans le code créé des pertes mémoires vues qu'elles sont utilisées sur un ensemble de mouvements légaux sur une pièce qui peut être relativement grand
-    //Par ailleurs, cette méthode vérifie si une pièce se situe entre la position acutelle et la position à atteindre d'une picèce
+
+    /**
+     * méthode nécéssaire car celle utilisé pour les pièces précédémment dans le code créé des pertes mémoires vues qu'elles sont utilisées sur un ensemble de mouvements légaux sur une pièce qui peut être relativement grand
+     * Par ailleurs, cette méthode vérifie si une pièce se situe entre la position acutelle et la position à atteindre d'une pièce
+     * @param piece
+     * @param nouvelleX
+     * @param nouvelleY
+     * @return
+     */
     private boolean cheminLibre(Piece piece, int nouvelleX, int nouvelleY) {
         int x = piece.getX();
         int y = piece.getY();
@@ -1004,7 +1178,13 @@ public class mainController {
         return true; // Aucun obstacle trouvé
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type roi
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type roi
+     * @param roi
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxRoi(Piece roi) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1026,7 +1206,13 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type reine
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type reine
+     * @param reine
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxReine(Piece reine) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1051,7 +1237,13 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type fou
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type fou
+     * @param fou
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxFou(Piece fou) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1076,7 +1268,13 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type tour
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type tour
+     * @param tour
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxTour(Piece tour) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1102,7 +1300,13 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type pion
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type pion
+     * @param pion
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxPion(Piece pion) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1137,7 +1341,13 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de générer tous les mouvements légaux dune pièce de type cavalier
+
+
+    /**
+     * Méthode permettant de générer tous les mouvements légaux dune pièce de type cavalier
+     * @param cavalier
+     * @return
+     */
     public List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -1162,7 +1372,12 @@ public class mainController {
         return mouvementsLegaux;
     }
 
-    //Méthode permettant de vérifier si une pièce Roi est dans une situation d'échec et mat
+
+    /**
+     * Méthode permettant de vérifier si une pièce Roi est dans une situation d'échec et mat
+     * @param roi
+     * @return
+     */
     private boolean estEchecEtMat(Piece roi) {
         if (!roiEnEchec(roi.getEquipe())) {
             return false;
@@ -1203,7 +1418,13 @@ public class mainController {
     }
 
 
-    //Méthode permettant de vérifier si une équipe est en situation de pat
+
+
+    /**
+     * Méthode permettant de vérifier si une équipe est en situation de pat
+     * @param equipe
+     * @return
+     */
     private boolean estPat(String equipe) {
 
         if (roiEnEchec(equipe)) {
@@ -1256,9 +1477,12 @@ public class mainController {
 
 
     @FXML
-    // jouerTournoi est appelé lorsque le bouton "Jouer Tournoi" est cliqué
-    // cela permet de lancer un tournoi entre les joueurs sélectionnés
-    // on va se servir de setJoueursPartieTournoi pour charger les parties qui doivent être jouées
+
+    /**
+     * jouerTournoi est appelé lorsque le bouton "Jouer Tournoi" est cliqué
+     * cela permet de lancer un tournoi entre les joueurs sélectionnés
+     * on va se servir de setJoueursPartieTournoi pour charger les parties qui doivent être jouées
+     */
     public void jouerTournoi() {
         if(joueursListe.size() < joueursSize) {
             tourBlanc = true;
@@ -1271,10 +1495,14 @@ public class mainController {
         setJoueursPartieTournoi();
     }
 
-    // fonction appelée dans jouerTournoi qui permet de charger les parties qui doivent être jouéer dans une partie du tournoi
-    // ainsi si on est sur la premiere partie d'un tournoi 8 joueurs, on charge dans la liste 2 parties, donc les 4 premiers joueurs
-    // si on était dans une partie 16 joueurs, on chargerait 4 parties, donc les 8 premiers joueurs
-    // ensuite on appelle la fontion runPartieTournoi qui permet de jouer la partie actuelle
+
+
+    /**
+     * fonction appelée dans jouerTournoi qui permet de charger les parties qui doivent être jouéer dans une partie du tournoi
+     * ainsi si on est sur la premiere partie d'un tournoi 8 joueurs, on charge dans la liste 2 parties, donc les 4 premiers joueurs
+     * si on était dans une partie 16 joueurs, on chargerait 4 parties, donc les 8 premiers joueurs
+     * ensuite on appelle la fontion runPartieTournoi qui permet de jouer la partie actuelle
+     */
     private void setJoueursPartieTournoi() {
         // on charge les joueurs de la partie actuelle
         for(int i = 0; i < joueursSize; i++) {
@@ -1283,7 +1511,10 @@ public class mainController {
         runPartieTournoi();
     }
 
-    //méthode permettant de lancer une partie d'un tournoi
+
+    /**
+     * méthode permettant de lancer une partie d'un tournoi
+     */
     private void runPartieTournoi() {
         joueur1Actuel = joueursPartie.get(0);
         joueur2Actuel = joueursPartie.get(1);
@@ -1304,7 +1535,11 @@ public class mainController {
         runJeuTournoi();
     }
 
-    //Méthode permettant de générer le plateau correctement lors de changement de partie automatique d'un tournoi
+
+
+    /**
+     * Méthode permettant de générer le plateau correctement lors de changement de partie automatique d'un tournoi
+     */
     private void runJeuTournoi() {
         tourBlanc = true ;
         reinitialiserPlateau();
@@ -1314,7 +1549,10 @@ public class mainController {
         reinitialiserTimer(); // Démarrer le timer lorsque le jeu commence
     }
 
-    //Méthode récupérant les gagnants et les perdants à la fin d'une partie d'un tournoi (pouvant mettre également fin au tournoi quand il ne reste qu'un seul joueur)
+
+    /**
+     * Méthode récupérant les gagnants et les perdants à la fin d'une partie d'un tournoi (pouvant mettre également fin au tournoi quand il ne reste qu'un seul joueur)
+     */
     private void finPartie() {
         // on filtre dans la liste des joueurs ceux qui ont gagné, donc ceux qui sont aussi dans nextPartieJoueurs
         // on ajoute les joueurs gagnants dans la liste des joueurs pour la prochaine partie
@@ -1343,9 +1581,9 @@ public class mainController {
     //Le mode étant en phase de BETA test, n'est efficient que pour des parties simples même si les conditions d'enregistrement pour un tournoi sont inclues (elles ne tournent pas pour l'instant)
 
 
-
-
-    //
+    /**
+     * méthode permettant de mettre uniquement en visible l'onglet de gestion d'une partie
+     */
     @FXML
     private void selectPartie() {
         selectPartie.setStyle("-fx-background-color: black");
@@ -1361,6 +1599,9 @@ public class mainController {
         selectedStats.setManaged(false);
     }
 
+    /**
+     * méthode permettant de mettre uniquement en visible l'onglet de gestion du replay
+     */
     @FXML
     private void selectReplay() {
         selectReplay.setStyle("-fx-background-color: black");
@@ -1375,9 +1616,12 @@ public class mainController {
         selectedPartie.setManaged(false);
         selectedStats.setManaged(false);
 
-        BoutonRediffClicked();
     }
-    //Méthode permettant de créer un fichier texte où seront stocké les coups joués
+
+
+    /**
+     * Méthode permettant de créer un fichier texte où seront stocké les coups joués
+     */
     private void createLogFile() {
         // Chemin et nom du fichier, ici le fichier est nommé avec la date et l'heure actuelles
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
@@ -1389,7 +1633,12 @@ public class mainController {
 
     }
 
-    //Méthode gérant l'écriture du fichier texte de la partie en cours
+
+
+    /**
+     * Méthode gérant l'écriture du fichier texte de la partie en cours
+     * @param fileName
+     */
     private void ajoutDataToFile(String fileName) {
         try (FileWriter writer = new FileWriter(logFile, true)) {
             writer.write(data);
@@ -1399,7 +1648,12 @@ public class mainController {
         }
     }
 
-    //Méthode permettant la lecture de coordonnées depuis un fichier texte
+
+
+    /**
+     * Méthode permettant la lecture de coordonnées depuis un fichier texte
+     * @return
+     */
     private List<Coordinate> readCoordinatesFromFile() {
         List<Coordinate> coordinates = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
@@ -1419,15 +1673,10 @@ public class mainController {
         return coordinates;
     }
 
-    //méthode
-    private void BoutonRediffClicked() {
-    }
 
-    @FXML
-    private ListView<String> listView;
-    private ObservableList<String> fileList;
-    private Path watchDir;
-
+    /**
+     * méthode permettant de récupérer à l'aide d'une boucle infini des fichier texte dans un dossier
+     */
     private void initializeWatchService() {
         // add already existing files to the list
         File directory = new File(DIRECTORY_PATH);
@@ -1474,7 +1723,13 @@ public class mainController {
         }
     }
 
-    //Méthode permettant la lecture d'un fichier texte
+
+
+    /**
+     * Méthode permettant la lecture d'un fichier texte
+     * @param file
+     * @throws IOException
+     */
     private void playMovesFromFile(String file) throws IOException {
         reinitialiserPlateau();
         configurerPieces();
@@ -1514,7 +1769,13 @@ public class mainController {
         reader.close();
     }
 
-    //méthode permettant de sélectionner une pièce sur le plateau par le fichier texte en mode rediffusion
+
+
+    /**
+     * méthode permettant de sélectionner une pièce sur le plateau par le fichier texte en mode rediffusion
+     * @param ligne
+     * @param col
+     */
     public void selectionnerPieceForRediff(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
@@ -1524,7 +1785,13 @@ public class mainController {
         }
     }
 
-    //méthode permettant de déplacer une pièce sélectionnées en mode rediffusion
+
+
+    /**
+     * méthode permettant de déplacer une pièce sélectionnées en mode rediffusion
+     * @param nouvelleLigne
+     * @param nouvelleCol
+     */
     public void deplacerPiecePourRediff(int nouvelleLigne, int nouvelleCol) {
         VBox selectedCase = (VBox) jeu.getChildren().get(selectedPiece.getX() * 8 + selectedPiece.getY());
         selectedCase.setStyle("");
@@ -1580,11 +1847,7 @@ public class mainController {
         // Vérification de l'échec et mat après chaque déplacement
         Piece roi = trouverRoi(tourBlanc ? "BLACK" : "WHITE");
         if (estEchecEtMat(Objects.requireNonNull(roi))) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Échec et mat");
-            alert.setHeaderText(null);
-            alert.setContentText("Echec et mat ! " + (tourBlanc ? "Les Blancs" : "Les Noirs") + " gagnent.");
-            alert.show();
+            showAlert(tourBlanc);
 
             if(tournoi) {
                 nextPartieJoueurs.add(tourBlanc ? joueur1Actuel : joueur2Actuel);
@@ -1593,7 +1856,7 @@ public class mainController {
         }
         else if (estPat(tourBlanc ? "BLACK" : "WHITE")) {
             timeline.stop();
-            showAlert2(tourBlanc);
+            showAlert2();
 
             // on retente la partie (ajout des 2 joueurs au tout debut et on retente)
             if(tournoi) {
@@ -1609,9 +1872,10 @@ public class mainController {
     }
 
 
-
-
-//méthode permettant de charger les joueurs présents dans un fichier csv
+    /**
+     * méthode permettant de charger les joueurs présents dans un fichier csv
+     * @return
+     */
     private ArrayList<Joueur> loadPlayers() {
         ArrayList<Joueur> players = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File("players.csv"))) {
@@ -1629,7 +1893,10 @@ public class mainController {
         return players;
     }
 
-    //méthode permettant d'enregistrer un joueur dans un fichier csv
+    /**
+     * méthode permettant d'enregistrer un joueur dans un fichier csv
+     * @param players
+     */
     private void savePlayers(ArrayList<Joueur> players) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("players.csv"))) {
             for (Joueur player : players) {
@@ -1640,7 +1907,10 @@ public class mainController {
         }
     }
 
-    //méthode permettant d'aller sur la page de stats des joueurs
+
+    /**
+     * méthode permettant d'aller sur la page de stats des joueurs
+     */
     @FXML
     private void selectStats() {
         selectStats.setStyle("-fx-background-color: #262522");
@@ -1671,7 +1941,12 @@ public class mainController {
 
 
 
-    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
+
+
+    /**
+     * méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
+     * @param tourBlanc
+     */
     public void showAlert(boolean tourBlanc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
@@ -1683,14 +1958,18 @@ public class mainController {
             alertStage.setTitle("Échec et mat");
             alertStage.initModality(Modality.APPLICATION_MODAL);
             alertStage.setScene(new Scene(alertRoot));
-            alertStage.showAndWait();
+            alertStage.show();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
-    public void showAlert2(boolean tourBlanc) {
+
+
+    /**
+     * méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
+     */
+    public void showAlert2() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));
             VBox alertRoot = fxmlLoader.load();
@@ -1700,7 +1979,7 @@ public class mainController {
             alertStage.setTitle("Pat");
             alertStage.initModality(Modality.APPLICATION_MODAL);
             alertStage.setScene(new Scene(alertRoot));
-            alertStage.showAndWait();
+            alertStage.show();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

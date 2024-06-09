@@ -3,6 +3,7 @@ package com.echecs.main;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class Accueil extends Application {
 
         AccueilController controller = fxmlLoader.getController();
         primaryStage.setOnShown(controller::setClose);
+        Image icon = new Image(getClass().getResourceAsStream("images/chesscom.png"));
+        primaryStage.getIcons().add(icon);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Jeu d'échecs");
         primaryStage.setScene(scene);

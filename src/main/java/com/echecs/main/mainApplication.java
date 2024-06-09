@@ -7,7 +7,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Page principal du jeu
+ */
 public class mainApplication extends Application {
+
+    /**
+     * Point d'entrée de l'application
+     *
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(mainApplication.class.getResource("main.fxml"));
@@ -21,6 +31,11 @@ public class mainApplication extends Application {
         stage.show();
     }
 
+    /**
+     * Méthode qui lance l'application
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch();
     }

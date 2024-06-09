@@ -10,60 +10,120 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Cette classe gère la création des différentes pièces
+ */
 public class Piece {
+    /**
+     * Méthode retournant le type de la pièce
+     *
+     * @return
+     */
     public String getType() {
         return type;
     }
 
     String type;
 
+    /**
+     * Méthode retournant l'équipe de la pièce
+     *
+     * @return
+     */
     public String getEquipe() {
         return equipe;
     }
 
     String equipe;
 
+    /**
+     * Méthode retournant le symbole
+     *
+     * @return
+     */
     public ImageView getSymbole() {
         return symbole;
     }
 
     ImageView symbole;
 
+    /**
+     * Méthode retournant la valeur X (la ligne)
+     *
+     * @return
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Méthode permetant de définir la ligne
+     *
+     * @param x
+     */
     public void setX(int x) {
         this.x = x;
     }
 
     int x;
 
+    /**
+     * Méthode retournant la valeur Y (la colonne)
+     *
+     * @return
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Méthode permettant de définir la colonne de la pièce
+     *
+     * @param y
+     */
     public void setY(int y) {
         this.y = y;
     }
 
     int y;
 
+    /**
+     * Méthode permettant de définir le type de pièce
+     *
+     * @param type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
     private boolean hasMoved;
 
-    // Ajoutez un getter et un setter pour hasMoved
+    /**
+     * Méthode permettant de modifier si une pièce c'est déplacer ou non
+     *
+     * @param hasMoved
+     */
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
-    
+
+    /**
+     * Méthode retournant si une pièce a bouger
+     *
+     * @return
+     */
     public boolean getHasMoved(){
         return hasMoved;
     }
-    
+
+    /**
+     * Constructeur de la classe pièce
+     *
+     * @param type
+     * @param equipe
+     * @param x
+     * @param y
+     */
     Piece(String type, String equipe, int x, int y) {
         this.type = type;
         this.equipe = equipe;
@@ -72,6 +132,11 @@ public class Piece {
         this.hasMoved = false;
     }
 
+    /**
+     * Méthode génerant les différent symbole de chaque pièce
+     *
+     * @param theme
+     */
     public void generateSymbol(String theme) {
 
         // load the image
@@ -211,6 +276,11 @@ public class Piece {
 
     }
 
+    /**
+     * Méthode retournant une liste de mouvement possible d'une pièce
+     *
+     * @return
+     */
     public List<int[]> genererMouvementsPossibles() {
         List<int[]> mouvementsPossibles = new ArrayList<>();
 

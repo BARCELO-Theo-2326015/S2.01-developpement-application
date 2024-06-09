@@ -9,6 +9,10 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
+/**
+ * Cette classe représente l'affichage et la gestion de l'accueil pour l'accès au jeu
+ */
+
 public class AccueilController {
     @FXML
     Button playPlayer;
@@ -18,6 +22,11 @@ public class AccueilController {
 
     Stage theStage;
 
+    /**
+     * Méthode représentant le bouton jouer a 2 joueur
+     *
+     * @throws IOException
+     */
     @FXML
     private void playPlayer() throws IOException {
         Stage stage = new Stage();
@@ -34,6 +43,11 @@ public class AccueilController {
         theStage.close();
     }
 
+    /**
+     * Méthode représentant le bouton jouer avec un ordinateur
+     *
+     * @throws IOException
+     */
     @FXML
     private void playComputer() throws IOException {
         Stage stage = new Stage();
@@ -50,6 +64,11 @@ public class AccueilController {
         theStage.close();
     }
 
+    /**
+     * Méthode permettant de fermée la page d'accueil lorsqu'on clique sur un des 2 bouton pour jouer
+     *
+     * @param windowEvent
+     */
     void setClose(WindowEvent windowEvent) {
         theStage = (Stage) playPlayer.getScene().getWindow();
     }

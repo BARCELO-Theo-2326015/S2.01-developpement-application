@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+/**
+ * Cette classe représente le Bot et ses déplacments
+ */
 public class Bot {
     private static final int TAILLE = 8;
     private GridPane jeu;
@@ -19,6 +22,14 @@ public class Bot {
     Piece piece;
     private BotController controller;
 
+    /**
+     * Contructeur de la classe Bot
+     *
+     * @param echiquier
+     * @param equipe
+     * @param estHumain
+     * @param controller
+     */
     public Bot(GridPane echiquier, String equipe, boolean estHumain, BotController controller) {
         this.jeu = echiquier;
         this.equipe = equipe;
@@ -26,16 +37,17 @@ public class Bot {
         this.controller = controller;
     }
 
+    /**
+     * Méthode permettant de verifier si l'objet créer est un Bot ou non
+     */
     public void jouer() {
 
         if(!estHumain) deplacerAleatoirement();
     }
 
-    public void jouerEchec( List<int[]> moove) {
-
-        if(!estHumain) deplacerAleatoirementEchec(moove);
-    }
-
+    /**
+     * Méthode generant des déplacement aléatoire
+     */
     public void deplacerAleatoirement() {
         pionsNoirs = controller.pions.stream()
                 .filter(piece -> piece.getEquipe().equals("BLACK"))
@@ -73,6 +85,11 @@ public class Bot {
         }
     }
 
+    /**
+     * Méthode qui créer des déplacemennt aléatoire si il y a un échec
+     *
+     * @param moove
+     */
     public void deplacerAleatoirementEchec( List<int[]> moove) {
         pionsNoirs = controller.pions.stream()
                 .filter(piece -> piece.getEquipe().equals("BLACK"))
@@ -110,6 +127,12 @@ public class Bot {
         }
     }
 
+    /**
+     * Méthode pertmet de créer une liste de mouvement possible pour une pièce choisie
+     *
+     * @param piece
+     * @return
+     */
     private List<int[]> obtenirMouvementsValides(Piece piece) {
         List<int[]> mouvementsValides = new ArrayList<>();
         int botCol = pieceADeplacer.getY();

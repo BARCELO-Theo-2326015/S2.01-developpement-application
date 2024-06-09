@@ -24,6 +24,9 @@ import javafx.stage.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Cette classe est l'affichage de la fenêtre de jeu quand on joue contre l'odinateur
+ */
 public class BotController {
 
     //Partie du code dédiée à la declaration des attributs de la classe
@@ -57,7 +60,11 @@ public class BotController {
     public ComboBox pieceBox;
 
 
-    //Méthode permettant de passer à l'interface de joueur contre joueur depuis un bouton
+    /**
+     * Méthode permettant de passer à l'interface de joueur contre joueur depuis un bouton
+     *
+     * @throws IOException
+     */
     @FXML
     private void playPlayer() throws IOException {
         Stage stg = new Stage();
@@ -78,7 +85,9 @@ public class BotController {
     //Partie du code dédiée a la mise en place d'une partie
 
 
-    //Méthode initialisant une partie quand on clique sur le bouton jouer
+    /**
+     * Méthode initialisant une partie quand on clique sur le bouton jouer
+     */
     @FXML
     private void jouerClicked() {
         tourBlanc = true; // Les blancs commencent toujours
@@ -88,7 +97,10 @@ public class BotController {
         updateGameSize();
     }
 
-    //Méthode permettant de reinitialiser le plateau
+
+    /**
+     * Méthode permettant de reinitialiser le plateau
+     */
     private void reinitialiserPlateau() {
         jeu.getChildren().clear();
         pions.clear();
@@ -104,7 +116,13 @@ public class BotController {
         }
     }
 
-    //Méthode créeant les différentes cases du plateau sous forme de VBox
+    /**
+     * Méthode créeant les différentes cases du plateau sous forme de VBox
+     *
+     * @param ligne
+     * @param col
+     * @return
+     */
     private VBox createCase(int ligne, int col) {
         VBox caseRect = new VBox();
         caseRect.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -137,8 +155,9 @@ public class BotController {
         return caseRect;
     }
 
-
-    //Méthode configurant les pièces à leur position initiales sur le plateau
+    /**
+     * Méthode configurant les pièces à leur position initiales sur le plateau
+     */
     public void configurerPieces() {
         String selectedTheme = (String) pieceBox.getValue();
         switch (selectedTheme) {
@@ -232,7 +251,11 @@ public class BotController {
 
     }
 
-    //Méthode permettant la gestion d'un clic sur une pièce sur le plateau
+    /**
+     * Méthode permettant la gestion d'un clic sur une pièce sur le plateau
+     *
+     * @param rect
+     */
     private void clickEvent(Node rect) {
         int nouvelleLigne = GridPane.getRowIndex(rect);
         int nouvelleCol = GridPane.getColumnIndex(rect);
@@ -245,7 +268,12 @@ public class BotController {
         }
     }
 
-    //Méthode permettant de gérer la selection d'une pièce
+    /**
+     * Méthode permettant de gérer la selection d'une pièce
+     *
+     * @param ligne
+     * @param col
+     */
     public void selectionnerPiece(int ligne, int col) {
         for (Piece pion : pions) {
             if (pion.getX() == ligne && pion.getY() == col) {
@@ -259,7 +287,11 @@ public class BotController {
         }
     }
 
-//Méthode gérant le système de promotion d'un pion
+    /**
+     * Méthode gérant le système de promotion d'un pion
+     *
+     * @param pion
+     */
     private void promouvoirPion(Piece pion) {
         // Afficher une boîte de dialogue pour choisir la nouvelle pièce
         List<String> choix = List.of("QUEEN", "ROOK", "BISHOP", "KNIGHT");
@@ -380,6 +412,9 @@ public class BotController {
         tourBlanc = !tourBlanc;
     }
 
+    /**
+     * Méthode mettant a jour les pièce déplacés sur le plateau
+     */
     public void mettreAJourPieces() {
         jeu.getChildren().forEach(node -> ((VBox) node).getChildren().clear());
         for (Piece p : pions) {
@@ -389,9 +424,9 @@ public class BotController {
     }
 
 
-
-
-    //Méthode permettant d'initialiser certains éléments du stage à l'execution qui ont des comportements liés à des méthodes dans ce controller
+    /**
+     * Méthode permettant d'initialiser certains éléments du stage à l'execution qui ont des comportements liés à des méthodes dans ce controller
+     */
     @FXML
     private void initialize() {
         themeBox.setItems(FXCollections.observableArrayList("Classique", "Océan", "Bois","Pierre","Violet"));
@@ -403,7 +438,11 @@ public class BotController {
         jouerClicked();
     }
 
-    //Méthode permettant la gestion de la redimension de la fenêtre
+    /**
+     * Méthode permettant la gestion de la redimension de la fenêtre
+     *
+     * @param windowEvent
+     */
     public void setResizeEvents(WindowEvent windowEvent) {
         // Get the stage
         stage = (Stage) boutonJouer.getScene().getWindow();
@@ -424,7 +463,9 @@ public class BotController {
         });
     }
 
-    //méthode permettant d'adapter la taille des éléments après la redimension de la fenêtre
+    /**
+     * Méthode permettant d'adapter la taille des éléments après la redimension de la fenêtre
+     */
     public void updateGameSize() {
         double superVal;
         if(width > height) superVal = height;
@@ -455,11 +496,16 @@ public class BotController {
     //Partie du code dédiée à la vérification d'un mouvement spécifique durant une partie
 
 
-
-
-
-
-//méthode permettant de vérifier un déplacement d'une quelconque pièce
+    /**
+     * Méthode permettant de vérifier un déplacement d'une quelconque pièce
+     *
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public String deplacementPieceValide(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         if (colActuelle < 0 || colActuelle >= 8 || ligneActuelle < 0 || ligneActuelle >= 8) return "false";
         if(colActuelle == col && ligneActuelle == ligne) return "false";
@@ -477,7 +523,16 @@ public class BotController {
         };
     }
 
-    //méthode permettant de vérifier un mouvement d'un pion
+    /**
+     * Méthode permettant de vérifier un mouvement d'un pion
+     *
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementPion(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         String equipePiece = piece.getEquipe();
         if (equipePiece.equals("WHITE")) {
@@ -493,7 +548,15 @@ public class BotController {
 
     }
 
-    //méthode permettant de vérifier le déplacement d'une tour
+    /**
+     * Méthode permettant de vérifier le déplacement d'une tour
+     *
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementTour(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle) {
             int step = (ligne > ligneActuelle) ? 1 : -1;
@@ -511,7 +574,15 @@ public class BotController {
         return "false";
     }
 
-    //méthode permettant de vérifier le déplacement d'un cavalier
+    /**
+     * Méthode permettant de vérifier le déplacement d'un cavalier
+     *
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementCavalier(int col, int ligne, int colActuelle, int ligneActuelle) {
         int deltaX = Math.abs(col - colActuelle);
         int deltaY = Math.abs(ligne - ligneActuelle);
@@ -521,7 +592,15 @@ public class BotController {
         return "false";
     }
 
-    //méthode permettant de vérifier le déplacement d'un fou
+    /**
+     * Méthode permettant de vérifier le déplacement d'un fou
+     *
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementFou(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) == Math.abs(ligne - ligneActuelle)) {
             int colStep = (col > colActuelle) ? 1 : -1;
@@ -535,7 +614,15 @@ public class BotController {
         return "false";
     }
 
-    //méthode permettant de vérifier le déplacement d'une reine
+    /**
+     * Méthode permettant de vérifier le déplacement d'une reine
+     *
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementReine(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (col == colActuelle || ligne == ligneActuelle) {
             return validerDeplacementTour(col, ligne, colActuelle, ligneActuelle);
@@ -545,7 +632,15 @@ public class BotController {
         return "false";
     }
 
-    //méthode permettant de vérifier le déplacement d'un roi
+    /**
+     * Méthode permettant de vérifier le déplacement d'un roi
+     *
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     private String validerDeplacementRoi(int col, int ligne, int colActuelle, int ligneActuelle) {
         if (Math.abs(col - colActuelle) <= 1 && Math.abs(ligne - ligneActuelle) <= 1) {
             return "true";
@@ -553,7 +648,13 @@ public class BotController {
         return "false";
     }
 
-    //méthode permettant de vérifier si il y a une pièce à une position donnée
+    /**
+     * Méthode permettant de vérifier si il y a une pièce à une position donnée
+     *
+     * @param col
+     * @param ligne
+     * @return
+     */
     public Piece getPieceAt(int col, int ligne) {
         for (Piece p : pions) {
             if (p.getX() == ligne && p.getY() == col) return p;
@@ -567,8 +668,12 @@ public class BotController {
     //Partie du code contenant les méthode de vérification de fin de partie et de mise en échec
 
 
-
-    //méthode permettant de vérifier si un roi est en échec
+    /**
+     * Méthode permettant de vérifier si un roi est en échec
+     *
+     * @param equipe
+     * @return
+     */
     private boolean roiEnEchec(String equipe) {
         // Trouver la position du roi
         int roiX = -1;
@@ -592,7 +697,16 @@ public class BotController {
         return false;
     }
 
-    //méthode permettant de vérifier si un déplacement est possible sans mettre le roi en échec
+    /**
+     * Méthode permettant de vérifier si un déplacement est possible sans mettre le roi en échec
+     *
+     * @param piece
+     * @param col
+     * @param ligne
+     * @param colActuelle
+     * @param ligneActuelle
+     * @return
+     */
     public boolean deplacementPossibleSansEchec(Piece piece, int col, int ligne, int colActuelle, int ligneActuelle) {
         // Vérifier si le déplacement met le roi en échec
         Piece pieceTemp = null;
@@ -618,7 +732,14 @@ public class BotController {
         return !enEchec;
     }
 
-    //méthode permettant de vérifier si le chemin est libre entre l position initiale et la position d'arrivée d'une pièce (plus efficace que la version implémentée au dessus pour couvrir des larges vérifications comme l'échec et mat)
+    /**
+     * Méthode permettant de vérifier si le chemin est libre entre l position initiale et la position d'arrivée d'une pièce (plus efficace que la version implémentée au dessus pour couvrir des larges vérifications comme l'échec et mat)
+     *
+     * @param piece
+     * @param nouvelleX
+     * @param nouvelleY
+     * @return
+     */
     private boolean cheminLibre(Piece piece, int nouvelleX, int nouvelleY) {
         int x = piece.getX();
         int y = piece.getY();
@@ -640,7 +761,12 @@ public class BotController {
         return true; // Aucun obstacle trouvé
     }
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type roi
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type roi
+     *
+     * @param roi
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxRoi(Piece roi) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -662,7 +788,12 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type reine
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type reine
+     *
+     * @param reine
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxReine(Piece reine) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -687,7 +818,12 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type fou
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type fou
+     *
+     * @param fou
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxFou(Piece fou) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -712,7 +848,12 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type tour
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type tour
+     *
+     * @param tour
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxTour(Piece tour) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -738,7 +879,12 @@ public class BotController {
     }
 
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type pion
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type pion
+     *
+     * @param pion
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxPion(Piece pion) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -773,7 +919,12 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    //méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type cavalier
+    /**
+     * Méthode permettant de trouver l'ensemble des mouvements légaux pour une pièce de type cavalier
+     *
+     * @param cavalier
+     * @return
+     */
     private List<int[]> genererMouvementsLegauxCavalier(Piece cavalier) {
         List<int[]> mouvementsLegaux = new ArrayList<>();
 
@@ -797,7 +948,12 @@ public class BotController {
         return mouvementsLegaux;
     }
 
-    //méthode permettant de trouver le roi d'une équipe donnée sur le plateau
+    /**
+     * Méthode permettant de trouver le roi d'une équipe donnée sur le plateau
+     *
+     * @param equipe
+     * @return
+     */
     private Piece trouverRoi(String equipe) {
         for (Piece piece : pions) {
             if (piece.getType().equals("KING") && piece.getEquipe().equals(equipe)) {
@@ -807,7 +963,12 @@ public class BotController {
         return null;
     }
 
-    //méthode permettant de vérifer si un roi donné est en situation d'échec et mat
+    /**
+     * Méthode permettant de vérifer si un roi donné est en situation d'échec et mat
+     *
+     * @param roi
+     * @return
+     */
     private boolean estEchecEtMat(Piece roi) {
         if (!roiEnEchec(roi.getEquipe())) {
             return false;
@@ -847,7 +1008,12 @@ public class BotController {
     }
 
 
-//méthode permettant de vérifier si une équipe donnée est en situation de pat
+    /**
+     * Méthode permettant de vérifier si une équipe donnée est en situation de pat
+     *
+     * @param equipe
+     * @return
+     */
     private boolean estPat(String equipe) {
 
         if (roiEnEchec(equipe)) {
@@ -895,9 +1061,11 @@ public class BotController {
     //Partie du code dédiée au méthode de gestion d'alertes de fin de partie
 
 
-
-
-//méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
+    /**
+     * Méthode permettant de générer une vbox affichant le résultat d'une partie en cas d'échec et mat
+     *
+     * @param tourBlanc
+     */
     public void showAlert(boolean tourBlanc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EchecEtMat.fxml"));
@@ -914,7 +1082,9 @@ public class BotController {
         }
     }
 
-    //méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
+    /**
+     * Méthode permettant de générer une vbox affichant le résultat d'une partie en cas de pat
+     */
     public void showAlert2() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("estPat.fxml"));

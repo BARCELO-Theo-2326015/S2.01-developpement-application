@@ -7,7 +7,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Page d'accueil du jeu d'echec
+ */
+
 public class Accueil extends Application {
+
+    /**
+     *
+     * Le point d'entré de l'application
+     *
+     * @param primaryStage la scène principale de l'accueil
+     * @throws IOException
+     */
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -21,6 +33,13 @@ public class Accueil extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    /**
+     *
+     * Méthode qui lance l'application
+     *
+     * @param args
+     */
 
     public static void main(String[] args) {
         launch(args);

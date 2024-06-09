@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"com.echecs.s201developpementapplication","l":"com.echecs.main"}];updateSearchResults();

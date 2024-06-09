@@ -7,6 +7,9 @@ module com.echecs.s201developpementapplication {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
 
+    requires org.mockito;
+    requires org.junit.jupiter.api;
+
     opens com.echecs.main to javafx.fxml;
     exports com.echecs.main;
 }

@@ -1519,11 +1519,21 @@ public class mainController {
         joueur1Actuel = joueursPartie.get(0);
         joueur2Actuel = joueursPartie.get(1);
 
-        // Récupérer le temps initial sélectionné dans le ComboBox
         String selectedTemps = tempsComboBox.getValue();
-
-        tempsInitialBlancs = Integer.parseInt(selectedTemps) * 60;
-        tempsInitialNoirs = Integer.parseInt(selectedTemps) * 60;
+        switch (selectedTemps) {
+            case "10 minutes" -> {
+                tempsInitialBlancs = 10 * 60;
+                tempsInitialNoirs = 10 * 60;
+            }
+            case "3 minutes" -> {
+                tempsInitialBlancs = 3 * 60;
+                tempsInitialNoirs = 3 * 60;
+            }
+            case "1 minute" -> {
+                tempsInitialBlancs = 60;
+                tempsInitialNoirs = 60;
+            }
+        }
 
         // on modifie les labels pour afficher les noms des joueurs
         joueur1.setText(joueur1Actuel.getNomJoueur());
